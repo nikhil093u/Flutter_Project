@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'home.dart';
+import 'dart:convert';
+import 'package:flutter_application/appservice.dart';
+import 'package:flutter_application/home.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'signin.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -11,6 +15,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreen extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final storage = FlutterSecureStorage();
   @override
   void dispose() {
     _emailController.dispose();
@@ -18,14 +23,34 @@ class _SignUpScreen extends State<SignUpScreen> {
     super.dispose();
   }
 
-  void _handleLogin() {
-    final String email = _emailController.text;
-    final String password = _passwordController.text;
-    print("User email $email and password $password");
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Home()),
-    );
+  Future<void> _handleLogin() async {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      _showMessage("Please enter both email and password.");
+      return;
+    }
+
+    try {
+      final response = await ApiService.login(email, password);
+      if (response.statusCode == 200) {
+        _showMessage("Loggin Successfull");
+        Map<String, dynamic> data = json.decode(response.body);
+        final token = data['access_token'];
+        await storage.write(key: 'auth_token', value: token);
+
+        Navigator.pushReplacement(
+          // ignore: use_build_context_synchronously
+          context,
+          MaterialPageRoute(builder: (context) => Home()),
+        );
+      } else {
+        _showMessage("Sign-up failed. Please try again.");
+      }
+    } catch (e) {
+      _showMessage("An error occurred. Please try again.");
+    }
   }
 
   @override
@@ -246,7 +271,12 @@ class _SignUpScreen extends State<SignUpScreen> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignInScreen()),
+                      );
+                    },
                     child: const Text(
                       'Sign Up',
                       style: TextStyle(
@@ -265,5 +295,11 @@ class _SignUpScreen extends State<SignUpScreen> {
         ),
       ),
     );
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }
