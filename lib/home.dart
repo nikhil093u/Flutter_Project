@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'customers.dart';
 import 'orders.dart';
 import 'resource.dart';
+import 'todo.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -109,13 +110,20 @@ class Home extends StatelessWidget {
       backgroundColor: Colors.white,
 
       appBar: AppBar(
+        backgroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.menu, size: 24, color: Color(0xFF030303)),
           onPressed: () {
             null;
           },
         ),
-        title: const Text(
+        title: GestureDetector(
+          onTap: (){
+            Navigator.push(context,
+            MaterialPageRoute(builder: (context)=>Todo())
+            );
+          },
+          child:  Text(
           'To-Do List',
           style: TextStyle(
             color: Color(0xFF030303),
@@ -124,16 +132,13 @@ class Home extends StatelessWidget {
             fontFamily: 'Poppins',
           ),
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
+      ),
       ),
 
       body: SingleChildScrollView(
         child: Column(
           children: [
             const SizedBox(height: 29),
-
             Center(
               child: Container(
                 width: 215,
