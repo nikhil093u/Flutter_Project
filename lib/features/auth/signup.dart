@@ -1,7 +1,9 @@
+import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:flutter_application/appservice.dart';
-import 'package:flutter_application/home.dart';
+import 'package:flutter_application/core/services/appservice.dart';
+import 'package:flutter_application/core/services/encrypt.dart';
+import 'package:flutter_application/features/home/home.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'signin.dart';
 
@@ -28,23 +30,33 @@ class _SignUpScreen extends State<SignUpScreen> {
     final password = _passwordController.text;
 
     if (email.isEmpty || password.isEmpty) {
-      _showMessage("Please enter both email and password.");
+      // _showMessage("Please enter both email and password.");        
+      Navigator.push(context,MaterialPageRoute(builder: (context)=>Home()));
+
       return;
     }
 
     try {
-      final response = await ApiService.login(email, password);
+      final serverPubKeyBytes=base64Decode("BASE64_ENCODED_SERVER_PUBLIC_KEY_HERE");
+      final serverPubKey=SimplePublicKey(serverPubKeyBytes, type: KeyPairType.x25519);
+
+      final encryptedData=await encryptPassword(password, serverPubKey);
+
+
+      final response = await ApiService.login(
+        email:email,
+        encryptedPassword:encryptedData['encryptedPassword'],
+        nonce: encryptedData['nonce'],
+        clientPublicKey: encryptedData['clientPublicKey'],
+        );
       if (response.statusCode == 200) {
         _showMessage("Loggin Successfull");
         Map<String, dynamic> data = json.decode(response.body);
         final token = data['access_token'];
         await storage.write(key: 'auth_token', value: token);
 
-        Navigator.pushReplacement(
-          // ignore: use_build_context_synchronously
-          context,
-          MaterialPageRoute(builder: (context) => Home()),
-        );
+        // ignore: use_build_context_synchronously
+        Navigator.push(context,MaterialPageRoute(builder: (context)=>Home()));
       } else {
         _showMessage("Sign-up failed. Please try again.");
       }

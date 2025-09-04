@@ -19,12 +19,25 @@ class ApiService {
     return response;
   }
 
-  static Future<http.Response> login(String email, String password) async {
-    final response = await http.post(
-      Uri.parse('$_baseUrl/login'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'email': email, 'password': password}),
-    );
-    return response;
+  static Future<http.Response> login({
+    required String email,
+    required String encryptedPassword,
+    required String nonce,
+    required String clientPublicKey,
+  }) async {
+    final url = Uri.parse('$_baseUrl/login');
+
+    final body = jsonEncode({
+      "email": email,
+      "encryptedPassword": encryptedPassword,
+      "nonce": nonce,
+      "clientPublicKey": clientPublicKey,
+    });
+
+    final headers = {
+      "Content-Type": "application/json",
+    };
+
+    return await http.post(url, headers: headers, body: body);
   }
 }

@@ -1,11 +1,33 @@
+import 'package:flutter_application/common/widgets/footer.dart';
 import 'package:flutter/material.dart';
-import 'customers.dart';
-import 'orders.dart';
-import 'resource.dart';
-import 'todo.dart';
+import 'package:flutter_application/routes/helpers/navigation_helper.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import '../customers/customers.dart';
+import '../orders/orders.dart';
+import '../resources/resource.dart';
+import '../todo/todo.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
+  void _onTabTapped(BuildContext context, int index) {
+    switch (index) {
+      case 0:
+        NavigationHelper.safePush(context,Home());
+        break;
+      case 1:
+        NavigationHelper.safePush(context,Todo());
+        break;
+      case 2:
+        NavigationHelper.safePush(context,CustomerScreen());
+        break;
+      case 3:
+        NavigationHelper.safePush(context,OrdersList());
+        break;
+      case 4:
+      // NavigationHelper.safePush(context,Settings(),'/settings');
+      // break;
+    }
+  }
 
   final List<String> labels = const [
     'Customers',
@@ -41,10 +63,10 @@ class Home extends StatelessWidget {
             MaterialPageRoute(builder: (context) => OrdersList()),
           );
         }
-        if(label== 'Resources'){
+        if (label == 'Resources') {
           Navigator.push(
-            context, 
-            MaterialPageRoute(builder: (context)=> ResourcePage()),
+            context,
+            MaterialPageRoute(builder: (context) => ResourcePage()),
           );
         }
       },
@@ -76,34 +98,6 @@ class Home extends StatelessWidget {
     );
   }
 
-  Widget _buildFooterItem(String label) {
-    return GestureDetector(
-      onTap: () {
-        // Placeholder for footer navigation
-      },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            footerIconPath,
-            width: 24,
-            height: 24,
-            fit: BoxFit.contain,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Color(0xFF030303),
-              fontFamily: 'Poppins',
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,27 +106,32 @@ class Home extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: const Icon(Icons.menu, size: 24, color: Color(0xFF030303)),
+          icon: const Icon(
+            LucideIcons.menu,
+            size: 24,
+            color: Color(0xFF030303),
+          ),
           onPressed: () {
             null;
           },
         ),
         title: GestureDetector(
-          onTap: (){
-            Navigator.push(context,
-            MaterialPageRoute(builder: (context)=>Todo())
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Todo()),
             );
           },
-          child:  Text(
-          'To-Do List',
-          style: TextStyle(
-            color: Color(0xFF030303),
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            fontFamily: 'Poppins',
+          child: Text(
+            'To-Do List',
+            style: TextStyle(
+              color: Color(0xFF030303),
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              fontFamily: 'Poppins',
+            ),
           ),
         ),
-      ),
       ),
 
       body: SingleChildScrollView(
@@ -257,28 +256,9 @@ class Home extends StatelessWidget {
         ),
       ),
 
-      bottomNavigationBar: Container(
-        width: 375,
-        height: 70,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: const [
-            BoxShadow(
-              color: Color.fromRGBO(3, 3, 3, 0.1),
-              offset: Offset(2, 2),
-              blurRadius: 4,
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildFooterItem('Home'),
-            _buildFooterItem('Resources'),
-            _buildFooterItem('Training'),
-            _buildFooterItem('Team'),
-          ],
-        ),
+      bottomNavigationBar: Footer(
+        currentIndex: 0, // 0 means you're on the Home tab
+        onTap: (index) => _onTabTapped(context, index),
       ),
     );
   }

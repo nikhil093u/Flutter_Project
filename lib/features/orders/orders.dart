@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/routes/helpers/navigation_helper.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import '../../common/widgets/footer.dart';
 import 'order_details.dart';
+import '../home/home.dart';
+import '../todo/todo.dart';
+import '../customers/customers.dart';
+import 'create_order.dart';
 
 class OrdersList extends StatefulWidget {
   const OrdersList({super.key});
@@ -9,26 +16,119 @@ class OrdersList extends StatefulWidget {
 }
 
 class _OrdersListState extends State<OrdersList> {
+  void _onTabTapped(BuildContext context, int index) {
+    switch (index) {
+      case 0:
+        NavigationHelper.safePush(context, Home());
+        break;
+      case 1:
+        NavigationHelper.safePush(context, Todo());
+        break;
+      case 2:
+        NavigationHelper.safePush(context, CustomerScreen());
+        break;
+      case 3:
+        NavigationHelper.safePush(context, OrdersList());
+        break;
+      case 4:
+      // NavigationHelper.safePush(context,Settings(),'/settings');
+      // break;
+    }
+  }
+
   final List<Map<String, String>> _orders = [
-    {
-      'id': 'ORD12345',
-      'name': 'Alice Johnson',
-      'date': 'Aug 20, 2025',
-      'status': 'Shipped',
-    },
-    {
-      'id': 'ORD12346',
-      'name': 'Bob Smith',
-      'date': 'Aug 21, 2025',
-      'status': 'Delivered',
-    },
-    {
-      'id': 'ORD12347',
-      'name': 'Charlie Lee',
-      'date': 'Aug 22, 2025',
-      'status': 'Processing',
-    },
-  ];
+  {
+    'id': 'ORD12345',
+    'name': 'Alice Johnson',
+    'date': 'Aug 20, 2025',
+    'status': 'Shipped',
+  },
+  {
+    'id': 'ORD12346',
+    'name': 'Bob Smith',
+    'date': 'Aug 21, 2025',
+    'status': 'Delivered',
+  },
+  {
+    'id': 'ORD12347',
+    'name': 'Charlie Lee',
+    'date': 'Aug 22, 2025',
+    'status': 'Processing',
+  },
+  {
+    'id': 'ORD12348',
+    'name': 'Diana Prince',
+    'date': 'Aug 23, 2025',
+    'status': 'Shipped',
+  },
+  {
+    'id': 'ORD12349',
+    'name': 'Ethan Hunt',
+    'date': 'Aug 24, 2025',
+    'status': 'Cancelled',
+  },
+  {
+    'id': 'ORD12350',
+    'name': 'Fiona Gallagher',
+    'date': 'Aug 25, 2025',
+    'status': 'Delivered',
+  },
+  {
+    'id': 'ORD12351',
+    'name': 'George Clooney',
+    'date': 'Aug 26, 2025',
+    'status': 'Processing',
+  },
+  {
+    'id': 'ORD12352',
+    'name': 'Hannah Baker',
+    'date': 'Aug 27, 2025',
+    'status': 'Shipped',
+  },
+  {
+    'id': 'ORD12353',
+    'name': 'Isaac Newton',
+    'date': 'Aug 28, 2025',
+    'status': 'Delivered',
+  },
+  {
+    'id': 'ORD12354',
+    'name': 'Jack Sparrow',
+    'date': 'Aug 29, 2025',
+    'status': 'Processing',
+  },
+  {
+    'id': 'ORD12355',
+    'name': 'Katherine Langford',
+    'date': 'Aug 30, 2025',
+    'status': 'Cancelled',
+  },
+  {
+    'id': 'ORD12356',
+    'name': 'Leo Messi',
+    'date': 'Aug 31, 2025',
+    'status': 'Delivered',
+  },
+  {
+    'id': 'ORD12357',
+    'name': 'Mona Lisa',
+    'date': 'Sep 01, 2025',
+    'status': 'Shipped',
+  },
+  {
+    'id': 'ORD12358',
+    'name': 'Nina Dobrev',
+    'date': 'Sep 02, 2025',
+    'status': 'Processing',
+  },
+  {
+    'id': 'ORD12359',
+    'name': 'Oscar Isaac',
+    'date': 'Sep 03, 2025',
+    'status': 'Delivered',
+  },
+];
+
 
   String _searchQuery = '';
 
@@ -162,6 +262,23 @@ class _OrdersListState extends State<OrdersList> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CreateOrder()),
+          );
+        },
+        backgroundColor: Colors.white,
+        child: const Icon(LucideIcons.plus),
+      ),
+
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+
+      bottomNavigationBar: Footer(
+        currentIndex: 3,
+        onTap: (index) => _onTabTapped(context, index),
       ),
     );
   }
