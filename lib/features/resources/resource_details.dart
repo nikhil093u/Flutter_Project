@@ -17,7 +17,7 @@ class ResourceDetails extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text("Resource Details"),
+        title: Text("Resource Details",style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w700, fontSize: 20)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -58,12 +58,15 @@ class ResourceDetails extends StatelessWidget {
                   Text(
                     title,
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
+                      fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  SizedBox(height: 10),
                   Text(
                     "This is the detailed description of Resource Page, providing all the necessary information that user needs to understand it's purpose and utility. The description is concise yet comprehensive, ensuring clarity and engagement.",
+                    style: TextStyle(fontFamily: 'Poppins'),      
                   ),
                 ],
               ),
@@ -93,18 +96,20 @@ class ResourceDetails extends StatelessWidget {
                   Text(
                     "Realated Links",
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
+                      fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.only(left: 16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Link 1"),
-                        Text("Link 2"),
-                        Text("Link 3"),
+                        Text("Link 1",style: TextStyle(fontFamily: 'Poppins')),
+                        Text("Link 2",style: TextStyle(fontFamily: 'Poppins')),
+                        Text("Link 3",style: TextStyle(fontFamily: 'Poppins')),
                       ],
                     ),
                   ),

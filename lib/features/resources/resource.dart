@@ -44,7 +44,7 @@ class ResourcePage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
-                Text("Oceana"),
+                Text("Oceana",style: TextStyle(fontFamily: 'Poppins', fontSize: 20, fontWeight: FontWeight.w700)),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Container(
@@ -63,6 +63,7 @@ class ResourcePage extends StatelessWidget {
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Search Resources',
+                              hintStyle: TextStyle(fontFamily: 'Poppins'),
                               isDense: true,
                             ),
                           ),
@@ -174,13 +175,13 @@ class ResourceCard extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               title,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              style: const TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Poppins', fontSize: 15),
             ),
             const SizedBox(height: 6),
             Expanded(
               child: Text(
                 description,
-                style: const TextStyle(fontSize: 13, color: Colors.black87),
+                style: const TextStyle(fontSize: 13,fontFamily: 'Poppins', color: Colors.black87),
               ),
             ),
           ],

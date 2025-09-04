@@ -20,7 +20,11 @@ class TaskDetails extends StatelessWidget {
         ),
         title: const Text(
           "Task Details",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.black,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: Padding(
@@ -28,7 +32,6 @@ class TaskDetails extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Task card with shadow
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
@@ -48,25 +51,32 @@ class TaskDetails extends StatelessWidget {
                 children: [
                   Text(
                     task,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   SizedBox(height: 10),
                   Text(
                     'Here you can add more information about the task. For example: deadlines, notes, etc.',
-                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Poppins',
+                      color: Colors.grey[700],
+                    ),
                   ),
                 ],
               ),
             ),
 
-            Spacer(), // Pushes the button to the bottom
-            // Delete Button
+            Spacer(),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: onDelete,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightBlue,
+                  backgroundColor: Color(0xFFA4CDFD),
                   padding: EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -74,7 +84,12 @@ class TaskDetails extends StatelessWidget {
                 ),
                 child: Text(
                   'Delete Task',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),

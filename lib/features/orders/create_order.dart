@@ -19,41 +19,12 @@ class _CreateOrderState extends State<CreateOrder> {
   final TextEditingController socialNetwork1Controller = TextEditingController();
   final TextEditingController socialNetwork2Controller = TextEditingController();
 
-  final List<String> waterTypeOptions = [
-    'Mineral Water',
-    'Spring Water',
-    'Distilled Water',
-  ];
-
-  final List<String> bottleMaterialOptions = [
-    'Plastic',
-    'Glass',
-    'Metal',
-  ];
-
-  final List<String> bottleShapeOptions = [
-    'Round',
-    'Square',
-    'Oval',
-  ];
-
-  final List<String> sizeQuantityOptions = [
-    '250ml',
-    '500ml',
-    '1L',
-  ];
-
-  final List<String> colorCombinationOptions = [
-    'Blue & White',
-    'Red & White',
-    'Green & White',
-  ];
-
-  final List<String> preDesignOptions = [
-    'Modern',
-    'Classic',
-    'Minimal',
-  ];
+  final List<String> waterTypeOptions = ['Mineral Water', 'Spring Water', 'Distilled Water'];
+  final List<String> bottleMaterialOptions = ['Plastic', 'Glass', 'Metal'];
+  final List<String> bottleShapeOptions = ['Round', 'Square', 'Oval'];
+  final List<String> sizeQuantityOptions = ['250ml', '500ml', '1L'];
+  final List<String> colorCombinationOptions = ['Blue & White', 'Red & White', 'Green & White'];
+  final List<String> preDesignOptions = ['Modern', 'Classic', 'Minimal'];
 
   void _submitOrder() {
     if (waterType == null ||
@@ -63,14 +34,13 @@ class _CreateOrderState extends State<CreateOrder> {
         colorCombination == null ||
         preDesignOption == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all required fields')),
+        const SnackBar(content: Text('Please fill all required fields',style: TextStyle(fontFamily: 'Poppins'))),
       );
       return;
     }
 
-
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Order submitted successfully!')),
+      const SnackBar(content: Text('Order submitted successfully!',style: TextStyle(fontFamily: 'Poppins'))),
     );
   }
 
@@ -101,47 +71,31 @@ class _CreateOrderState extends State<CreateOrder> {
                 label: 'Select Water Type',
                 value: waterType,
                 items: waterTypeOptions,
-                onChanged: (value) {
-                  setState(() {
-                    waterType = value;
-                  });
-                },
+                onChanged: (value) => setState(() => waterType = value),
               ),
               buildDropdown(
                 label: 'Select Bottle Material Type',
                 value: bottleMaterial,
                 items: bottleMaterialOptions,
-                onChanged: (value) {
-                  setState(() {
-                    bottleMaterial = value;
-                  });
-                },
+                onChanged: (value) => setState(() => bottleMaterial = value),
               ),
               buildDropdown(
                 label: 'Select Bottle Shape',
                 value: bottleShape,
                 items: bottleShapeOptions,
-                onChanged: (value) {
-                  setState(() {
-                    bottleShape = value;
-                  });
-                },
+                onChanged: (value) => setState(() => bottleShape = value),
               ),
               buildDropdown(
                 label: 'Select the Size/Quantity',
                 value: sizeQuantity,
                 items: sizeQuantityOptions,
-                onChanged: (value) {
-                  setState(() {
-                    sizeQuantity = value;
-                  });
-                },
+                onChanged: (value) => setState(() => sizeQuantity = value),
               ),
               const SizedBox(height: 8),
               const Text(
                 'Upload a Logo (Allowed formats .PSD, .AI, .CDR, PDF)',
                 style: TextStyle(
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w600,
                   fontSize: 14,
                   fontFamily: 'Poppins',
                 ),
@@ -151,7 +105,7 @@ class _CreateOrderState extends State<CreateOrder> {
                 height: 50,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(23),
                   border: Border.all(color: const Color(0xFFD5D5DA)),
                   color: Colors.white,
                 ),
@@ -159,12 +113,12 @@ class _CreateOrderState extends State<CreateOrder> {
                   onPressed: () {
                     null;
                   },
-                  child: const Text(
+                  child: Text(
                     'Choose File',
                     style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 16,
-                      color: Colors.black54,
+                      fontSize: 14,
+                      color: Colors.grey[800]
                     ),
                   ),
                 ),
@@ -174,11 +128,7 @@ class _CreateOrderState extends State<CreateOrder> {
                 label: 'Select Colour Combination',
                 value: colorCombination,
                 items: colorCombinationOptions,
-                onChanged: (value) {
-                  setState(() {
-                    colorCombination = value;
-                  });
-                },
+                onChanged: (value) => setState(() => colorCombination = value),
               ),
               const SizedBox(height: 16),
               buildTextField(
@@ -191,11 +141,7 @@ class _CreateOrderState extends State<CreateOrder> {
                 label: 'Select Pre-design Options',
                 value: preDesignOption,
                 items: preDesignOptions,
-                onChanged: (value) {
-                  setState(() {
-                    preDesignOption = value;
-                  });
-                },
+                onChanged: (value) => setState(() => preDesignOption = value),
               ),
               const SizedBox(height: 16),
               buildTextField(
@@ -203,6 +149,7 @@ class _CreateOrderState extends State<CreateOrder> {
                 controller: socialNetwork1Controller,
                 hint: 'Website URL',
               ),
+  
               const SizedBox(height: 8),
               buildTextField(
                 label: '',
@@ -216,7 +163,7 @@ class _CreateOrderState extends State<CreateOrder> {
                 child: ElevatedButton(
                   onPressed: _submitOrder,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFB5D8FF),
+                    backgroundColor: const Color(0xFFA4CDFD),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -253,7 +200,7 @@ class _CreateOrderState extends State<CreateOrder> {
           Text(
             label,
             style: const TextStyle(
-              fontWeight: FontWeight.w400, 
+              fontWeight: FontWeight.w600,
               fontSize: 14,
               fontFamily: 'Poppins',
             ),
@@ -270,22 +217,32 @@ class _CreateOrderState extends State<CreateOrder> {
               initialValue: value,
               isExpanded: true,
               decoration: const InputDecoration(
+                fillColor: Colors.white,
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
               ),
               items: items
                   .map((e) => DropdownMenuItem<String>(
                         value: e,
-                        child: Text(e),
+                        child: Text(
+                          e,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'Poppins',
+                            color:Colors.grey[800],
+                          ),
+                        ),
                       ))
                   .toList(),
               onChanged: onChanged,
+              iconEnabledColor: Colors.black,
+              dropdownColor: Colors.white,
               style: const TextStyle(
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
                 fontFamily: 'Poppins',
                 color: Colors.black,
               ),
-              iconEnabledColor: Colors.black,
             ),
           ),
         ],
@@ -305,27 +262,39 @@ class _CreateOrderState extends State<CreateOrder> {
           Text(
             label,
             style: const TextStyle(
-              fontWeight: FontWeight.w400, 
+              fontWeight: FontWeight.w600,
               fontSize: 14,
               fontFamily: 'Poppins',
             ),
           ),
-        const SizedBox(height: 6),
+        if (label.isNotEmpty) const SizedBox(height: 6),
         TextField(
           controller: controller,
+          style: const TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 14,
+            fontFamily: 'Poppins',
+          ),
           decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: const TextStyle(
-              fontWeight: FontWeight.w300,  
-              fontFamily: 'Poppins',
-              color: Colors.grey,
-            ),
+                        hintText: hint,
+            hintStyle: TextStyle(color: Colors.grey[800],fontFamily: 'Poppins'),
             filled: true,
             fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 14,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: Color(0xFFD5D5DA)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFD5D5DA)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFA4CDFD)),
             ),
           ),
         ),
@@ -333,3 +302,4 @@ class _CreateOrderState extends State<CreateOrder> {
     );
   }
 }
+

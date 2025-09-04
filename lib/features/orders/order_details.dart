@@ -19,7 +19,10 @@ class OrderDetails extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back),
         ),
-        title: Text("Order #${order['id']}"),
+        title: Text(
+          "Order #${order['id']}",
+          style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w700),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -45,16 +48,32 @@ class OrderDetails extends StatelessWidget {
                 children: [
                   const Text(
                     "Order Details",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 12),
-                  Text('Order ID: ${order['id']}'),
+                  Text(
+                    'Order ID: ${order['id']}',
+                    style: TextStyle(fontFamily: 'Poppins'),
+                  ),
                   const SizedBox(height: 8),
-                  Text('Customer Name: ${order['name']}'),
+                  Text(
+                    'Customer Name: ${order['name']}',
+                    style: TextStyle(fontFamily: 'Poppins'),
+                  ),
                   const SizedBox(height: 8),
-                  Text('Order Date: ${order['date']}'),
+                  Text(
+                    'Order Date: ${order['date']}',
+                    style: TextStyle(fontFamily: 'Poppins'),
+                  ),
                   const SizedBox(height: 8),
-                  Text('Status: ${order['status']}'),
+                  Text(
+                    'Status: ${order['status']}',
+                    style: TextStyle(fontFamily: 'Poppins'),
+                  ),
                 ],
               ),
             ),
@@ -81,16 +100,32 @@ class OrderDetails extends StatelessWidget {
                 children: [
                   const Text(
                     "Customer Information",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 12),
-                  Text('Name: ${order['name']}'),
+                  Text(
+                    'Name: ${order['name']}',
+                    style: TextStyle(fontFamily: 'Poppins'),
+                  ),
                   const SizedBox(height: 8),
-                  Text('Email: ${order['name']}@gmail.com'),
+                  Text(
+                    'Email: ${order['name']}@gmail.com',
+                    style: TextStyle(fontFamily: 'Poppins'),
+                  ),
                   const SizedBox(height: 8),
-                  const Text('Phone Number: +91 9999999999'),
+                  const Text(
+                    'Phone Number: +91 9999999999',
+                    style: TextStyle(fontFamily: 'Poppins'),
+                  ),
                   const SizedBox(height: 8),
-                  const Text('Address: New York'),
+                  const Text(
+                    'Address: New York',
+                    style: TextStyle(fontFamily: 'Poppins'),
+                  ),
                 ],
               ),
             ),
@@ -117,13 +152,18 @@ class OrderDetails extends StatelessWidget {
                 children: [
                   const Text(
                     "Order Status",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   Text(
                     'Status: ${order['status']}',
                     style: const TextStyle(
                       fontSize: 14,
+                      fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -153,7 +193,11 @@ class OrderDetails extends StatelessWidget {
                 children: [
                   const Text(
                     "Quick Actions",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   Wrap(
@@ -165,18 +209,14 @@ class OrderDetails extends StatelessWidget {
                         label: "Repeat Order",
                         icon: Icons.replay_outlined,
                         color: Colors.green,
-                        onPressed: () {
-                          
-                        },
+                        onPressed: () {},
                       ),
                       _actionButton(
                         context: context,
                         label: "Generate Invoice",
                         icon: Icons.receipt_long_outlined,
                         color: Colors.orange,
-                        onPressed: () {
-                          
-                        },
+                        onPressed: () {},
                       ),
                       _actionButton(
                         context: context,
@@ -184,7 +224,12 @@ class OrderDetails extends StatelessWidget {
                         icon: Icons.add_shopping_cart_outlined,
                         color: Colors.blue,
                         onPressed: () {
-                          Navigator.push(context,MaterialPageRoute(builder: (context)=>CreateOrder()));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreateOrder(),
+                            ),
+                          );
                         },
                       ),
                       _actionButton(
@@ -192,9 +237,7 @@ class OrderDetails extends StatelessWidget {
                         label: "Need Assistance",
                         icon: Icons.support_agent_outlined,
                         color: Colors.purple,
-                        onPressed: () {
-                          
-                        },
+                        onPressed: () {},
                       ),
                     ],
                   ),
@@ -215,21 +258,31 @@ class OrderDetails extends StatelessWidget {
     required VoidCallback onPressed,
   }) {
     return SizedBox(
-      width: (MediaQuery.of(context).size.width - 56) / 2, 
+      width: (MediaQuery.of(context).size.width - 56) / 2,
       child: ElevatedButton.icon(
         onPressed: onPressed,
         icon: Icon(icon, size: 20),
-        label: Text(label, style: const TextStyle(fontSize: 14)),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: color.withOpacity(0.1),
-          foregroundColor: color,
-          elevation: 0,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-            side: BorderSide(color: color.withOpacity(0.3)),
-          ),
+        label: Text(
+          label,
+          style: const TextStyle(fontFamily: 'Poppins', fontSize: 14),
         ),
+        style:
+            ElevatedButton.styleFrom(
+              backgroundColor: color.withOpacity(0.1),
+              foregroundColor: color,
+              elevation: 0,
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+                side: BorderSide(color: color.withOpacity(0.3)),
+              ),
+              shadowColor: Colors.transparent,
+              splashFactory: NoSplash.splashFactory,
+            ).copyWith(
+              overlayColor: MaterialStateProperty.all(
+                Colors.grey.withOpacity(0.5),
+              ),
+            ),
       ),
     );
   }

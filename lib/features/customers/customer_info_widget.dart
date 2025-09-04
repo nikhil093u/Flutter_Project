@@ -61,6 +61,7 @@ class CustomerInfoWidget extends StatelessWidget {
                     name,
                     style: const TextStyle(
                       fontSize: 16,
+                      fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -68,13 +69,13 @@ class CustomerInfoWidget extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     email,
-                    style: const TextStyle(fontSize: 14, color: Colors.black),
+                    style: const TextStyle(fontSize: 14,fontFamily: 'Poppins', color: Colors.black),
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 2),
                   Text(
                     phoneNumber,
-                    style: const TextStyle(fontSize: 14, color: Colors.black),
+                    style: const TextStyle(fontSize: 14,fontFamily: 'Poppins', color: Colors.black),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],

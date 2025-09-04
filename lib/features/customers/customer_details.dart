@@ -26,7 +26,7 @@ class CustomerDetails extends StatelessWidget {
         ),
         title: const Text(
           "Oceana",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.black,fontFamily: 'Poppins', fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -36,7 +36,7 @@ class CustomerDetails extends StatelessWidget {
           children: [
             const Text(
               "Customer Details",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20,fontFamily: 'Poppins', fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 12),
@@ -71,7 +71,7 @@ class CustomerDetails extends StatelessWidget {
 
             const Text(
               "Order Details",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 18,fontFamily: 'Poppins', fontWeight: FontWeight.w600),
             ),
 
             const SizedBox(height: 12),
@@ -86,7 +86,7 @@ class CustomerDetails extends StatelessWidget {
 
             const Text(
               "Notes",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 18,fontFamily: 'Poppins', fontWeight: FontWeight.w600),
             ),
 
             const SizedBox(height: 12),
@@ -108,7 +108,7 @@ class CustomerDetails extends StatelessWidget {
               ),
               child: const Text(
                 "Follow-up calls are scheduled for next week. Discussed potential order increase for the upcoming quarter.",
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontFamily: 'Poppins', fontSize: 16),
               ),
             ),
           ],
@@ -124,7 +124,7 @@ class CustomerDetails extends StatelessWidget {
             onPressed: () {
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
+              backgroundColor: Color(0xFFA4CDFD),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -134,6 +134,7 @@ class CustomerDetails extends StatelessWidget {
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
+                fontFamily: 'Poppins',
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -149,9 +150,9 @@ class CustomerDetails extends StatelessWidget {
       children: [
         Text(
           "$label: ",
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          style: const TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Poppins', fontSize: 16),
         ),
-        Expanded(child: Text(value, style: const TextStyle(fontSize: 16))),
+        Expanded(child: Text(value, style: const TextStyle(fontFamily: 'Poppins', fontSize: 16))),
       ],
     );
   }
@@ -182,12 +183,12 @@ class CustomerDetails extends StatelessWidget {
         children: [
           Text(
             "Order ID: $orderId",
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: const TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.bold, fontSize: 16),
           ),
           const SizedBox(height: 4),
           Text(
             "Date: $date",
-            style: const TextStyle(fontSize: 14, color: Colors.black54),
+            style: const TextStyle(fontFamily: 'Poppins', fontSize: 14, color: Colors.black54),
           ),
           const SizedBox(height: 12),
           Text(
@@ -195,6 +196,7 @@ class CustomerDetails extends StatelessWidget {
             style: const TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w500,
+              fontFamily: 'Poppins',
               color: Colors.blue,
             ),
           ),

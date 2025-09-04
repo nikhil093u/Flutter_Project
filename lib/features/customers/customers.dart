@@ -178,6 +178,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 20,
+                fontFamily: 'Poppins',
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -189,7 +190,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                   hintText: 'Search by name or number',
-                  hintStyle: const TextStyle(color: Colors.black54, fontSize: 14),
+                  hintStyle: const TextStyle(color: Colors.black54,fontFamily: 'Poppins', fontSize: 14),
                   fillColor: Colors.grey[200],
                   filled: true,
                   border: OutlineInputBorder(
@@ -230,7 +231,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                 );
               },
               backgroundColor: Colors.white,
-              child: const Icon(Icons.person_add),
+              child: const Icon(Icons.person_add,color: Colors.black),
             ),
           ),
         ],

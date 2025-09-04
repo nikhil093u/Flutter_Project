@@ -157,13 +157,14 @@ class _OrdersListState extends State<OrdersList> {
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 20,
+                fontFamily: 'Poppins',
                 fontWeight: FontWeight.bold,
               ),
             ),
             Spacer(),
             Text(
               'Orders',
-              style: TextStyle(color: Colors.black54, fontSize: 16),
+              style: TextStyle(fontFamily: 'Poppins',fontWeight: FontWeight.w600, fontSize: 16),
             ),
           ],
         ),
@@ -180,9 +181,10 @@ class _OrdersListState extends State<OrdersList> {
               },
               decoration: InputDecoration(
                 hintText: 'Search Orders...',
+                hintStyle: TextStyle(fontFamily: 'Poppins'),
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
                   borderSide: const BorderSide(color: Colors.white),
                 ),
               ),
@@ -223,6 +225,7 @@ class _OrdersListState extends State<OrdersList> {
                                   'Order ID: ${order['id']}',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w600,
+                                    fontFamily: 'Poppins',
                                     fontSize: 16,
                                   ),
                                 ),
@@ -231,7 +234,7 @@ class _OrdersListState extends State<OrdersList> {
                                 const SizedBox(height: 4),
                                 Text(
                                   order['date'] ?? '',
-                                  style: const TextStyle(color: Colors.black),
+                                  style: const TextStyle(fontFamily: 'Poppins', color: Colors.black),
                                 ),
                               ],
                             ),
@@ -249,6 +252,7 @@ class _OrdersListState extends State<OrdersList> {
                               order['status'] ?? '',
                               style: const TextStyle(
                                 color: Colors.white,
+                                fontFamily: 'Poppins',
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -271,7 +275,7 @@ class _OrdersListState extends State<OrdersList> {
           );
         },
         backgroundColor: Colors.white,
-        child: const Icon(LucideIcons.plus),
+        child: Icon(LucideIcons.plus,color: Colors.black,),
       ),
 
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

@@ -38,7 +38,7 @@ class AddCustomerForm extends StatelessWidget {
                         "Add Customer",
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
-
+                          fontFamily: 'Poppins',
                           fontSize: 18,
                         ),
                       ),
@@ -96,7 +96,7 @@ class AddCustomerForm extends StatelessWidget {
                     ),
                     child: const Text(
                       "Save Customer",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white,fontFamily: 'Poppins'),
                     ),
                   ),
                 ],
@@ -125,6 +125,7 @@ class AddCustomerForm extends StatelessWidget {
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14,
+              fontFamily: 'Poppins',
               color: Colors.black,
             ),
           ),
@@ -133,7 +134,7 @@ class AddCustomerForm extends StatelessWidget {
             keyboardType: keyboardType,
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: const TextStyle(color: Colors.grey),
+              hintStyle: TextStyle(color: Colors.grey[800],fontFamily: 'Poppins'),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(color: Colors.grey),
