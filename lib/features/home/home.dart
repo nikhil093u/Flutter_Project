@@ -1,31 +1,32 @@
 import 'package:flutter_application/common/widgets/footer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application/routes/helpers/navigation_helper.dart';
+import 'package:flutter_application/routes/routes.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../customers/customers.dart';
-import '../orders/orders.dart';
-import '../resources/resource.dart';
-import '../todo/todo.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
   void _onTabTapped(BuildContext context, int index) {
     switch (index) {
       case 0:
-        NavigationHelper.safePush(context,Home());
+        Navigator.pushNamed(context, Routes.home);
+
         break;
       case 1:
-        NavigationHelper.safePush(context,Todo());
+        Navigator.pushNamed(context, Routes.todo);
+
         break;
       case 2:
-        NavigationHelper.safePush(context,CustomerScreen());
+        Navigator.pushNamed(context, Routes.customers);
+
         break;
       case 3:
-        NavigationHelper.safePush(context,OrdersList());
+        Navigator.pushNamed(context, Routes.orders);
+
         break;
       case 4:
-      // NavigationHelper.safePush(context,Settings(),'/settings');
-      // break;
+        Navigator.pushNamed(context, Routes.home);
+
+         break;
     }
   }
 
@@ -52,22 +53,13 @@ class Home extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (label == 'Customers') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => CustomerScreen()),
-          );
+          Navigator.pushNamed(context, Routes.customers);
         }
         if (label == 'Orders') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => OrdersList()),
-          );
+          Navigator.pushNamed(context, Routes.orders);
         }
         if (label == 'Resources') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ResourcePage()),
-          );
+          Navigator.pushNamed(context, Routes.resources);
         }
       },
       child: Container(
@@ -117,13 +109,10 @@ class Home extends StatelessWidget {
         ),
         title: GestureDetector(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Todo()),
-            );
+            Navigator.pushNamed(context, Routes.todo);
           },
           child: Text(
-            'To-Do List',
+            'TO-DO List',
             style: TextStyle(
               color: Color(0xFF030303),
               fontSize: 20,
@@ -257,7 +246,7 @@ class Home extends StatelessWidget {
       ),
 
       bottomNavigationBar: Footer(
-        currentIndex: 0, // 0 means you're on the Home tab
+        currentIndex: 0,
         onTap: (index) => _onTabTapped(context, index),
       ),
     );

@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/routes/helpers/navigation_helper.dart';
-import 'task_details.dart';
+import 'package:flutter_application/routes/routes.dart';
 import '../../common/widgets/footer.dart';
-import '../home/home.dart';
-import '../orders/orders.dart';
-import '../customers/customers.dart';
 
 class Todo extends StatefulWidget {
   const Todo({super.key});
@@ -16,20 +12,25 @@ class TodoState extends State<Todo> {
   void _onTabTapped(BuildContext context, int index) {
     switch (index) {
       case 0:
-        NavigationHelper.safePush(context, Home());
+        Navigator.pushNamed(context, Routes.home);
+
         break;
       case 1:
-        NavigationHelper.safePush(context, Todo());
+        Navigator.pushNamed(context, Routes.todo);
+
         break;
       case 2:
-        NavigationHelper.safePush(context, CustomerScreen());
+        Navigator.pushNamed(context, Routes.customers);
+
         break;
       case 3:
-        NavigationHelper.safePush(context, OrdersList());
+        Navigator.pushNamed(context, Routes.orders);
+
         break;
       case 4:
-      // NavigationHelper.safePush(context,Settings(),'/settings');
-      // break;
+        Navigator.pushNamed(context, Routes.home);
+
+        break;
     }
   }
 
@@ -93,22 +94,22 @@ class TodoState extends State<Todo> {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 12.0),
                           child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TaskDetails(
-                                    task: _todos[index],
-                                    onDelete: () {
-                                      setState(() {
-                                        _todos.removeAt(index);
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ),
-                              );
+                            onTap: () async {
+                              final bool? deleted =
+                                  await Navigator.pushNamed(
+                                        context,
+                                        '/taskdetails',
+                                        arguments: _todos[index],
+                                      )
+                                      as bool?;
+
+                              if (deleted == true) {
+                                setState(() {
+                                  _todos.removeAt(index);
+                                });
+                              }
                             },
+
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 16.0,

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 class TaskDetails extends StatelessWidget {
   final String task;
-  final VoidCallback onDelete;
-
-  const TaskDetails({super.key, required this.task, required this.onDelete});
+  const TaskDetails({super.key, required this.task});
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +72,9 @@ class TaskDetails extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: onDelete,
+                 onPressed: () {
+              Navigator.pop(context, true);
+            },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFFA4CDFD),
                   padding: EdgeInsets.symmetric(vertical: 14),

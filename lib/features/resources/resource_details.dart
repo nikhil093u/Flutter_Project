@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
 
 class ResourceDetails extends StatelessWidget {
-  final String imagePath;
   final String title;
+  final String imagePath;
   final String description;
 
   const ResourceDetails({
     super.key,
-    required this.imagePath,
     required this.title,
+    required this.imagePath,
     required this.description,
   });
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text("Resource Details",style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w700, fontSize: 20)),
+        title: Text(
+          "Resource Details",
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -65,8 +74,8 @@ class ResourceDetails extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    "This is the detailed description of Resource Page, providing all the necessary information that user needs to understand it's purpose and utility. The description is concise yet comprehensive, ensuring clarity and engagement.",
-                    style: TextStyle(fontFamily: 'Poppins'),      
+                    "This is the detailed description of Resource Page, providing all the necessary information that user needs to understand it's purpose and utility. The description is concise yet comprehensive, ensuring clarity and engagement.$description",
+                    style: TextStyle(fontFamily: 'Poppins'),
                   ),
                 ],
               ),
@@ -107,9 +116,9 @@ class ResourceDetails extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Link 1",style: TextStyle(fontFamily: 'Poppins')),
-                        Text("Link 2",style: TextStyle(fontFamily: 'Poppins')),
-                        Text("Link 3",style: TextStyle(fontFamily: 'Poppins')),
+                        Text("Link 1", style: TextStyle(fontFamily: 'Poppins')),
+                        Text("Link 2", style: TextStyle(fontFamily: 'Poppins')),
+                        Text("Link 3", style: TextStyle(fontFamily: 'Poppins')),
                       ],
                     ),
                   ),
