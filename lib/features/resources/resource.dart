@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/common/widgets/footer.dart';
-import 'package:flutter_application/routes/helpers/navigation_helper.dart';
-import 'package:flutter_application/features/home/home.dart';
-import 'resource_details.dart';
-import '../customers/customers.dart';
-import '../orders/orders.dart';
-import '../todo/todo.dart';
+import 'package:flutter_application/routes/routes.dart';
 
 class ResourcePage extends StatelessWidget {
   const ResourcePage({super.key});
@@ -13,20 +8,25 @@ class ResourcePage extends StatelessWidget {
   void _onTabTapped(BuildContext context, int index) {
     switch (index) {
       case 0:
-        NavigationHelper.safePush(context,Home());
+        Navigator.pushNamed(context, Routes.home);
+
         break;
       case 1:
-        NavigationHelper.safePush(context,Todo());
+        Navigator.pushNamed(context, Routes.todo);
+
         break;
       case 2:
-        NavigationHelper.safePush(context,CustomerScreen());
+        Navigator.pushNamed(context, Routes.customers);
+
         break;
       case 3:
-        NavigationHelper.safePush(context,OrdersList());
+        Navigator.pushNamed(context, Routes.orders);
+
         break;
       case 4:
-      // NavigationHelper.safePush(context,Settings(),'/settings');
-      // break;
+        Navigator.pushNamed(context, Routes.home);
+
+        break;
     }
   }
 
@@ -44,7 +44,14 @@ class ResourcePage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
-                Text("Oceana",style: TextStyle(fontFamily: 'Poppins', fontSize: 20, fontWeight: FontWeight.w700)),
+                Text(
+                  "Oceana",
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Container(
@@ -135,18 +142,18 @@ class ResourceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => {
-        Navigator.push(
+      onTap: () {
+        Navigator.pushNamed(
           context,
-          MaterialPageRoute(
-            builder: (context) => ResourceDetails(
-              imagePath: imagePath,
-              title: title,
-              description: description,
-            ),
-          ),
-        ),
+          '/resourceDetails',
+          arguments: {
+            'imagePath': imagePath,
+            'title': title,
+            'description': description,
+          },
+        );
       },
+
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -175,13 +182,21 @@ class ResourceCard extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               title,
-              style: const TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Poppins', fontSize: 15),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Poppins',
+                fontSize: 15,
+              ),
             ),
             const SizedBox(height: 6),
             Expanded(
               child: Text(
                 description,
-                style: const TextStyle(fontSize: 13,fontFamily: 'Poppins', color: Colors.black87),
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontFamily: 'Poppins',
+                  color: Colors.black87,
+                ),
               ),
             ),
           ],

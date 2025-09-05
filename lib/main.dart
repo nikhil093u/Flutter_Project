@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/landingpage.dart';
+import 'package:flutter_application/routes/routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,9 +11,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomeScreen(), 
+      onGenerateRoute: Routes.generateRoute,
+      initialRoute: Routes.landingpage,
     );
   }
 }
-
