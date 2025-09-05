@@ -72,8 +72,8 @@ class TaskDetails extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                 onPressed: () {
-              Navigator.pop(context, true);
+                onPressed: () {
+                Navigator.pop(context, true);
             },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFFA4CDFD),

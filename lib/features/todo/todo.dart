@@ -161,7 +161,7 @@ class TodoState extends State<Todo> {
               color: Colors.white,
               border: Border(
                 top: BorderSide(
-                  color: Colors.grey.shade300, // Light grey border
+                  color: Colors.grey.shade300,
                   width: 1.0,
                 ),
               ),
