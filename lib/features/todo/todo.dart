@@ -28,7 +28,7 @@ class TodoState extends State<Todo> {
 
         break;
       case 4:
-        Navigator.pushNamed(context, Routes.home);
+        Navigator.pushNamed(context, Routes.setting);
 
         break;
     }

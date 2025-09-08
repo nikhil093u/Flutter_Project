@@ -13,7 +13,7 @@ class Footer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
+    return SafeArea(child:  BottomNavigationBar(
       backgroundColor: Colors.white,
       selectedItemColor: Colors.blue,
       unselectedItemColor: Colors.black,
@@ -27,6 +27,7 @@ class Footer extends StatelessWidget {
         BottomNavigationBarItem(icon: Icon(LucideIcons.box), label: ''),
         BottomNavigationBarItem(icon: Icon(LucideIcons.settings), label: ''),
       ],
+    )
     );
   }
 }

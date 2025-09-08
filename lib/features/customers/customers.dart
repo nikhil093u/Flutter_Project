@@ -156,9 +156,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
 
         break;
       case 4:
-        Navigator.pushNamed(context, Routes.home);
-
-      // break;
+        Navigator.pushNamed(context, Routes.setting);
+       break;
     }
   }
 

@@ -114,33 +114,34 @@ class CustomerDetails extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16),
-        color: Colors.white,
-        child: SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: ElevatedButton(
-            onPressed: () {
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFA4CDFD),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            child: const Text(
-              'Edit Details',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+      bottomNavigationBar: SafeArea(
+  minimum: const EdgeInsets.all(16),
+  child: SizedBox(
+    width: double.infinity,
+    height: 50,
+    child: ElevatedButton(
+      onPressed: () {
+        // Handle edit logic
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Color(0xFFA4CDFD),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
         ),
       ),
+      child: const Text(
+        'Edit Details',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontFamily: 'Poppins',
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+  ),
+),
+
     );
   }
 

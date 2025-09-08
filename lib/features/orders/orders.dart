@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/core/services/apiservice.dart';
+import 'package:flutter_application/features/orders/order_model.dart';
 import 'package:flutter_application/routes/routes.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../common/widgets/footer.dart';
@@ -11,131 +13,90 @@ class OrdersList extends StatefulWidget {
 }
 
 class _OrdersListState extends State<OrdersList> {
+  List<Order> _orders = [];
+  final List<Order> _dummyOrders = [
+    Order(
+      id: 'ORD001',
+      name: 'Water Bottle Pack',
+      date: '2023-09-01',
+      status: 'Delivered',
+    ),
+    Order(
+      id: 'ORD002',
+      name: 'Eco-friendly Straws',
+      date: '2023-09-05',
+      status: 'Pending',
+    ),
+    Order(
+      id: 'ORD003',
+      name: 'Reusable Bags',
+      date: '2023-09-10',
+      status: 'Shipped',
+    ),
+    Order(
+      id: 'ORD004',
+      name: 'Water Filter',
+      date: '2023-09-12',
+      status: 'Cancelled',
+    ),
+    Order(
+      id: 'ORD005',
+      name: 'Solar Charger',
+      date: '2023-09-15',
+      status: 'Delivered',
+    ),
+  ];
+
+  bool _isLoading = true;
+  String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadOrders();
+  }
+
+  void _loadOrders() async {
+    try {
+      final fetchedOrders = await ApiService.fetchOrders();
+      setState(() {
+        _orders = fetchedOrders;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _orders = _dummyOrders;
+        _isLoading = false;
+      });
+      print('Error fetching orders: $e');
+    }
+  }
+
   void _onTabTapped(BuildContext context, int index) {
     switch (index) {
       case 0:
         Navigator.pushNamed(context, Routes.home);
-
         break;
       case 1:
         Navigator.pushNamed(context, Routes.todo);
-
         break;
       case 2:
         Navigator.pushNamed(context, Routes.customers);
-
         break;
       case 3:
         Navigator.pushNamed(context, Routes.orders);
-
         break;
       case 4:
-        Navigator.pushNamed(context, Routes.home);
-        
-         break;
+        Navigator.pushNamed(context, Routes.setting);
+        break;
     }
   }
-
-  final List<Map<String, String>> _orders = [
-    {
-      'id': 'ORD12345',
-      'name': 'Alice Johnson',
-      'date': 'Aug 20, 2025',
-      'status': 'Shipped',
-    },
-    {
-      'id': 'ORD12346',
-      'name': 'Bob Smith',
-      'date': 'Aug 21, 2025',
-      'status': 'Delivered',
-    },
-    {
-      'id': 'ORD12347',
-      'name': 'Charlie Lee',
-      'date': 'Aug 22, 2025',
-      'status': 'Processing',
-    },
-    {
-      'id': 'ORD12348',
-      'name': 'Diana Prince',
-      'date': 'Aug 23, 2025',
-      'status': 'Shipped',
-    },
-    {
-      'id': 'ORD12349',
-      'name': 'Ethan Hunt',
-      'date': 'Aug 24, 2025',
-      'status': 'Cancelled',
-    },
-    {
-      'id': 'ORD12350',
-      'name': 'Fiona Gallagher',
-      'date': 'Aug 25, 2025',
-      'status': 'Delivered',
-    },
-    {
-      'id': 'ORD12351',
-      'name': 'George Clooney',
-      'date': 'Aug 26, 2025',
-      'status': 'Processing',
-    },
-    {
-      'id': 'ORD12352',
-      'name': 'Hannah Baker',
-      'date': 'Aug 27, 2025',
-      'status': 'Shipped',
-    },
-    {
-      'id': 'ORD12353',
-      'name': 'Isaac Newton',
-      'date': 'Aug 28, 2025',
-      'status': 'Delivered',
-    },
-    {
-      'id': 'ORD12354',
-      'name': 'Jack Sparrow',
-      'date': 'Aug 29, 2025',
-      'status': 'Processing',
-    },
-    {
-      'id': 'ORD12355',
-      'name': 'Katherine Langford',
-      'date': 'Aug 30, 2025',
-      'status': 'Cancelled',
-    },
-    {
-      'id': 'ORD12356',
-      'name': 'Leo Messi',
-      'date': 'Aug 31, 2025',
-      'status': 'Delivered',
-    },
-    {
-      'id': 'ORD12357',
-      'name': 'Mona Lisa',
-      'date': 'Sep 01, 2025',
-      'status': 'Shipped',
-    },
-    {
-      'id': 'ORD12358',
-      'name': 'Nina Dobrev',
-      'date': 'Sep 02, 2025',
-      'status': 'Processing',
-    },
-    {
-      'id': 'ORD12359',
-      'name': 'Oscar Isaac',
-      'date': 'Sep 03, 2025',
-      'status': 'Delivered',
-    },
-  ];
-
-  String _searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
     final filteredOrders = _orders.where((order) {
-      final name = order['name']!.toLowerCase();
-      final id = order['id']!.toLowerCase();
+      final name = order.name.toLowerCase();
+      final id = order.id.toLowerCase();
       return name.contains(_searchQuery.toLowerCase()) ||
           id.contains(_searchQuery.toLowerCase());
     }).toList();
@@ -172,107 +133,115 @@ class _OrdersListState extends State<OrdersList> {
           ],
         ),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: TextField(
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value;
-                });
-              },
-              decoration: InputDecoration(
-                hintText: 'Search Orders...',
-                hintStyle: TextStyle(fontFamily: 'Poppins'),
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(color: Colors.white),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              itemCount: filteredOrders.length,
-              itemBuilder: (context, index) {
-                final order = filteredOrders[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      Routes.orderdetails,
-                      arguments: order,
-                    );
-                  },
-
-                  child: Card(
-                    color: Colors.white,
-                    margin: const EdgeInsets.only(bottom: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        _searchQuery = value;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Search Orders...',
+                      hintStyle: TextStyle(fontFamily: 'Poppins'),
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: Colors.white),
+                      ),
                     ),
-                    elevation: 3,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Column(
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    itemCount: filteredOrders.length,
+                    itemBuilder: (context, index) {
+                      final order = filteredOrders[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            Routes.orderdetails,
+                            arguments: order,
+                          );
+                        },
+                        child: Card(
+                          color: Colors.white,
+                          margin: const EdgeInsets.only(bottom: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 3,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Order ID: ${order['id']}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Poppins',
-                                    fontSize: 16,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Order ID: ${order.id}',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: 'Poppins',
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(order.name),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        order.date,
+                                        style: const TextStyle(
+                                          fontFamily: 'Poppins',
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                Text(order['name'] ?? ''),
-                                const SizedBox(height: 4),
-                                Text(
-                                  order['date'] ?? '',
-                                  style: const TextStyle(
-                                    fontFamily: 'Poppins',
-                                    color: Colors.black,
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFA4CDFD),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Text(
+                                    order.status,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFA4CDFD),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              order['status'] ?? '',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, Routes.createorder);
@@ -280,9 +249,7 @@ class _OrdersListState extends State<OrdersList> {
         backgroundColor: Colors.white,
         child: Icon(LucideIcons.plus, color: Colors.black),
       ),
-
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-
       bottomNavigationBar: Footer(
         currentIndex: 3,
         onTap: (index) => _onTabTapped(context, index),

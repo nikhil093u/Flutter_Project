@@ -24,9 +24,9 @@ class Home extends StatelessWidget {
 
         break;
       case 4:
-        Navigator.pushNamed(context, Routes.home);
+        Navigator.pushNamed(context, Routes.setting);
 
-         break;
+        break;
     }
   }
 
@@ -37,10 +37,10 @@ class Home extends StatelessWidget {
     'Help',
   ];
   final List<String> iconPaths = const [
-    'assets/customers.png',
-    'assets/orders.png',
-    'assets/resources.png',
-    'assets/help.png',
+    'assets/images/customers.png',
+    'assets/images/orders.png',
+    'assets/images/resources.png',
+    'assets/images/help.png',
   ];
 
   final String footerIconPath = 'assets/watericon.png';
@@ -104,7 +104,7 @@ class Home extends StatelessWidget {
             color: Color(0xFF030303),
           ),
           onPressed: () {
-            null;
+            Navigator.pushNamed(context, Routes.profile);
           },
         ),
         title: GestureDetector(
@@ -134,7 +134,7 @@ class Home extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   image: const DecorationImage(
-                    image: AssetImage('assets/logo.png'),
+                    image: AssetImage('assets/logo/logo.png'),
                     fit: BoxFit.cover,
                     alignment: Alignment.center,
                   ),
