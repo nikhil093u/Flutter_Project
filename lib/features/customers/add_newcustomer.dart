@@ -8,7 +8,7 @@ class AddCustomerForm extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
@@ -79,32 +79,37 @@ class AddCustomerForm extends StatelessWidget {
                     hint: "Enter GST Number",
                   ),
 
-                  const SizedBox(height: 20),
-
-                  ElevatedButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        // Handle form submission
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.lightBlue[200],
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Text(
-                      "Save Customer",
-                      style: TextStyle(color: Colors.white,fontFamily: 'Poppins'),
-                    ),
-                  ),
+                  
                 ],
               ),
             ),
           ),
         ),
       ),
+      bottomNavigationBar: SafeArea(
+      minimum: const EdgeInsets.all(16),
+      child: SizedBox(
+        width: double.infinity,
+        height: 48,
+        child: ElevatedButton(
+          onPressed: () {
+            if (formKey.currentState!.validate()) {
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.lightBlue[200],
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          child: const Text(
+            "Save Customer",
+            style: TextStyle(color: Colors.white, fontFamily: 'Poppins'),
+          ),
+        ),
+      ),
+    ),
     );
   }
 

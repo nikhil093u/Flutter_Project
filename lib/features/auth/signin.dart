@@ -71,7 +71,7 @@ class _SignInScreen extends State<SignInScreen> {
                               ),
                               borderRadius: BorderRadius.all(Radius.circular(8)),
                               image: DecorationImage(
-                                image: AssetImage('assets/login_image.png'),
+                                image: AssetImage('assets/logo/login_image.png'),
                                 fit: BoxFit.cover,
                                 alignment: Alignment.center,
                               ),

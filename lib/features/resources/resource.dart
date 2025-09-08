@@ -93,25 +93,25 @@ class ResourcePage extends StatelessWidget {
           childAspectRatio: 0.75,
           children: const [
             ResourceCard(
-              imagePath: 'assets/resource_1.png',
+              imagePath: 'assets/images/resource_1.png',
               title: 'Water Filtration Product',
               description:
                   'Learn about the latest in eco-friendly water filtration technology.',
             ),
             ResourceCard(
-              imagePath: 'assets/resource_2.png',
+              imagePath: 'assets/images/resource_2.png',
               title: 'AquaPure Marketing',
               description:
                   'Access marketing materials for the AquaPure product line.',
             ),
             ResourceCard(
-              imagePath: 'assets/resource_3.png',
+              imagePath: 'assets/images/resource_3.png',
               title: 'Sales Guide',
               description:
                   'A comprehensive guide to selling AquaSales products.',
             ),
             ResourceCard(
-              imagePath: 'assets/resource_4.png',
+              imagePath: 'assets/images/resource_4.png',
               title: 'Water Conservation Trends',
               description:
                   'Explore the latest trends in water conservation and sustainability.',
@@ -145,7 +145,7 @@ class ResourceCard extends StatelessWidget {
       onTap: () {
         Navigator.pushNamed(
           context,
-          '/resourceDetails',
+          '/resourcedetails',
           arguments: {
             'imagePath': imagePath,
             'title': title,

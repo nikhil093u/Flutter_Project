@@ -1,7 +1,7 @@
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:flutter_application/core/services/appservice.dart';
+import 'package:flutter_application/core/services/apiservice.dart';
 import 'package:flutter_application/core/services/encrypt.dart';
 import 'package:flutter_application/routes/routes.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -56,6 +56,7 @@ class _SignUpScreen extends State<SignUpScreen> {
         final token = data['access_token'];
         await storage.write(key: 'auth_token', value: token);
 
+        // ignore: use_build_context_synchronously
         Navigator.pushNamed(context, Routes.home);
       } else {
         _showMessage("Sign-up failed. Please try again.");
@@ -95,7 +96,7 @@ class _SignUpScreen extends State<SignUpScreen> {
                                 Radius.circular(8),
                               ),
                               image: DecorationImage(
-                                image: AssetImage('assets/login_image.png'),
+                                image: AssetImage('assets/logo/login_image.png'),
                                 fit: BoxFit.cover,
                                 alignment: Alignment.center,
                               ),

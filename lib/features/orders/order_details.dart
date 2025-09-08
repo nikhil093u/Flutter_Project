@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application/features/orders/create_order.dart';
+import 'package:flutter_application/routes/routes.dart';
 
 class OrderDetails extends StatelessWidget {
   final Map<String, String> order;
@@ -78,7 +78,6 @@ class OrderDetails extends StatelessWidget {
               ),
             ),
 
-            // Customer Information container
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
@@ -130,7 +129,6 @@ class OrderDetails extends StatelessWidget {
               ),
             ),
 
-            // Order Status container
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
@@ -209,7 +207,9 @@ class OrderDetails extends StatelessWidget {
                         label: "Repeat Order",
                         icon: Icons.replay_outlined,
                         color: Colors.green,
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, Routes.repeatorder);
+                        },
                       ),
                       _actionButton(
                         context: context,
@@ -224,12 +224,7 @@ class OrderDetails extends StatelessWidget {
                         icon: Icons.add_shopping_cart_outlined,
                         color: Colors.blue,
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CreateOrder(),
-                            ),
-                          );
+                          Navigator.pushNamed(context, Routes.createorder);
                         },
                       ),
                       _actionButton(

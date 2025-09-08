@@ -34,7 +34,7 @@ class LandingPage extends StatelessWidget {
                                   Radius.circular(12),
                                 ),
                                 image: DecorationImage(
-                                  image: AssetImage('assets/company_logo.png'),
+                                  image: AssetImage('assets/logo/company_logo.png'),
                                   fit: BoxFit.cover,
                                   alignment: Alignment.center,
                                 ),

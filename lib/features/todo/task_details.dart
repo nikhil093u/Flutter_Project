@@ -69,31 +69,34 @@ class TaskDetails extends StatelessWidget {
             ),
 
             Spacer(),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                 onPressed: () {
+          ],
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        minimum: const EdgeInsets.all(16),
+        child: SizedBox(
+          width: double.infinity,
+          height: 48,
+          child: ElevatedButton(
+            onPressed: () {
               Navigator.pop(context, true);
             },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFA4CDFD),
-                  padding: EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Text(
-                  'Delete Task',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xFFA4CDFD),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
-          ],
+            child: Text(
+              'Delete Task',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         ),
       ),
     );
