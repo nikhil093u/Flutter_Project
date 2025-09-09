@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -16,7 +18,8 @@ class _SignInScreen extends State<SignInScreen> {
   final TextEditingController _dobController = TextEditingController();
   final TextEditingController _userIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   final storage = FlutterSecureStorage();
   bool isEmailSignUp = true;
@@ -69,9 +72,13 @@ class _SignInScreen extends State<SignInScreen> {
                               border: Border.fromBorderSide(
                                 BorderSide(color: Color(0xFFF68B1F), width: 4),
                               ),
-                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8),
+                              ),
                               image: DecorationImage(
-                                image: AssetImage('assets/logo/login_image.png'),
+                                image: AssetImage(
+                                  'assets/logo/login_image.png',
+                                ),
                                 fit: BoxFit.cover,
                                 alignment: Alignment.center,
                               ),
@@ -117,13 +124,20 @@ class _SignInScreen extends State<SignInScreen> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isEmailSignUp ? Color(0xFFA4CDFD) : Colors.grey,
+                      backgroundColor: isEmailSignUp
+                          ? Color(0xFFA4CDFD)
+                          : Colors.grey,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      elevation:2,
+                      shadowColor: Colors.black.withOpacity(0.9),
+
+                      elevation: 2,
                     ),
-                    child: const Text('Sign Up with Email',style: TextStyle(color: Colors.white),),
+                    child: const Text(
+                      'Sign Up with Email',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                   const SizedBox(width: 6),
                   ElevatedButton(
@@ -133,13 +147,20 @@ class _SignInScreen extends State<SignInScreen> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: !isEmailSignUp ? Color(0xFFA4CDFD) : Colors.grey,
+                      backgroundColor: !isEmailSignUp
+                          ? Color(0xFFA4CDFD)
+                          : Colors.grey,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      elevation:2,
+                      shadowColor: Colors.black.withOpacity(0.9),
+
+                      elevation: 2,
                     ),
-                    child: const Text('Sign Up with Phone',style: TextStyle(color: Colors.white),),
+                    child: const Text(
+                      'Sign Up with Phone',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
@@ -170,11 +191,15 @@ class _SignInScreen extends State<SignInScreen> {
                           controller: _emailController,
                           decoration: const InputDecoration(
                             hintText: 'Email@gmail.com',
-                            contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ),
                             filled: true,
                             fillColor: Color.fromRGBO(255, 255, 255, 0.8),
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(12)),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(12),
+                              ),
                             ),
                           ),
                         ),
@@ -207,11 +232,15 @@ class _SignInScreen extends State<SignInScreen> {
                           controller: _phoneController,
                           decoration: const InputDecoration(
                             hintText: 'Phone Number',
-                            contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ),
                             filled: true,
                             fillColor: Color.fromRGBO(255, 255, 255, 0.8),
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(12)),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(12),
+                              ),
                             ),
                           ),
                         ),
@@ -235,7 +264,9 @@ class _SignInScreen extends State<SignInScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     minimumSize: const Size(335, 48),
-                    elevation: 4,
+                    shadowColor: Colors.black.withOpacity(0.9),
+
+                    elevation: 2,
                   ),
                   child: const Text(
                     'Verify OTP',
@@ -464,7 +495,9 @@ class _SignInScreen extends State<SignInScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     minimumSize: const Size(335, 48),
-                    elevation: 0,
+                    shadowColor: Colors.black.withOpacity(0.9),
+
+                    elevation: 3,
                   ),
                   child: const Text(
                     'Submit',

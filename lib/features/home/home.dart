@@ -1,32 +1,28 @@
-import 'package:flutter_application/common/widgets/footer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/routes/routes.dart';
+import 'package:flutter_application/common/widgets/footer.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
+
   void _onTabTapped(BuildContext context, int index) {
     switch (index) {
       case 0:
         Navigator.pushNamed(context, Routes.home);
-
         break;
       case 1:
         Navigator.pushNamed(context, Routes.todo);
-
         break;
       case 2:
         Navigator.pushNamed(context, Routes.customers);
-
         break;
       case 3:
         Navigator.pushNamed(context, Routes.orders);
-
         break;
       case 4:
         Navigator.pushNamed(context, Routes.setting);
-
         break;
     }
   }
@@ -37,31 +33,30 @@ class Home extends StatelessWidget {
     'Resources',
     'Help',
   ];
-  final List<String> iconPaths = const [
-    'assets/images/customers.png',
-    'assets/images/orders.png',
-    'assets/images/resources.png',
-    'assets/images/help.png',
-  ];
 
-  final String footerIconPath = 'assets/watericon.png';
+  final List<IconData> icons = const [
+    LucideIcons.users,
+    LucideIcons.fileText,
+    LucideIcons.refreshCcw,
+    LucideIcons.helpCircle,
+  ];
 
   Widget _buildClickableBlock(
     BuildContext context,
     String label,
-    String iconPath,
+    IconData icon,
   ) {
     return GestureDetector(
       onTap: () {
         if (label == 'Customers') {
           Navigator.pushNamed(context, Routes.customers);
-        }
-        if (label == 'Orders') {
+        } else if (label == 'Orders') {
           Navigator.pushNamed(context, Routes.orders);
-        }
-        if (label == 'Resources') {
+        } else if (label == 'Resources') {
           Navigator.pushNamed(context, Routes.resources);
-        }
+        }// else if (label == 'Help') {
+        //   Navigator.pushNamed(context, Routes.help);
+        // }
       },
       child: Container(
         width: 135,
@@ -73,7 +68,11 @@ class Home extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(iconPath, width: 48, height: 48, fit: BoxFit.contain),
+            Icon(
+              icon,
+              size: 48,
+              color: Colors.black,
+            ),
             const SizedBox(height: 8),
             Text(
               label,
@@ -95,7 +94,6 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
@@ -108,11 +106,12 @@ class Home extends StatelessWidget {
             Navigator.pushNamed(context, Routes.profile);
           },
         ),
+        centerTitle: true,
         title: GestureDetector(
           onTap: () {
             Navigator.pushNamed(context, Routes.todo);
           },
-          child: Text(
+          child: const Text(
             'TO-DO List',
             style: TextStyle(
               color: Color(0xFF030303),
@@ -123,7 +122,6 @@ class Home extends StatelessWidget {
           ),
         ),
       ),
-
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -142,14 +140,12 @@ class Home extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 18),
-
             Center(
               child: Text(
                 DateFormat('hh:mm a').format(DateTime.now()),
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xFF030303),
                   fontSize: 56,
                   height: 73 / 56,
@@ -157,14 +153,12 @@ class Home extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 2),
-
             Center(
               child: Text(
-                DateFormat('dd.mm.yyyy').format(DateTime.now()),
+                DateFormat('dd.MM.yyyy').format(DateTime.now()),
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xFF030303),
                   fontSize: 20,
                   height: 26 / 20,
@@ -172,21 +166,18 @@ class Home extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 20),
-
             Center(
               child: Container(
                 width: 500,
                 height: 400,
                 decoration: BoxDecoration(
                   color: const Color(0xFFA4CDFD),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Column(
                   children: [
                     const SizedBox(height: 42),
-
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40),
                       child: Row(
@@ -196,7 +187,7 @@ class Home extends StatelessWidget {
                             child: _buildClickableBlock(
                               context,
                               labels[0],
-                              iconPaths[0],
+                              icons[0],
                             ),
                           ),
                           const SizedBox(width: 20),
@@ -204,15 +195,13 @@ class Home extends StatelessWidget {
                             child: _buildClickableBlock(
                               context,
                               labels[1],
-                              iconPaths[1],
+                              icons[1],
                             ),
                           ),
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 42),
-
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40),
                       child: Row(
@@ -222,7 +211,7 @@ class Home extends StatelessWidget {
                             child: _buildClickableBlock(
                               context,
                               labels[2],
-                              iconPaths[2],
+                              icons[2],
                             ),
                           ),
                           const SizedBox(width: 20),
@@ -230,7 +219,7 @@ class Home extends StatelessWidget {
                             child: _buildClickableBlock(
                               context,
                               labels[3],
-                              iconPaths[3],
+                              icons[3],
                             ),
                           ),
                         ],
@@ -240,12 +229,10 @@ class Home extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 20),
           ],
         ),
       ),
-
       bottomNavigationBar: Footer(
         currentIndex: 0,
         onTap: (index) => _onTabTapped(context, index),

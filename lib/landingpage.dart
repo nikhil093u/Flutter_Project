@@ -34,7 +34,9 @@ class LandingPage extends StatelessWidget {
                                   Radius.circular(12),
                                 ),
                                 image: DecorationImage(
-                                  image: AssetImage('assets/logo/company_logo.png'),
+                                  image: AssetImage(
+                                    'assets/logo/company_logo.png',
+                                  ),
                                   fit: BoxFit.cover,
                                   alignment: Alignment.center,
                                 ),
@@ -85,7 +87,9 @@ class LandingPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     minimumSize: const Size(335, 48),
-                    elevation: 0,
+                    shadowColor: Colors.black.withOpacity(0.9),
+
+                    elevation: 3,
                   ),
                   child: const Text(
                     'Login',

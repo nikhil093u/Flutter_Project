@@ -20,22 +20,34 @@ class _CreateOrderState extends State<CreateOrder> {
   String? preDesignOption = 'Modern';
 
   final TextEditingController waterTypeController = TextEditingController();
-  final TextEditingController bottleMaterialController = TextEditingController();
+  final TextEditingController bottleMaterialController =
+      TextEditingController();
   final TextEditingController bottleShapeController = TextEditingController();
   final TextEditingController sizeQuantityController = TextEditingController();
-  final TextEditingController colorCombinationController = TextEditingController();
-  final TextEditingController preDesignOptionController = TextEditingController();
+  final TextEditingController colorCombinationController =
+      TextEditingController();
+  final TextEditingController preDesignOptionController =
+      TextEditingController();
 
   final TextEditingController textOnBottleController = TextEditingController();
-  final TextEditingController socialNetwork1Controller = TextEditingController();
-  final TextEditingController socialNetwork2Controller = TextEditingController();
+  final TextEditingController socialNetwork1Controller =
+      TextEditingController();
+  final TextEditingController socialNetwork2Controller =
+      TextEditingController();
 
-
-  final List<String> waterTypeOptions = ['Mineral Water', 'Spring Water', 'Distilled Water'];
+  final List<String> waterTypeOptions = [
+    'Mineral Water',
+    'Spring Water',
+    'Distilled Water',
+  ];
   final List<String> bottleMaterialOptions = ['Plastic', 'Glass', 'Metal'];
   final List<String> bottleShapeOptions = ['Round', 'Square', 'Oval'];
   final List<String> sizeQuantityOptions = ['250ml', '500ml', '1L'];
-  final List<String> colorCombinationOptions = ['Blue & White', 'Red & White', 'Green & White'];
+  final List<String> colorCombinationOptions = [
+    'Blue & White',
+    'Red & White',
+    'Green & White',
+  ];
   final List<String> preDesignOptions = ['Modern', 'Classic', 'Minimal'];
 
   @override
@@ -65,35 +77,35 @@ class _CreateOrderState extends State<CreateOrder> {
   }
 
   void _submitOrder() {
-  final formData = getFormData();
+    final formData = getFormData();
 
-  if (formData.values.any((value) => value.trim().isEmpty)) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Please fill all fields')),
+    if (formData.values.any((value) => value.trim().isEmpty)) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please fill all fields')));
+      return;
+    }
+
+    final newOrder = Order(
+      id: const Uuid().v4().substring(0, 8),
+      customerName: 'John Doe',
+      date: DateTime.now(),
+      status: 'Pending',
+      waterType: formData['waterType']!,
+      bottleMaterial: formData['bottleMaterial']!,
+      bottleShape: formData['bottleShape']!,
+      sizeQuantity: formData['sizeQuantity']!,
+      colorCombination: formData['colorCombination']!,
+      preDesignOption: formData['preDesignOption']!,
+      textOnBottle: formData['textOnBottle']!,
+      socialNetwork1: formData['socialNetwork1']!,
+      socialNetwork2: formData['socialNetwork2']!,
     );
-    return;
+
+    Provider.of<OrderProvider>(context, listen: false).addOrder(newOrder);
+
+    Navigator.pop(context);
   }
-
-  final newOrder = Order(
-    id: const Uuid().v4().substring(0, 8),
-    customerName: 'John Doe', 
-    date: DateTime.now(),
-    status: 'Pending',
-    waterType: formData['waterType']!,
-    bottleMaterial: formData['bottleMaterial']!,
-    bottleShape: formData['bottleShape']!,
-    sizeQuantity: formData['sizeQuantity']!,
-    colorCombination: formData['colorCombination']!,
-    preDesignOption: formData['preDesignOption']!,
-    textOnBottle: formData['textOnBottle']!,
-    socialNetwork1: formData['socialNetwork1']!,
-    socialNetwork2: formData['socialNetwork2']!,
-  );
-
-  Provider.of<OrderProvider>(context, listen: false).addOrder(newOrder);
-
-  Navigator.pop(context);
-}
 
   Map<String, String> getFormData() {
     return {
@@ -113,6 +125,7 @@ class _CreateOrderState extends State<CreateOrder> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text('Create Order'),
         backgroundColor: Colors.white,
         elevation: 0,
@@ -201,9 +214,10 @@ class _CreateOrderState extends State<CreateOrder> {
                   child: Text(
                     'Choose File',
                     style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 14,
-                        color: Colors.grey[800]),
+                      fontFamily: 'Poppins',
+                      fontSize: 14,
+                      color: Colors.grey[800],
+                    ),
                   ),
                 ),
               ),
@@ -265,6 +279,8 @@ class _CreateOrderState extends State<CreateOrder> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
+              shadowColor: Colors.black.withOpacity(0.9),
+              elevation: 3,
             ),
             child: const Text(
               'Submit Order',
@@ -317,17 +333,19 @@ class _CreateOrderState extends State<CreateOrder> {
                 contentPadding: EdgeInsets.zero,
               ),
               items: items
-                  .map((e) => DropdownMenuItem<String>(
-                        value: e,
-                        child: Text(
-                          e,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontFamily: 'Poppins',
-                            color: Colors.grey[800],
-                          ),
+                  .map(
+                    (e) => DropdownMenuItem<String>(
+                      value: e,
+                      child: Text(
+                        e,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'Poppins',
+                          color: Colors.grey[800],
                         ),
-                      ))
+                      ),
+                    ),
+                  )
                   .toList(),
               onChanged: onChanged,
               iconEnabledColor: Colors.black,
@@ -372,12 +390,16 @@ class _CreateOrderState extends State<CreateOrder> {
           ),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle:
-                TextStyle(color: Colors.grey[800], fontFamily: 'Poppins'),
+            hintStyle: TextStyle(
+              color: Colors.grey[800],
+              fontFamily: 'Poppins',
+            ),
             filled: true,
             fillColor: Colors.white,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 14,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: Color(0xFFD5D5DA)),
