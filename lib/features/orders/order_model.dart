@@ -1,22 +1,34 @@
+// models/order.dart
+
 class Order {
   final String id;
-  final String name;
-  final String date;
+  final String customerName;
+  final DateTime date;
   final String status;
+
+  final String waterType;
+  final String bottleMaterial;
+  final String bottleShape;
+  final String sizeQuantity;
+  final String colorCombination;
+  final String preDesignOption;
+  final String textOnBottle;
+  final String socialNetwork1;
+  final String socialNetwork2;
 
   Order({
     required this.id,
-    required this.name,
+    required this.customerName,
     required this.date,
     required this.status,
+    required this.waterType,
+    required this.bottleMaterial,
+    required this.bottleShape,
+    required this.sizeQuantity,
+    required this.colorCombination,
+    required this.preDesignOption,
+    required this.textOnBottle,
+    required this.socialNetwork1,
+    required this.socialNetwork2,
   });
-
-  factory Order.fromJson(Map<String, dynamic> json) {
-    return Order(
-      id: json['name'] ?? '', 
-      name: json['partner_id'] is List ? json['partner_id'][1] : '',
-      date: json['date_order'] ?? '',
-      status: json['state'] ?? '',
-    );
-  }
 }

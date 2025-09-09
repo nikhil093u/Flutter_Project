@@ -49,7 +49,7 @@ class LandingPage extends StatelessWidget {
               ),
               const SizedBox(height: 100),
               const Text(
-                'Oceana',
+                'Oceana Positive',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF030303),
@@ -61,7 +61,7 @@ class LandingPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               const Text(
-                'For Oceana',
+                'For Oceana Positive',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF030303),

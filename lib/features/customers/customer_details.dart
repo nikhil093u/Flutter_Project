@@ -25,7 +25,7 @@ class CustomerDetails extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
         ),
         title: const Text(
-          "Oceana",
+          "Oceana Positive",
           style: TextStyle(color: Colors.black,fontFamily: 'Poppins', fontWeight: FontWeight.bold),
         ),
       ),

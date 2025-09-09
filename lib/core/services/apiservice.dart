@@ -1,4 +1,4 @@
-import 'package:flutter_application/features/orders/order_model.dart';
+// import 'package:flutter_application/features/orders/order_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -22,17 +22,13 @@ class ApiService {
 
   static Future<http.Response> login({
     required String email,
-    required String encryptedPassword,
-    required String nonce,
-    required String clientPublicKey,
+    required String password,
   }) async {
     final url = Uri.parse('$_baseUrl/login');
 
     final body = jsonEncode({
       "email": email,
-      "encryptedPassword": encryptedPassword,
-      "nonce": nonce,
-      "clientPublicKey": clientPublicKey,
+      "password":password,
     });
 
     final headers = {"Content-Type": "application/json"};
@@ -40,18 +36,17 @@ class ApiService {
     return await http.post(url, headers: headers, body: body);
   }
 
-  static Future<List<Order>> fetchOrders() async {
-    final response = await get('$_baseUrl/odoo/orders');
+  // static Future<List<Order>> fetchOrders() async {
+  //   final response = await get('/odoo/orders');
 
-    print('Fetch Orders Status: ${response.statusCode}');
-    print('Body: ${response.body}');
+  //   print('Fetch Orders Status: ${response.statusCode}');
+  //   print('Body: ${response.body}');
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      final ordersJson = data['orders'] as List;
-      return ordersJson.map((json) => Order.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to load orders');
-    }
-  }
+  //   if (response.statusCode == 200) {
+  //     final List<dynamic> data = json.decode(response.body);
+  //     return data.map((json) => Order.fromJson(json)).toList();
+  //   } else {
+  //     throw Exception('Failed to load orders');
+  //   }
+  // }
 }

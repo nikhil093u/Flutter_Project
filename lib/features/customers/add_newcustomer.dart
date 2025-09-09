@@ -1,7 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/features/customers/customerprovider.dart';
+import 'package:provider/provider.dart';
 
-class AddCustomerForm extends StatelessWidget {
+class AddCustomerForm extends StatefulWidget {
   const AddCustomerForm({super.key});
+
+  @override
+  State<AddCustomerForm> createState() => _AddCustomerFormState();
+}
+
+class _AddCustomerFormState extends State<AddCustomerForm> {
+  final _nameController = TextEditingController();
+  final _customerTypeController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _modeofbusinnerController = TextEditingController();
+  final _spoc1Controller = TextEditingController();
+  final _spoc2Controller = TextEditingController();
+  final _gstController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _customerTypeController.dispose();
+    _addressController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _modeofbusinnerController.dispose();
+    _spoc1Controller.dispose();
+    _spoc2Controller.dispose();
+    _gstController.dispose();
+    super.dispose();
+  }
+
+  void _saveCustomer() {
+    final newCustomer = Customer(
+      name: _nameController.text,
+      email: _emailController.text,
+      phoneNumber: _phoneController.text,
+      profileImageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
+    );
+    Provider.of<CustomerProvider>(context,listen:false).addCustomer(newCustomer);
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +54,7 @@ class AddCustomerForm extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
-          "Oceana",
+          "Oceana Positive",
           style: TextStyle(
             color: Color(0xFF030303),
             fontSize: 20,
@@ -47,39 +89,51 @@ class AddCustomerForm extends StatelessWidget {
                   const SizedBox(height: 10),
 
                   // Input Fields
-                  _buildTextField("Name", hint: "Enter Your Name"),
-                  _buildTextField("Customer Type", hint: "e.g. B2B, B2C"),
-                  _buildTextField("Address", hint: "Enter Your Name"),
+                  _buildTextField(
+                    "Name",
+                    controller: _nameController,
+                    hint: "Enter Your Name",
+                  ),
+                  _buildTextField(
+                    "Customer Type",
+                    controller: _customerTypeController,
+                    hint: "e.g. B2B, B2C",
+                  ),
+                  _buildTextField(
+                    "Address",
+                    controller: _addressController,
+                    hint: "Enter Your Name",
+                  ),
                   _buildTextField(
                     "Phone Number",
-                    keyboardType: TextInputType.phone,
+                    controller: _phoneController,
                     hint: "Enter Mobile Number",
                   ),
                   _buildTextField(
                     "Email (optional)",
-                    keyboardType: TextInputType.emailAddress,
+                    controller: _emailController,
                     hint: "Enter Email",
                   ),
                   _buildTextField(
                     "Mode of Business",
+                    controller: _modeofbusinnerController,
                     hint: "e.g. Functiona Hall, Shop",
                   ),
                   _buildTextField(
                     "SPOC 1 Contact Number",
-                    keyboardType: TextInputType.phone,
+                    controller: _spoc1Controller,
                     hint: "Contact Number 1",
                   ),
                   _buildTextField(
                     "SPOC 2 Contact Number",
-                    keyboardType: TextInputType.phone,
+                    controller: _spoc2Controller,
                     hint: "Contact Number 1",
                   ),
                   _buildTextField(
                     "GST Number (Compulsory for B2B)",
+                    controller: _modeofbusinnerController,
                     hint: "Enter GST Number",
                   ),
-
-                  
                 ],
               ),
             ),
@@ -87,35 +141,33 @@ class AddCustomerForm extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: SafeArea(
-      minimum: const EdgeInsets.all(16),
-      child: SizedBox(
-        width: double.infinity,
-        height: 48,
-        child: ElevatedButton(
-          onPressed: () {
-            if (formKey.currentState!.validate()) {
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.lightBlue[200],
-            padding: const EdgeInsets.symmetric(vertical: 14),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+        minimum: const EdgeInsets.all(16),
+        child: SizedBox(
+          width: double.infinity,
+          height: 48,
+          child: ElevatedButton(
+            onPressed: _saveCustomer,
+
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFA4CDFD),
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
-          ),
-          child: const Text(
-            "Save Customer",
-            style: TextStyle(color: Colors.white, fontFamily: 'Poppins'),
+            child: const Text(
+              "Save Customer",
+              style: TextStyle(color: Colors.white, fontFamily: 'Poppins'),
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 
   Widget _buildTextField(
     String label, {
-    TextInputType keyboardType = TextInputType.text,
+    required TextEditingController controller,
     String hint = '',
     bool isOptional = false,
   }) {
@@ -136,10 +188,13 @@ class AddCustomerForm extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           TextFormField(
-            keyboardType: keyboardType,
+            controller: controller,
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: TextStyle(color: Colors.grey[800],fontFamily: 'Poppins'),
+              hintStyle: TextStyle(
+                color: Colors.grey[800],
+                fontFamily: 'Poppins',
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(color: Colors.grey),
