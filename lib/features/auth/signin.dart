@@ -85,7 +85,7 @@ class _SignInScreen extends State<SignInScreen> {
               ),
               const SizedBox(height: 20),
               const Text(
-                'Oceana',
+                'Oceana Positive',
                 style: TextStyle(
                   color: Color(0xFF030303),
                   fontSize: 34,
@@ -121,6 +121,7 @@ class _SignInScreen extends State<SignInScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
+                      elevation:2,
                     ),
                     child: const Text('Sign Up with Email',style: TextStyle(color: Colors.white),),
                   ),
@@ -136,6 +137,7 @@ class _SignInScreen extends State<SignInScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
+                      elevation:2,
                     ),
                     child: const Text('Sign Up with Phone',style: TextStyle(color: Colors.white),),
                   ),
@@ -233,7 +235,7 @@ class _SignInScreen extends State<SignInScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     minimumSize: const Size(335, 48),
-                    elevation: 0,
+                    elevation: 4,
                   ),
                   child: const Text(
                     'Verify OTP',

@@ -6,6 +6,7 @@ import 'package:flutter_application/features/customers/customers.dart';
 import 'package:flutter_application/features/home/home.dart';
 import 'package:flutter_application/features/orders/create_order.dart';
 import 'package:flutter_application/features/orders/order_details.dart';
+import 'package:flutter_application/features/orders/order_model.dart';
 import 'package:flutter_application/features/orders/orders.dart';
 import 'package:flutter_application/features/orders/repeatorder.dart';
 import 'package:flutter_application/features/profile.dart';
@@ -63,7 +64,7 @@ class Routes {
       case repeatorder:
         return MaterialPageRoute(builder: (_) => RepeatOrderPage());
       case orderdetails:
-        final args = settings.arguments as Map<String, String>;
+        final args = settings.arguments as Order;
         return MaterialPageRoute(builder: (_) => OrderDetails(order: args));
       case resourcedetails:
         final args = settings.arguments as Map<String, String>;

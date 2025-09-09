@@ -45,7 +45,7 @@ class ResourcePage extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  "Oceana",
+                  "Oceana Positive",
                   style: TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 20,

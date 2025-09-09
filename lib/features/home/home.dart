@@ -1,6 +1,7 @@
 import 'package:flutter_application/common/widgets/footer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/routes/routes.dart';
+import 'package:intl/intl.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 class Home extends StatelessWidget {
@@ -144,9 +145,9 @@ class Home extends StatelessWidget {
 
             const SizedBox(height: 18),
 
-            const Center(
+            Center(
               child: Text(
-                '09:11 AM',
+                DateFormat('hh:mm a').format(DateTime.now()),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF030303),
@@ -159,9 +160,9 @@ class Home extends StatelessWidget {
 
             const SizedBox(height: 2),
 
-            const Center(
+            Center(
               child: Text(
-                '08-22-2025',
+                DateFormat('dd.mm.yyyy').format(DateTime.now()),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF030303),

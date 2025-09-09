@@ -1,8 +1,10 @@
-import 'package:cryptography/cryptography.dart';
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:flutter_application/core/services/apiservice.dart';
-import 'package:flutter_application/core/services/encrypt.dart';
+// import 'package:cryptography/cryptography.dart';
+// import 'dart:convert';
+// import 'package:flutter_application/core/services/apiservice.dart';
+// import 'package:flutter_application/core/services/encrypt.dart';
 import 'package:flutter_application/routes/routes.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -29,41 +31,29 @@ class _SignUpScreen extends State<SignUpScreen> {
     final password = _passwordController.text;
 
     if (email.isEmpty || password.isEmpty) {
-      Navigator.pushNamed(context, Routes.home);
+      _showMessage("Please Enter Required Details");
       return;
     }
-
-    try {
-      final serverPubKeyBytes = base64Decode(
-        "BASE64_ENCODED_SERVER_PUBLIC_KEY_HERE",
-      );
-      final serverPubKey = SimplePublicKey(
-        serverPubKeyBytes,
-        type: KeyPairType.x25519,
-      );
-
-      final encryptedData = await encryptPassword(password, serverPubKey);
-
-      final response = await ApiService.login(
-        email: email,
-        encryptedPassword: encryptedData['encryptedPassword'],
-        nonce: encryptedData['nonce'],
-        clientPublicKey: encryptedData['clientPublicKey'],
-      );
-      if (response.statusCode == 200) {
-        _showMessage("Loggin Successfull");
-        Map<String, dynamic> data = json.decode(response.body);
-        final token = data['access_token'];
-        await storage.write(key: 'auth_token', value: token);
-
-        // ignore: use_build_context_synchronously
-        Navigator.pushNamed(context, Routes.home);
-      } else {
-        _showMessage("Sign-up failed. Please try again.");
-      }
-    } catch (e) {
-      _showMessage("An error occurred. Please try again.");
+    else{
+      Navigator.pushNamed(context, Routes.home);
     }
+
+    // try {
+    //   final response = await ApiService.login(email: email, password: password);
+    //   if (response.statusCode == 200) {
+    //     _showMessage("Loggin Successfull");
+    //     Map<String, dynamic> data = json.decode(response.body);
+    //     final token = data['access_token'];
+    //     await storage.write(key: 'auth_token', value: token);
+
+    //     // ignore: use_build_context_synchronously
+    //     Navigator.pushNamed(context, Routes.home);
+    //   } else {
+    //     _showMessage("Sign-up failed. Please try again.");
+    //   }
+    // } catch (e) {
+    //   _showMessage("An error occurred. Please try again.");
+    // }
   }
 
   @override
@@ -96,7 +86,9 @@ class _SignUpScreen extends State<SignUpScreen> {
                                 Radius.circular(8),
                               ),
                               image: DecorationImage(
-                                image: AssetImage('assets/logo/login_image.png'),
+                                image: AssetImage(
+                                  'assets/logo/login_image.png',
+                                ),
                                 fit: BoxFit.cover,
                                 alignment: Alignment.center,
                               ),
@@ -112,7 +104,7 @@ class _SignUpScreen extends State<SignUpScreen> {
               const SizedBox(height: 20),
 
               const Text(
-                'Oceana',
+                'Oceana Positive',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF030303),
@@ -253,7 +245,8 @@ class _SignUpScreen extends State<SignUpScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     minimumSize: const Size(335, 48),
-                    elevation: 0,
+                    shadowColor: Colors.black.withOpacity(0.9),
+                    elevation: 3,
                   ),
                   child: const Text(
                     'Login',
@@ -274,7 +267,7 @@ class _SignUpScreen extends State<SignUpScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'New to Oceana? ',
+                    'New to Oceana Positive? ',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Color(0xFF030303),

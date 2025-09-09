@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/features/customers/customerprovider.dart';
+import 'package:flutter_application/features/orders/orderprovider.dart';
 import 'package:flutter_application/routes/routes.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CustomerProvider()),
+        ChangeNotifierProvider(create: (_) => OrderProvider()),
+      ],
+      child: const MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
