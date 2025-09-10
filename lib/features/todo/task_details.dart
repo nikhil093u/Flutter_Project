@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 class TaskDetails extends StatelessWidget {
@@ -37,7 +39,6 @@ class TaskDetails extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    // ignore: deprecated_member_use
                     color: Colors.grey.withOpacity(0.3),
                     blurRadius: 8,
                     offset: Offset(0, 4),
@@ -86,6 +87,9 @@ class TaskDetails extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
+              elevation: 3,
+                                  shadowColor: Colors.black.withOpacity(0.9),
+
             ),
             child: Text(
               'Delete Task',

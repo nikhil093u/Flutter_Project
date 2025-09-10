@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application/features/customers/customerprovider.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +43,10 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
       phoneNumber: _phoneController.text,
       profileImageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
     );
-    Provider.of<CustomerProvider>(context,listen:false).addCustomer(newCustomer);
+    Provider.of<CustomerProvider>(
+      context,
+      listen: false,
+    ).addCustomer(newCustomer);
     Navigator.pop(context);
   }
 
@@ -52,9 +57,10 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Colors.white,
         title: Text(
-          "Oceana Positive",
+          "Add Customers",
           style: TextStyle(
             color: Color(0xFF030303),
             fontSize: 20,
@@ -73,19 +79,19 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 0),
-                      child: Text(
-                        "Add Customer",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontFamily: 'Poppins',
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ),
+                  // const Center(
+                  //   child: Padding(
+                  //     padding: EdgeInsets.symmetric(vertical: 0),
+                  //     child: Text(
+                  //       "Add Customer",
+                  //       style: TextStyle(
+                  //         fontWeight: FontWeight.w700,
+                  //         fontFamily: 'Poppins',
+                  //         fontSize: 18,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   const SizedBox(height: 10),
 
                   // Input Fields
@@ -154,6 +160,8 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
+              shadowColor: Colors.black.withOpacity(0.9),
+              elevation: 3,
             ),
             child: const Text(
               "Save Customer",

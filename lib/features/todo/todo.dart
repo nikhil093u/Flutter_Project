@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application/routes/routes.dart';
 import '../../common/widgets/footer.dart';
@@ -120,7 +122,6 @@ class TodoState extends State<Todo> {
                                 borderRadius: BorderRadius.circular(12.0),
                                 boxShadow: [
                                   BoxShadow(
-                                    // ignore: deprecated_member_use
                                     color: Colors.black.withOpacity(0.05),
                                     blurRadius: 4,
                                     offset: Offset(0, 2),
@@ -160,10 +161,7 @@ class TodoState extends State<Todo> {
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border(
-                top: BorderSide(
-                  color: Colors.grey.shade300,
-                  width: 1.0,
-                ),
+                top: BorderSide(color: Colors.grey.shade300, width: 1.0),
               ),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -215,16 +213,17 @@ class TodoState extends State<Todo> {
                       onPressed: _addTodo,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFA4CDFD),
-                        foregroundColor: Colors.white,
-                        elevation: 0,
+                        elevation: 3,
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
+                        shadowColor: Colors.black.withOpacity(0.9),
                       ),
                       child: Text(
                         'Add',
                         style: TextStyle(
+                          color: Colors.white,
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
                           fontFamily: 'Poppins',

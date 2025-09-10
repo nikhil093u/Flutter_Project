@@ -18,6 +18,7 @@ class ResourceDetails extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Colors.white,
         title: Text(
           "Resource Details",
@@ -37,7 +38,7 @@ class ResourceDetails extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               child: Image.asset(
                 imagePath,
-                height: 200,
+                height: 150,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
