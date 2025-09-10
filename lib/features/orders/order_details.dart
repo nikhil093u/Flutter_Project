@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/features/orders/order_model.dart';
 import 'package:flutter_application/routes/routes.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class OrderDetails extends StatelessWidget {
   final Order order;
@@ -20,7 +21,7 @@ class OrderDetails extends StatelessWidget {
         backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(LucideIcons.arrowLeft, color: Colors.black),
         ),
         title: Text(
           "Order #${order.id.substring(0, 6)}",
