@@ -163,19 +163,7 @@ class _SettingsPageState extends State<SettingsPage> {
             fontSize: 20,
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 14),
-            child: CircleAvatar(
-              radius: 16,
-              backgroundImage: AssetImage(
-                'assets/images/profile_avatar.png',
-              ),
-              backgroundColor: Colors.grey.shade300,
-            ),
-          ),
-        ],
-        iconTheme: const IconThemeData(color: Colors.black),
+        
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -194,11 +182,9 @@ class _SettingsPageState extends State<SettingsPage> {
             Row(
               children: [
                 CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage(
-                    'assets/images/profile_avatar.png',
-                  ),
-                  backgroundColor: Colors.grey.shade300,
+                  radius: 40,
+                  backgroundColor: Colors.blue.shade100,
+                  child: Icon(Icons.person, size: 50, color: Colors.white),
                 ),
                 const SizedBox(width: 10),
                 Expanded(

@@ -1,5 +1,7 @@
 // order_details.dart
 
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application/features/orders/order_model.dart';
 import 'package:flutter_application/routes/routes.dart';
@@ -88,7 +90,7 @@ class OrderDetails extends StatelessWidget {
                     icon: Icons.receipt_long_outlined,
                     color: Colors.orange,
                     onPressed: () {
-                      // TODO: Implement
+                      null;
                     },
                   ),
                   _actionButton(
@@ -106,7 +108,7 @@ class OrderDetails extends StatelessWidget {
                     icon: Icons.support_agent_outlined,
                     color: Colors.purple,
                     onPressed: () {
-                      // TODO: Implement
+                      null;
                     },
                   ),
                 ],
