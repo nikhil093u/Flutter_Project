@@ -3,6 +3,7 @@ import 'package:flutter_application/features/customers/customer_info_widget.dart
 import 'package:flutter_application/common/widgets/footer.dart';
 import 'package:flutter_application/features/customers/customerprovider.dart';
 import 'package:flutter_application/routes/routes.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 class CustomerScreen extends StatefulWidget {
@@ -61,8 +62,10 @@ class _CustomerScreenState extends State<CustomerScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.menu, size: 24, color: Color(0xFF030303)),
-          onPressed: () {},
+          icon: const Icon(LucideIcons.arrowLeft, size: 24, color: Color(0xFF030303)),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         title: Row(
           children: [
@@ -97,7 +100,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                     borderRadius: BorderRadius.circular(30),
                     borderSide: BorderSide.none,
                   ),
-                  prefixIcon: const Icon(Icons.search, color: Colors.black54),
+                  prefixIcon: const Icon(LucideIcons.search, color: Colors.black54),
                 ),
               ),
             ),
@@ -127,7 +130,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                 Navigator.pushNamed(context, Routes.addcustomer);
               },
               backgroundColor: Colors.white,
-              child: const Icon(Icons.person_add, color: Colors.black),
+              child: const Icon(LucideIcons.userPlus2,size:30, color: Colors.black),
             ),
           ),
         ],

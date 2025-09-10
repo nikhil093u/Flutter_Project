@@ -1,12 +1,14 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application/features/auth/authprovider.dart';
 // import 'package:cryptography/cryptography.dart';
 // import 'dart:convert';
 // import 'package:flutter_application/core/services/apiservice.dart';
 // import 'package:flutter_application/core/services/encrypt.dart';
 import 'package:flutter_application/routes/routes.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -33,9 +35,15 @@ class _SignUpScreen extends State<SignUpScreen> {
     if (email.isEmpty || password.isEmpty) {
       Navigator.pushNamed(context, Routes.home);
       _showMessage("Login Successfull!");
-      // return;
-    }
-    else{
+    } else if (!email.contains('@') || !email.contains('.com')) {
+      _showMessage('Enter a valid email containing "@" and ".com"');
+    } else if (password.length<8) {
+      _showMessage('PassWord must be min 8 characters');
+    } else {
+      Provider.of<AuthProvider>(
+        context,
+        listen: false,
+      ).login(email: email, password: password);
       Navigator.pushNamed(context, Routes.home);
     }
 
@@ -209,7 +217,7 @@ class _SignUpScreen extends State<SignUpScreen> {
                           height: 1.43,
                         ),
                         decoration: const InputDecoration(
-                          hintText: '******************',
+                          hintText: '**********',
                           contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                           filled: true,
                           fillColor: Color.fromRGBO(255, 255, 255, 0.8),

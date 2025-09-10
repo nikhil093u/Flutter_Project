@@ -55,7 +55,7 @@ class _OrdersListState extends State<OrdersList> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.menu, size: 24, color: Color(0xFF030303)),
+          icon: const Icon(LucideIcons.arrowLeft, size: 24, color: Color(0xFF030303)),
           onPressed: () {},
         ),
         title: Row(
@@ -94,7 +94,7 @@ class _OrdersListState extends State<OrdersList> {
               decoration: InputDecoration(
                 hintText: 'Search Orders...',
                 hintStyle: const TextStyle(fontFamily: 'Poppins'),
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(LucideIcons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                   borderSide: const BorderSide(color: Colors.white),

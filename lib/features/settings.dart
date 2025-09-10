@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/common/widgets/footer.dart';
 import 'package:flutter_application/routes/routes.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -115,11 +116,11 @@ class _SettingsPageState extends State<SettingsPage> {
       elevation: 1,
       child: ListTile(
         leading: Icon(
-          Icons.insert_drive_file_outlined,
+          LucideIcons.file,
           color: Colors.grey[700],
         ),
         title: Text(title, style: TextStyle(fontFamily: 'Poppins')),
-        trailing: Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+        trailing: Icon(LucideIcons.chevronRight, size: 14, color: Colors.grey),
         onTap: () {
         },
       ),
@@ -138,7 +139,7 @@ class _SettingsPageState extends State<SettingsPage> {
         leading: Icon(icon, color: Colors.blue),
         title: Text(title, style: TextStyle(fontFamily: 'Poppins')),
         trailing: IconButton(
-          icon: Icon(Icons.edit, color: Colors.blue),
+          icon: Icon(LucideIcons.edit, color: Colors.blue),
           onPressed: () {
             
           },
@@ -184,7 +185,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 CircleAvatar(
                   radius: 40,
                   backgroundColor: Colors.blue.shade100,
-                  child: Icon(Icons.person, size: 50, color: Colors.white),
+                  child: Icon(LucideIcons.user, size: 50, color: Colors.white),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
@@ -201,7 +202,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   onPressed: () {
                     
                   },
-                  icon: Icon(Icons.edit, size: 18),
+                  icon: Icon(LucideIcons.edit, size: 18),
                   label: Text(
                     'edit profile',
                     style: TextStyle(fontFamily: 'Poppins', fontSize: 14),
@@ -253,7 +254,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     label: 'Joining date',
                     controller: joiningDateController,
                     readOnly: true,
-                    suffix: Icon(Icons.calendar_today_outlined),
+                    suffix: Icon(LucideIcons.calendar),
                   ),
                 ),
               ],
@@ -338,11 +339,11 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             const SizedBox(height: 10),
 
-            identificationDocumentItem('Emplo', Icons.work_outline),
-            identificationDocumentItem('Work', Icons.work),
+            identificationDocumentItem('Emplo', LucideIcons.contact2),
+            identificationDocumentItem('Work', LucideIcons.briefcase),
             identificationDocumentItem(
               'Office Access',
-              Icons.location_on_outlined,
+              LucideIcons.lock,
             ),
 
             const SizedBox(height: 40),

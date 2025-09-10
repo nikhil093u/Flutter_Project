@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/features/auth/authprovider.dart';
 import 'package:flutter_application/features/customers/customerprovider.dart';
 import 'package:flutter_application/features/orders/orderprovider.dart';
 import 'package:flutter_application/routes/routes.dart';
@@ -10,6 +11,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => CustomerProvider()),
         ChangeNotifierProvider(create: (_) => OrderProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: const MyApp(),
     )

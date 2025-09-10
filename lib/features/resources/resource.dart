@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/common/widgets/footer.dart';
 import 'package:flutter_application/routes/routes.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class ResourcePage extends StatelessWidget {
   const ResourcePage({super.key});
@@ -63,7 +64,7 @@ class ResourcePage extends StatelessWidget {
                     ),
                     child: const Row(
                       children: [
-                        Icon(Icons.search, size: 20, color: Colors.grey),
+                        Icon(LucideIcons.search, size: 20, color: Colors.grey),
                         SizedBox(width: 8),
                         Expanded(
                           child: TextField(

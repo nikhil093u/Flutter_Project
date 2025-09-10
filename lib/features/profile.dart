@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/features/auth/authprovider.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final authProvider=Provider.of<AuthProvider>(context);
+    final email= authProvider.email;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -30,13 +35,13 @@ class ProfilePage extends StatelessWidget {
                 CircleAvatar(
                   radius: 40,
                   backgroundColor: Colors.blue.shade100,
-                  child: Icon(Icons.person, size: 50, color: Colors.white),
+                  child: Icon(LucideIcons.user, size: 50, color: Colors.white),
                 ),
 
                 const SizedBox(height: 15),
 
                 Text(
-                  'Alex Johnson',
+                  email?.split('@')[0]??"Person",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -45,7 +50,7 @@ class ProfilePage extends StatelessWidget {
                 ),
 
                 Text(
-                  'alex.johnson@example.com',
+                  email??'no-email@example.com',
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.blue,

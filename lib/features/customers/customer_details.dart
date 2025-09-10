@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class CustomerDetails extends StatelessWidget {
   final String name;
@@ -22,7 +23,7 @@ class CustomerDetails extends StatelessWidget {
         elevation: 1,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(LucideIcons.arrowLeft, color: Colors.black),
         ),
         title: const Text(
           "Oceana Positive",

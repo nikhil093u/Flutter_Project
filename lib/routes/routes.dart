@@ -58,7 +58,7 @@ class Routes {
       case createorder:
         return MaterialPageRoute(builder: (_) => CreateOrder());
       case profile:
-        return MaterialPageRoute(builder: (_) => ProfilePage());
+        return MaterialPageRoute(builder: (context) => const ProfilePage());
       case setting:
         return MaterialPageRoute(builder: (_) => SettingsPage());
       case repeatorder:

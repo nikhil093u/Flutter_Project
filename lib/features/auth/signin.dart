@@ -18,8 +18,7 @@ class _SignInScreen extends State<SignInScreen> {
   final TextEditingController _dobController = TextEditingController();
   final TextEditingController _userIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   final storage = FlutterSecureStorage();
   bool isEmailSignUp = true;
@@ -38,11 +37,9 @@ class _SignInScreen extends State<SignInScreen> {
   }
 
   Future<void> _handleSignUp() async {
-    // Implement the API call to handle sign up.
   }
 
   Future<void> _handleOTPVerification() async {
-    // Implement OTP verification logic
   }
 
   @override
@@ -54,7 +51,6 @@ class _SignInScreen extends State<SignInScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // App Logo
               SizedBox(
                 width: 335,
                 height: 200,
@@ -251,7 +247,6 @@ class _SignInScreen extends State<SignInScreen> {
                 const SizedBox(height: 20),
               ],
 
-              // OTP Button
               SizedBox(
                 width: 335,
                 height: 48,
@@ -281,7 +276,6 @@ class _SignInScreen extends State<SignInScreen> {
               ),
               const SizedBox(height: 30),
 
-              // Form Fields for First Name, Last Name, DOB, etc.
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Column(
@@ -475,14 +469,12 @@ class _SignInScreen extends State<SignInScreen> {
                         ),
                       ),
                     ),
-                    // More fields here for User ID, Password, Confirm Password...
                   ],
                 ),
               ),
 
               const SizedBox(height: 20),
 
-              // Submit Button
               SizedBox(
                 width: 335,
                 height: 48,
