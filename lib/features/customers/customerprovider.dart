@@ -1,3 +1,5 @@
+// Your complete CustomerProvider should look like this:
+
 import 'package:flutter/material.dart';
 
 class Customer {
@@ -5,113 +7,119 @@ class Customer {
   final String email;
   final String phoneNumber;
   final String profileImageUrl;
+  final String customerType;
+  final String address;
+  final String modeOfBusiness;
+  final String spoc1;
+  final String spoc2;
+  final String gstNumber;
 
   Customer({
     required this.name,
     required this.email,
     required this.phoneNumber,
     required this.profileImageUrl,
+    required this.customerType,
+    required this.address,
+    required this.modeOfBusiness,
+    required this.spoc1,
+    required this.spoc2,
+    required this.gstNumber,
   });
+
+  Customer copyWith({
+    String? name,
+    String? email,
+    String? phoneNumber,
+    String? profileImageUrl,
+    String? customerType,
+    String? address,
+    String? modeOfBusiness,
+    String? spoc1,
+    String? spoc2,
+    String? gstNumber,
+  }) {
+    return Customer(
+      name: name ?? this.name,
+      email: email ?? this.email,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
+      customerType: customerType ?? this.customerType,
+      address: address ?? this.address,
+      modeOfBusiness: modeOfBusiness ?? this.modeOfBusiness,
+      spoc1: spoc1 ?? this.spoc1,
+      spoc2: spoc2 ?? this.spoc2,
+      gstNumber: gstNumber ?? this.gstNumber,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Customer &&
+        other.name == name &&
+        other.email == email &&
+        other.phoneNumber == phoneNumber &&
+        other.profileImageUrl == profileImageUrl &&
+        other.customerType == customerType &&
+        other.address == address &&
+        other.modeOfBusiness == modeOfBusiness &&
+        other.spoc1 == spoc1 &&
+        other.spoc2 == spoc2 &&
+        other.gstNumber == gstNumber;
+  }
+
+  @override
+  int get hashCode {
+    return name.hashCode ^
+        email.hashCode ^
+        phoneNumber.hashCode ^
+        profileImageUrl.hashCode ^
+        customerType.hashCode ^
+        address.hashCode ^
+        modeOfBusiness.hashCode ^
+        spoc1.hashCode ^
+        spoc2.hashCode ^
+        gstNumber.hashCode;
+  }
 }
 
 class CustomerProvider with ChangeNotifier {
-  final List<Customer> _customers = [
-    Customer(
-      name: 'Suresh P',
-      email: 'suresh.p@example.com',
-      phoneNumber: '+91 9867542301',
-      profileImageUrl: 'https://randomuser.me/api/portraits/men/11.jpg',
-    ),
-    Customer(
-      name: 'Srikanth Reddy',
-      email: 'srikanth.reddy@example.com',
-      phoneNumber: '+91 9999988888',
-      profileImageUrl: 'https://randomuser.me/api/portraits/men/21.jpg',
-    ),
-    Customer(
-      name: 'Anjali Mehta',
-      email: 'anjali.mehta@example.com',
-      phoneNumber: '+91 9876543210',
-      profileImageUrl: 'https://randomuser.me/api/portraits/women/45.jpg',
-    ),
-    Customer(
-      name: 'Ravi Kumar',
-      email: 'ravi.kumar@example.com',
-      phoneNumber: '+91 9123456780',
-      profileImageUrl: 'https://randomuser.me/api/portraits/men/34.jpg',
-    ),
-    Customer(
-      name: 'Deepa Shah',
-      email: 'deepa.shah@example.com',
-      phoneNumber: '+91 8989898989',
-      profileImageUrl: 'https://randomuser.me/api/portraits/women/52.jpg',
-    ),
-    Customer(
-      name: 'Aman Verma',
-      email: 'aman.verma@example.com',
-      phoneNumber: '+91 9090909090',
-      profileImageUrl: 'https://randomuser.me/api/portraits/men/55.jpg',
-    ),
-    Customer(
-      name: 'Priya Desai',
-      email: 'priya.desai@example.com',
-      phoneNumber: '+91 9001234567',
-      profileImageUrl: 'https://randomuser.me/api/portraits/women/61.jpg',
-    ),
-    Customer(
-      name: 'Nikhil Sharma',
-      email: 'nikhil.sharma@example.com',
-      phoneNumber: '+91 9988776655',
-      profileImageUrl: 'https://randomuser.me/api/portraits/men/41.jpg',
-    ),
-    Customer(
-      name: 'Kavita Joshi',
-      email: 'kavita.joshi@example.com',
-      phoneNumber: '+91 9876501234',
-      profileImageUrl: 'https://randomuser.me/api/portraits/women/30.jpg',
-    ),
-    Customer(
-      name: 'Arjun Singh',
-      email: 'arjun.singh@example.com',
-      phoneNumber: '+91 9012345678',
-      profileImageUrl: 'https://randomuser.me/api/portraits/men/19.jpg',
-    ),
-    Customer(
-      name: 'Meena Kumari',
-      email: 'meena.kumari@example.com',
-      phoneNumber: '+91 9100001122',
-      profileImageUrl: 'https://randomuser.me/api/portraits/women/14.jpg',
-    ),
-    Customer(
-      name: 'Rahul Dev',
-      email: 'rahul.dev@example.com',
-      phoneNumber: '+91 9301234567',
-      profileImageUrl: 'https://randomuser.me/api/portraits/men/64.jpg',
-    ),
-    Customer(
-      name: 'Sneha Patel',
-      email: 'sneha.patel@example.com',
-      phoneNumber: '+91 9445566778',
-      profileImageUrl: 'https://randomuser.me/api/portraits/women/66.jpg',
-    ),
-    Customer(
-      name: 'Manoj Tiwari',
-      email: 'manoj.tiwari@example.com',
-      phoneNumber: '+91 9800112233',
-      profileImageUrl: 'https://randomuser.me/api/portraits/men/23.jpg',
-    ),
-    Customer(
-      name: 'Divya Agarwal',
-      email: 'divya.agarwal@example.com',
-      phoneNumber: '+91 9900887766',
-      profileImageUrl: 'https://randomuser.me/api/portraits/women/88.jpg',
-    ),
-  ];
+  final List<Customer> _customers = [];
 
   List<Customer> get customers => _customers;
 
   void addCustomer(Customer customer) {
     _customers.add(customer);
     notifyListeners();
+  }
+
+  void updateCustomer(Customer oldCustomer, Customer updatedCustomer) {
+    final index = _customers.indexOf(oldCustomer);
+    if (index != -1) {
+      _customers[index] = updatedCustomer;
+      notifyListeners();
+    }
+  }
+
+  void updateCustomerByPhone(String phoneNumber, Customer updatedCustomer) {
+    final index = _customers.indexWhere((customer) => customer.phoneNumber == phoneNumber);
+    if (index != -1) {
+      _customers[index] = updatedCustomer;
+      notifyListeners();
+    }
+  }
+
+  void removeCustomerByPhone(String phoneNumber) {
+    _customers.removeWhere((customer) => customer.phoneNumber == phoneNumber);
+    notifyListeners();
+  }
+
+  Customer? getCustomerByPhone(String phoneNumber) {
+    try {
+      return _customers.firstWhere((customer) => customer.phoneNumber == phoneNumber);
+    } catch (e) {
+      return null;
+    }
   }
 }

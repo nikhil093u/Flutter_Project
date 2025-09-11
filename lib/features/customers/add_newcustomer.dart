@@ -5,7 +5,8 @@ import 'package:flutter_application/features/customers/customerprovider.dart';
 import 'package:provider/provider.dart';
 
 class AddCustomerForm extends StatefulWidget {
-  const AddCustomerForm({super.key});
+  final Customer? existingCustomer;
+  const AddCustomerForm({super.key,this.existingCustomer});
 
   @override
   State<AddCustomerForm> createState() => _AddCustomerFormState();
@@ -22,6 +23,25 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
   final _spoc2Controller = TextEditingController();
   final _gstController = TextEditingController();
 
+@override
+void initState() {
+  super.initState();
+
+  if (widget.existingCustomer != null) {
+    final customer = widget.existingCustomer!;
+    _nameController.text = customer.name;
+    _emailController.text = customer.email;
+    _phoneController.text = customer.phoneNumber;
+    _customerTypeController.text = customer.customerType;
+    _addressController.text = customer.address;
+    _modeofbusinnerController.text = customer.modeOfBusiness;
+    _spoc1Controller.text = customer.spoc1;
+    _spoc2Controller.text = customer.spoc2;
+    _gstController.text = customer.gstNumber;
+  }
+}
+
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -37,17 +57,26 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
   }
 
   void _saveCustomer() {
+    final customerProvider = Provider.of<CustomerProvider>(context, listen: false);
     final newCustomer = Customer(
       name: _nameController.text,
       email: _emailController.text,
       phoneNumber: _phoneController.text,
       profileImageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
+      customerType: _customerTypeController.text,
+      address: _addressController.text,
+      modeOfBusiness: _modeofbusinnerController.text,
+      spoc1: _spoc1Controller.text,
+      spoc2: _spoc2Controller.text,
+      gstNumber: _gstController.text,
     );
-    Provider.of<CustomerProvider>(
-      context,
-      listen: false,
-    ).addCustomer(newCustomer);
-    Navigator.pop(context);
+    if (widget.existingCustomer != null) {
+    // Update existing customer
+    customerProvider.updateCustomer(widget.existingCustomer!, newCustomer);
+  }else{
+    customerProvider.addCustomer(newCustomer);
+  }
+    Navigator.pop(context,newCustomer);
   }
 
   @override
@@ -137,7 +166,7 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
                   ),
                   _buildTextField(
                     "GST Number (Compulsory for B2B)",
-                    controller: _modeofbusinnerController,
+                    controller: _gstController,
                     hint: "Enter GST Number",
                   ),
                 ],

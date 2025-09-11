@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/features/customers/add_newcustomer.dart';
+import 'package:flutter_application/features/customers/customerprovider.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
-class CustomerDetails extends StatelessWidget {
-  final String name;
-  final String email;
-  final String phoneNumber;
+class CustomerDetails extends StatefulWidget {
+  final Customer initialCustomer;
 
-  const CustomerDetails({
-    super.key,
-    required this.name,
-    required this.email,
-    required this.phoneNumber,
-  });
+  const CustomerDetails({super.key, required this.initialCustomer});
+
+  @override
+  State<CustomerDetails> createState() => _CustomerDetailsState();
+}
+
+class _CustomerDetailsState extends State<CustomerDetails> {
+  late Customer customer;
+
+  @override
+  void initState() {
+    super.initState();
+    customer = widget.initialCustomer;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +30,19 @@ class CustomerDetails extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 1,
         leading: IconButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator.pop(context, customer);
+          },
+
           icon: const Icon(LucideIcons.arrowLeft, color: Colors.black),
         ),
         title: const Text(
           "Oceana Positive",
-          style: TextStyle(color: Colors.black,fontFamily: 'Poppins', fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.black,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -37,7 +52,11 @@ class CustomerDetails extends StatelessWidget {
           children: [
             const Text(
               "Customer Details",
-              style: TextStyle(fontSize: 20,fontFamily: 'Poppins', fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 20,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.bold,
+              ),
             ),
 
             const SizedBox(height: 12),
@@ -59,11 +78,23 @@ class CustomerDetails extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _infoRow("Name", name),
+                  _infoRow("Name", customer.name),
                   const SizedBox(height: 8),
-                  _infoRow("Email", email),
+                  _infoRow("Email", customer.email),
                   const SizedBox(height: 8),
-                  _infoRow("Phone", phoneNumber),
+                  _infoRow("Phone", customer.phoneNumber),
+                  const SizedBox(height: 8),
+                  _infoRow("Customer Type", customer.customerType),
+                  const SizedBox(height: 8),
+                  _infoRow("Address", customer.address),
+                  const SizedBox(height: 8),
+                  _infoRow("Mode of Business", customer.modeOfBusiness),
+                  const SizedBox(height: 8),
+                  _infoRow("SPOC 1", customer.spoc1),
+                  const SizedBox(height: 8),
+                  _infoRow("SPOC 2", customer.spoc2),
+                  const SizedBox(height: 8),
+                  _infoRow("GST Number", customer.gstNumber),
                 ],
               ),
             ),
@@ -72,7 +103,11 @@ class CustomerDetails extends StatelessWidget {
 
             const Text(
               "Order Details",
-              style: TextStyle(fontSize: 18,fontFamily: 'Poppins', fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontSize: 18,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w600,
+              ),
             ),
 
             const SizedBox(height: 12),
@@ -87,7 +122,11 @@ class CustomerDetails extends StatelessWidget {
 
             const Text(
               "Notes",
-              style: TextStyle(fontSize: 18,fontFamily: 'Poppins', fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontSize: 18,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w600,
+              ),
             ),
 
             const SizedBox(height: 12),
@@ -116,33 +155,45 @@ class CustomerDetails extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: SafeArea(
-  minimum: const EdgeInsets.all(16),
-  child: SizedBox(
-    width: double.infinity,
-    height: 50,
-    child: ElevatedButton(
-      onPressed: () {
-        // Handle edit logic
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFFA4CDFD),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-      child: const Text(
-        'Edit Details',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-          fontFamily: 'Poppins',
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ),
-  ),
-),
+        minimum: const EdgeInsets.all(16),
+        child: SizedBox(
+          width: double.infinity,
+          height: 50,
+          child: ElevatedButton(
+            onPressed: () async {
+              final updatedCustomer = await Navigator.push<Customer>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      AddCustomerForm(existingCustomer: customer),
+                ),
+              );
 
+              if (updatedCustomer != null) {
+                setState(() {
+                  customer = updatedCustomer;
+                });
+              }
+            },
+
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xFFA4CDFD),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text(
+              'Edit Details',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -152,9 +203,18 @@ class CustomerDetails extends StatelessWidget {
       children: [
         Text(
           "$label: ",
-          style: const TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Poppins', fontSize: 16),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Poppins',
+            fontSize: 16,
+          ),
         ),
-        Expanded(child: Text(value, style: const TextStyle(fontFamily: 'Poppins', fontSize: 16))),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(fontFamily: 'Poppins', fontSize: 16),
+          ),
+        ),
       ],
     );
   }
@@ -185,12 +245,20 @@ class CustomerDetails extends StatelessWidget {
         children: [
           Text(
             "Order ID: $orderId",
-            style: const TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.bold, fontSize: 16),
+            style: const TextStyle(
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             "Date: $date",
-            style: const TextStyle(fontFamily: 'Poppins', fontSize: 14, color: Colors.black54),
+            style: const TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 14,
+              color: Colors.black54,
+            ),
           ),
           const SizedBox(height: 12),
           Text(
