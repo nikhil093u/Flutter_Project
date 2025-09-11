@@ -1,34 +1,32 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'customer_details.dart';
+import 'customerprovider.dart';
 
 class CustomerInfoWidget extends StatelessWidget {
-  final String name;
-  final String email;
-  final String phoneNumber;
-  final String profileImageUrl;
+  final Customer customer;
 
-  const CustomerInfoWidget({
-    super.key,
-    required this.name,
-    required this.email,
-    required this.phoneNumber,
-    required this.profileImageUrl,
-  });
+  const CustomerInfoWidget({super.key, required this.customer});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        final updatedCustomer = await Navigator.push<Customer>(
           context,
           MaterialPageRoute(
-            builder: (context) => CustomerDetails(
-              name: name,
-              email: email,
-              phoneNumber: phoneNumber,
-            ),
+            builder: (context) => CustomerDetails(initialCustomer: customer),
           ),
         );
+
+        if (updatedCustomer != null) {
+          if (context.mounted) {
+            Provider.of<CustomerProvider>(context, listen: false)
+                .updateCustomer(customer, updatedCustomer);
+          }
+        }
       },
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -38,8 +36,7 @@ class CustomerInfoWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              // ignore: deprecated_member_use
-              color: Colors.grey.withOpacity(1),
+              color: Colors.grey.withOpacity(0.2),
               blurRadius: 6,
               offset: const Offset(0, 3),
             ),
@@ -49,8 +46,21 @@ class CustomerInfoWidget extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 30,
-              backgroundImage: NetworkImage(profileImageUrl),
+              backgroundImage: NetworkImage(customer.profileImageUrl),
               backgroundColor: Colors.grey[300],
+              onBackgroundImageError: (exception, stackTrace) {
+                Text("Profile");
+              },
+              child: customer.profileImageUrl.isEmpty
+                  ? Text(
+                      customer.name.isNotEmpty ? customer.name[0].toUpperCase() : '?',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    )
+                  : null,
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -58,28 +68,42 @@ class CustomerInfoWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    name,
+                    customer.name,
                     style: const TextStyle(
                       fontSize: 16,
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    email,
-                    style: const TextStyle(fontSize: 14,fontFamily: 'Poppins', color: Colors.black),
+                    customer.email,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'Poppins',
+                      color: Colors.grey,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    phoneNumber,
-                    style: const TextStyle(fontSize: 14,fontFamily: 'Poppins', color: Colors.black),
+                    customer.phoneNumber,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'Poppins',
+                      color: Colors.grey,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
+            ),
+            const Icon(
+              Icons.chevron_right,
+              color: Colors.grey,
+              size: 24,
             ),
           ],
         ),
