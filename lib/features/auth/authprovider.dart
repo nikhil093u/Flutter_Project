@@ -1,23 +1,64 @@
 import 'package:flutter/material.dart';
 
+class User {
+  final String firstName;
+  final String lastName;
+  final String dob;
+  final String email;
+  final String phone;
+  final String password;
+
+  User({
+    required this.firstName,
+    required this.lastName,
+    required this.dob,
+    required this.email,
+    required this.phone,
+    required this.password,
+  });
+}
+
+
 class AuthProvider with ChangeNotifier {
-  String? _email;
-  String? _password;
+  final List<User> _users = [];
+  User? _currentUser;
 
-  String? get email => _email;
-  String? get password => _password;
+  List<User> get users => _users;
+  User? get currentUser => _currentUser;
+  bool get isLoggedIn => _currentUser != null;
 
-  bool get isLoggedIn => _password != null;
+  bool signUp(User newUser) {
+    final exists = _users.any((user) => user.email == newUser.email);
+    if (exists) return false;
 
-  void login({required String email, required String password}) {
-    _email = email;
-    _password = password;
+    _users.add(newUser);
+    _currentUser = newUser;
     notifyListeners();
+    return true;
+  }
+
+  bool signIn({required String email, required String password}) {
+    final matchedUser = _users.firstWhere(
+      (user) => user.email == email && user.password == password,
+      orElse: () => User(
+        firstName: '',
+        lastName: '',
+        dob: '',
+        email: '',
+        phone: '',
+        password: '',
+      ),
+    );
+
+    if (matchedUser.email.isEmpty) return false;
+
+    _currentUser = matchedUser;
+    notifyListeners();
+    return true;
   }
 
   void logout() {
-    _email = null;
-    _password = null;
+    _currentUser = null;
     notifyListeners();
   }
 }

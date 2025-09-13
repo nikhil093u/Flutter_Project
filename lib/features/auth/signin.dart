@@ -1,45 +1,58 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application/features/auth/authprovider.dart';
+import 'package:flutter_application/routes/routes.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 
-class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreen();
+  State<SignUpScreen> createState() => _SignUpScreen();
 }
 
-class _SignInScreen extends State<SignInScreen> {
+class _SignUpScreen extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _dobController = TextEditingController();
-  final TextEditingController _userIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
-
   final storage = FlutterSecureStorage();
-  bool isEmailSignUp = true;
 
   @override
   void dispose() {
     _emailController.dispose();
-    _phoneController.dispose();
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    _dobController.dispose();
-    _userIdController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleSignUp() async {
-  }
+  Future<void> _handleLogin() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
 
-  Future<void> _handleOTPVerification() async {
+    if (email.isEmpty || password.isEmpty) {
+      _showMessage("Please fill in all fields");
+      return;
+    }
+
+    if (!email.contains('@') || !email.contains('.com')) {
+      _showMessage('Enter a valid email containing "@" and ".com"');
+      return;
+    }
+
+    if (password.length < 8) {
+      _showMessage('Password must be minimum 8 characters');
+      return;
+    }
+
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    bool loginSuccess = authProvider.signIn(email: email, password: password);
+
+    if (loginSuccess) {
+      _showMessage("Login Successful!");
+      Navigator.pushReplacementNamed(context, Routes.home);
+    } else {
+      _showMessage("Invalid email or password. Please try again or sign up.");
+    }
   }
 
   @override
@@ -86,9 +99,12 @@ class _SignInScreen extends State<SignInScreen> {
                   ],
                 ),
               ),
+
               const SizedBox(height: 20),
+
               const Text(
                 'Oceana Positive',
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF030303),
                   fontSize: 34,
@@ -97,9 +113,12 @@ class _SignInScreen extends State<SignInScreen> {
                   height: 1.41,
                 ),
               ),
+
               const SizedBox(height: 10),
+
               const Text(
-                'Sign Up',
+                'Login',
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF030303),
                   fontSize: 16,
@@ -107,174 +126,8 @@ class _SignInScreen extends State<SignInScreen> {
                   height: 1.5,
                 ),
               ),
+
               const SizedBox(height: 20),
-
-              // Selection Buttons: Email or Phone
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        isEmailSignUp = true;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isEmailSignUp
-                          ? Color(0xFFA4CDFD)
-                          : Colors.grey,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      shadowColor: Colors.black.withOpacity(0.9),
-
-                      elevation: 2,
-                    ),
-                    child: const Text(
-                      'Sign Up with Email',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        isEmailSignUp = false;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: !isEmailSignUp
-                          ? Color(0xFFA4CDFD)
-                          : Colors.grey,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      shadowColor: Colors.black.withOpacity(0.9),
-
-                      elevation: 2,
-                    ),
-                    child: const Text(
-                      'Sign Up with Phone',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-
-              // Input Fields based on Selection
-              if (isEmailSignUp) ...[
-                // Email Input
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Email*",
-                        style: TextStyle(
-                          color: Color(0xFF030303),
-                          fontSize: 14,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      SizedBox(
-                        width: 335,
-                        height: 48,
-                        child: TextField(
-                          controller: _emailController,
-                          decoration: const InputDecoration(
-                            hintText: 'Email@gmail.com',
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 8.0,
-                            ),
-                            filled: true,
-                            fillColor: Color.fromRGBO(255, 255, 255, 0.8),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(12),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-              ] else ...[
-                // Phone Number Input
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Phone Number*",
-                        style: TextStyle(
-                          color: Color(0xFF030303),
-                          fontSize: 14,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      SizedBox(
-                        width: 335,
-                        height: 48,
-                        child: TextField(
-                          controller: _phoneController,
-                          decoration: const InputDecoration(
-                            hintText: 'Phone Number',
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 8.0,
-                            ),
-                            filled: true,
-                            fillColor: Color.fromRGBO(255, 255, 255, 0.8),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(12),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-              ],
-
-              SizedBox(
-                width: 335,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: _handleOTPVerification,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    backgroundColor: const Color(0xFFA4CDFD),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    minimumSize: const Size(335, 48),
-                    shadowColor: Colors.black.withOpacity(0.9),
-
-                    elevation: 2,
-                  ),
-                  child: const Text(
-                    'Verify OTP',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 30),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -282,155 +135,78 @@ class _SignInScreen extends State<SignInScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "First Name*",
-                      style: TextStyle(
-                        color: Color(0xFF030303),
-                        fontSize: 14,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    SizedBox(
-                      width: 335,
-                      height: 48,
-                      child: TextField(
-                        controller: _firstNameController,
-                        decoration: const InputDecoration(
-                          hintText: 'First Name',
-                          contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
-                          filled: true,
-                          fillColor: Color.fromRGBO(255, 255, 255, 0.8),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      "Last Name*",
-                      style: TextStyle(
-                        color: Color(0xFF030303),
-                        fontSize: 14,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    SizedBox(
-                      width: 335,
-                      height: 48,
-                      child: TextField(
-                        controller: _lastNameController,
-                        decoration: const InputDecoration(
-                          hintText: 'Last Name',
-                          contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
-                          filled: true,
-                          fillColor: Color.fromRGBO(255, 255, 255, 0.8),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      "Date of Birth*",
-                      style: TextStyle(
-                        color: Color(0xFF030303),
-                        fontSize: 14,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    SizedBox(
-                      width: 335,
-                      height: 48,
-                      child: TextField(
-                        controller: _dobController,
-                        decoration: const InputDecoration(
-                          hintText: 'DD/MM/YYYY',
-                          contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
-                          filled: true,
-                          fillColor: Color.fromRGBO(255, 255, 255, 0.8),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
                       "Email*",
                       style: TextStyle(
                         color: Color(0xFF030303),
                         fontSize: 14,
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.w600,
+                        height: 1.57,
                       ),
                     ),
+
                     const SizedBox(height: 6),
+
                     SizedBox(
                       width: 335,
                       height: 48,
                       child: TextField(
-                        controller: _dobController,
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        style: const TextStyle(
+                          color: Color(0xFF171719),
+                          fontSize: 14,
+                          fontFamily: 'Poppins',
+                          height: 1.43,
+                        ),
                         decoration: const InputDecoration(
-                          hintText: 'Email@example.com',
+                          hintText: 'Email@gmail.com',
                           contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                           filled: true,
                           fillColor: Color.fromRGBO(255, 255, 255, 0.8),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(12)),
+                            borderSide: BorderSide(color: Color(0xFFD5D5DA)),
                           ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      "Phone Number*",
-                      style: TextStyle(
-                        color: Color(0xFF030303),
-                        fontSize: 14,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    SizedBox(
-                      width: 335,
-                      height: 48,
-                      child: TextField(
-                        controller: _dobController,
-                        decoration: const InputDecoration(
-                          hintText: 'Phone Number',
-                          contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
-                          filled: true,
-                          fillColor: Color.fromRGBO(255, 255, 255, 0.8),
-                          border: OutlineInputBorder(
+                          enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(12)),
+                            borderSide: BorderSide(color: Color(0xFFD5D5DA)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                            borderSide: BorderSide(color: Color(0xFFD5D5DA)),
                           ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 20),
+
                     const Text(
-                      "Enter Password*",
+                      "Password*",
                       style: TextStyle(
                         color: Color(0xFF030303),
                         fontSize: 14,
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.w600,
+                        height: 1.57,
                       ),
                     ),
+
                     const SizedBox(height: 6),
+
                     SizedBox(
                       width: 335,
                       height: 48,
                       child: TextField(
-                        controller: _dobController,
+                        controller: _passwordController,
+                        obscureText: true,
+                        style: const TextStyle(
+                          color: Color(0xFF171719),
+                          fontSize: 14,
+                          fontFamily: 'Poppins',
+                          height: 1.43,
+                        ),
                         decoration: const InputDecoration(
                           hintText: '**********',
                           contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -438,33 +214,15 @@ class _SignInScreen extends State<SignInScreen> {
                           fillColor: Color.fromRGBO(255, 255, 255, 0.8),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(12)),
+                            borderSide: BorderSide(color: Color(0xFFD5D5DA)),
                           ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      "Conform Password*",
-                      style: TextStyle(
-                        color: Color(0xFF030303),
-                        fontSize: 14,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    SizedBox(
-                      width: 335,
-                      height: 48,
-                      child: TextField(
-                        controller: _dobController,
-                        decoration: const InputDecoration(
-                          hintText: '**********',
-                          contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
-                          filled: true,
-                          fillColor: Color.fromRGBO(255, 255, 255, 0.8),
-                          border: OutlineInputBorder(
+                          enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(12)),
+                            borderSide: BorderSide(color: Color(0xFFD5D5DA)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                            borderSide: BorderSide(color: Color(0xFFD5D5DA)),
                           ),
                         ),
                       ),
@@ -473,39 +231,85 @@ class _SignInScreen extends State<SignInScreen> {
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
 
               SizedBox(
                 width: 335,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: _handleSignUp,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    backgroundColor: const Color(0xFFA4CDFD),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                  onPressed: _handleLogin,
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all(
+                      const EdgeInsets.symmetric(horizontal: 8),
                     ),
-                    minimumSize: const Size(335, 48),
-                    shadowColor: Colors.black.withOpacity(0.9),
-
-                    elevation: 3,
+                    backgroundColor: MaterialStateProperty.resolveWith<Color>((
+                      Set<MaterialState> states,
+                    ) {
+                      if (states.contains(MaterialState.pressed)) {
+                        return  Color(0xFF5BAAF8); // Pressed color
+                      }
+                      return const Color(0xFFA4CDFD); // Default color
+                    }),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    minimumSize: MaterialStateProperty.all(const Size(335, 48)),
+                    shadowColor: MaterialStateProperty.all(
+                      Colors.black.withOpacity(0.9),
+                    ),
+                    elevation: MaterialStateProperty.all(3),
                   ),
                   child: const Text(
-                    'Submit',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w600,
-                    ),
+                    'Login',
+                    style: TextStyle(color: Colors.white,fontFamily: 'poppins',fontWeight: FontWeight.w600,height: 1.375, fontSize: 16),
                   ),
                 ),
+              ),
+
+              const SizedBox(height: 20),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'New to Oceana Positive? ',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF030303),
+                      fontSize: 14,
+                      fontFamily: 'Poppins',
+                      height: 1.57,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, Routes.signin);
+                    },
+                    child: const Text(
+                      'Sign Up',
+                      style: TextStyle(
+                        color: Color(0xFF030303),
+                        fontSize: 14,
+                        fontFamily: 'Poppins',
+                        height: 1.57,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), duration: Duration(seconds: 3)),
     );
   }
 }

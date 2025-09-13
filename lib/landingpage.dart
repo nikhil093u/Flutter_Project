@@ -82,25 +82,37 @@ class LandingPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.pushNamed(context, Routes.signup);
                   },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    backgroundColor: const Color(0xFFA4CDFD),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all(
+                      const EdgeInsets.symmetric(horizontal: 8),
                     ),
-                    minimumSize: const Size(335, 48),
-                    shadowColor: Colors.black.withOpacity(0.9),
-
-                    elevation: 3,
+                    backgroundColor: MaterialStateProperty.resolveWith<Color>((
+                      Set<MaterialState> states,
+                    ) {
+                      if (states.contains(MaterialState.pressed)) {
+                        return Color(0xFF5BAAF8); // Pressed color
+                      }
+                      return const Color(0xFFA4CDFD); // Default color
+                    }),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    minimumSize: MaterialStateProperty.all(const Size(335, 48)),
+                    shadowColor: MaterialStateProperty.all(
+                      Colors.black.withOpacity(0.9),
+                    ),
+                    elevation: MaterialStateProperty.all(3),
                   ),
                   child: const Text(
                     'Login',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
-                      fontFamily: 'Poppins',
+                      fontFamily: 'poppins',
                       fontWeight: FontWeight.w600,
                       height: 1.375,
+                      fontSize: 16,
                     ),
                   ),
                 ),

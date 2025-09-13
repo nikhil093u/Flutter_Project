@@ -1,181 +1,254 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/features/orders/order_model.dart';
 
 class RepeatOrderPage extends StatefulWidget {
-  const RepeatOrderPage({super.key});
+  final Order order;
+
+  const RepeatOrderPage({super.key, required this.order});
 
   @override
   State<RepeatOrderPage> createState() => _RepeatOrderPageState();
 }
 
 class _RepeatOrderPageState extends State<RepeatOrderPage> {
-  double selectedQuantity = 1;
+  int selectedQuantity = 1;
 
-  final List<Map<String, dynamic>> orders = [
-    {
-      'orderId': '#12345',
-      'quantity': 5,
-      'imagePath': 'assets/images/bottle_blue.png',
-    },
-    {
-      'orderId': '#12346',
-      'quantity': 3,
-      'imagePath': 'assets/images/bottle_green.png',
-    },
-    {
-      'orderId': '#12347',
-      'quantity': 2,
-      'imagePath': 'assets/images/bottle_silver.png',
-    },
-  ];
+  @override
+  Widget build(BuildContext context) {
+    final order = widget.order;
 
-  Widget orderCard(Map<String, dynamic> order) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(40),
-              child: Image.asset(
-                order['imagePath'],
-                width: 60,
-                height: 60,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(width: 15),
-            Expanded(
-              child: Text(
-                'Order ${order['orderId']} - ${order['quantity']} bottles',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.lightBlue.shade200,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Text(
-                'Repeat Order',
-                style: TextStyle(
+    return Scaffold(
+      backgroundColor: Colors.grey.shade100,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Repeat Order',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Poppins',
+            color: Colors.black,
+          ),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
+        elevation: 1,
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 💡 Order Summary Card with Shadow
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
                   color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.08),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Order Summary",
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Poppins',
+                          ),
+                    ),
+                    const SizedBox(height: 12),
+                    _buildDetailRow("Customer", order.customerName),
+                    _buildDetailRow("Water Type", order.waterType),
+                    _buildDetailRow("Material", order.bottleMaterial),
+                    _buildDetailRow("Shape", order.bottleShape),
+                    _buildDetailRow("Color", order.colorCombination),
+                    _buildDetailRow("Text on Bottle", order.textOnBottle),
+                    _buildDetailRow("Pre-design", order.preDesignOption),
+                  ],
                 ),
               ),
-            )
-          ],
+
+              const SizedBox(height: 24),
+
+              // 🧮 Quantity Selector Styled Like Image
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.08),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Row(
+                      children: [
+                        Icon(Icons.inventory_2_outlined,
+                            color: Colors.blueAccent),
+                        SizedBox(width: 6),
+                        Text(
+                          "Select the quantity",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 40,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.grey.shade100,
+                        ),
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.remove),
+                              onPressed: selectedQuantity > 1
+                                  ? () {
+                                      setState(() {
+                                        selectedQuantity--;
+                                      });
+                                    }
+                                  : null,
+                            ),
+                            Expanded(
+                              child: Center(
+                                child: Text(
+                                  selectedQuantity.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.add),
+                              onPressed: () {
+                                setState(() {
+                                  selectedQuantity++;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 30),
+
+              // ✅ Checkout and Proceed Buttons like Image
+              Container(
+                width: double.infinity,
+                height: 48,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFCCE5FF), Color(0xFFCCE5FF)],
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          "Check out & Pay",
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: const BorderRadius.horizontal(
+                          right: Radius.circular(10),
+                        ),
+                      ),
+                      child: TextButton(
+                        onPressed: () {
+                          // Simulate checkout
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  'Proceeding with $selectedQuantity bottles'),
+                            ),
+                          );
+                          Navigator.pop(context);
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Text(
+                            "Proceed to Payment",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade200,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              color: Colors.lightBlue.shade300,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              child: const Center(
-                child: Text(
-                  'Repeat Order',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "$label: ",
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Poppins',
             ),
-
-            const SizedBox(height: 12),
-
-            const Text(
-              'Your Last 5 Orders',
-              style: TextStyle(
-                fontWeight: FontWeight.w900,
-                fontSize: 18,
-              ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(fontFamily: 'Poppins'),
             ),
-
-            const SizedBox(height: 12),
-
-            Expanded(
-              child: ListView.builder(
-                itemCount: orders.length,
-                itemBuilder: (context, index) {
-                  return orderCard(orders[index]);
-                },
-              ),
-            ),
-
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Select Quantity:',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Slider(
-                    value: selectedQuantity,
-                    min: 1,
-                    max: 10,
-                    divisions: 9,
-                    label: selectedQuantity.round().toString(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedQuantity = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: SizedBox(
-                width: 140,
-                height: 45,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                  ),
-                  onPressed: () {
-                    // Handle checkout
-                  },
-                  child: const Text(
-                    'Checkout',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -95,7 +95,7 @@ class ResourcePage extends StatelessWidget {
           children: const [
             ResourceCard(
               imagePath: 'assets/images/resource_1.png',
-              title: 'Water Filtration Product',
+              title: 'Water Filtration Process',
               description:
                   'Learn about the latest in eco-friendly water filtration technology.',
             ),

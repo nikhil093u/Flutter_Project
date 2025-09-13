@@ -82,15 +82,26 @@ class TaskDetails extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context, true);
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFA4CDFD),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith<Color>((
+                states,
+              ) {
+                if (states.contains(WidgetState.pressed)) {
+                  // Darker color when pressed
+                  return const Color(0xFF6B9EEA);
+                }
+                // Normal color
+                return const Color(0xFFA4CDFD);
+              }),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
-              elevation: 3,
-                                  shadowColor: Colors.black.withOpacity(0.9),
-
+              elevation: MaterialStateProperty.all(3),
+              shadowColor: MaterialStateProperty.all(
+                Colors.black.withOpacity(0.9),
+              ),
             ),
+
             child: Text(
               'Delete Task',
               style: TextStyle(

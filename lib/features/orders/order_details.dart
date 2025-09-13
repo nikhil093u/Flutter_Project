@@ -82,7 +82,7 @@ class OrderDetails extends StatelessWidget {
                     icon: Icons.replay_outlined,
                     color: Colors.green,
                     onPressed: () {
-                      Navigator.pushNamed(context, Routes.repeatorder);
+                      Navigator.pushNamed(context, Routes.repeatorder,arguments: order);
                     },
                   ),
                   _actionButton(
@@ -187,7 +187,8 @@ class OrderDetails extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: color.withOpacity(0.1),
           foregroundColor: color,
-          elevation: 0,
+          elevation: 3,
+          shadowColor: Colors.transparent,
           padding: const EdgeInsets.symmetric(vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),

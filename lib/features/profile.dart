@@ -9,7 +9,8 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider=Provider.of<AuthProvider>(context);
-    final email= authProvider.email;
+    final user = authProvider.currentUser;
+    final email=user?.email;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(

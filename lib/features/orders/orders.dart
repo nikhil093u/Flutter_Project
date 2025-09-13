@@ -56,7 +56,9 @@ class _OrdersListState extends State<OrdersList> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(LucideIcons.arrowLeft, size: 24, color: Color(0xFF030303)),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         title: Row(
           children: const [

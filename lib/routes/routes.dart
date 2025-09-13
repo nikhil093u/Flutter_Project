@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/features/auth/signin.dart';
 import 'package:flutter_application/features/auth/signup.dart';
+import 'package:flutter_application/features/auth/signin.dart';
 import 'package:flutter_application/features/customers/add_newcustomer.dart';
 import 'package:flutter_application/features/customers/customers.dart';
 import 'package:flutter_application/features/home/home.dart';
@@ -62,7 +62,8 @@ class Routes {
       case setting:
         return MaterialPageRoute(builder: (_) => SettingsPage());
       case repeatorder:
-        return MaterialPageRoute(builder: (_) => RepeatOrderPage());
+        final order = settings.arguments as Order;
+        return MaterialPageRoute(builder: (_) => RepeatOrderPage(order: order));
       case orderdetails:
         final args = settings.arguments as Order;
         return MaterialPageRoute(builder: (_) => OrderDetails(order: args));
