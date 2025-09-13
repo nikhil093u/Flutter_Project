@@ -80,7 +80,7 @@ class TodoState extends State<Todo> {
                     child: Text(
                       'No tasks yet.',
                       style: TextStyle(
-                        color: Colors.grey[800],
+                        color: Colors.grey,
                         fontFamily: 'Poppins',
 
                         fontSize: 16,
@@ -215,10 +215,9 @@ class TodoState extends State<Todo> {
                         backgroundColor:
                             MaterialStateProperty.resolveWith<Color>((states) {
                               if (states.contains(WidgetState.pressed)) {
-                                // Darker or normal blue on pressed
                                 return const Color(
                                   0xFF7EB6FF,
-                                ); // a bit darker than 0xFFA4CDFD
+                                ); 
                               }
                               return const Color(0xFFA4CDFD);
                             }),

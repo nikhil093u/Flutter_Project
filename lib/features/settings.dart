@@ -49,10 +49,10 @@ class _SettingsPageState extends State<SettingsPage> {
       contactNumberController.text = currentUser.phone;
       joiningDateController.text = currentUser.dob;
 
-
       roleController.text = 'User';
       languagesController.text = 'English';
-      officeAddressController.text = 'SmatWork Innovations Pvt. Ltd. 104, Supriya Estates, Prashant Hills,RaiDurga, Hyderabad, Telangana 500008';
+      officeAddressController.text =
+          'SmatWork Innovations Pvt. Ltd. 104, Supriya Estates, Prashant Hills,RaiDurga, Hyderabad, Telangana 500008';
       specialRequirementsController.text = 'N/A';
       dietaryRestrictionsController.text = '';
     }
@@ -153,6 +153,7 @@ class _SettingsPageState extends State<SettingsPage> {
       margin: const EdgeInsets.symmetric(vertical: 6),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 1,
+      color: Color(0xFFD3D3D3),
       child: ListTile(
         leading: Icon(LucideIcons.file, color: Colors.grey[700]),
         title: Text(title, style: TextStyle(fontFamily: 'Poppins')),
@@ -187,7 +188,6 @@ class _SettingsPageState extends State<SettingsPage> {
       builder: (context, authProvider, child) {
         final currentUser = authProvider.currentUser;
 
-        // If no user is logged in, redirect to login
         if (currentUser == null) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             Navigator.pushReplacementNamed(context, Routes.signin);
@@ -196,17 +196,20 @@ class _SettingsPageState extends State<SettingsPage> {
         }
 
         return Scaffold(
-          backgroundColor: Colors.grey.shade100,
+          backgroundColor: Colors.white,
           appBar: AppBar(
+            centerTitle: true,
             backgroundColor: Colors.white,
-            elevation: 1,
+            leading: IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(LucideIcons.arrowLeft, color: Colors.black),
+            ),
             title: Text(
-              'Profile',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
+              "Settings",
+              style: const TextStyle(
                 fontFamily: 'Poppins',
-                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
               ),
             ),
             actions: [
@@ -216,6 +219,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 tooltip: 'Logout',
               ),
             ],
+            elevation: 0,
           ),
           body: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
