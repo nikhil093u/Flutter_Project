@@ -3,7 +3,6 @@ import 'package:flutter_application/features/auth/authprovider.dart';
 import 'package:flutter_application/features/orders/order_model.dart';
 import 'package:flutter_application/features/orders/orderprovider.dart';
 import 'package:provider/provider.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:uuid/uuid.dart';
 
 class CreateOrder extends StatefulWidget {
@@ -146,16 +145,7 @@ class _CreateOrderState extends State<CreateOrder> {
                     color: Colors.white,
                   ),
                   child: TextButton(
-                    onPressed: () async {
-                      FilePickerResult? result = await FilePicker.platform.pickFiles(
-                        type: FileType.custom,
-                        allowedExtensions: ['psd', 'ai', 'cdr', 'pdf'],
-                      );
-                      if (result != null && result.files.isNotEmpty) {
-                        setState(() {
-                          selectedFileName = result.files.single.name;
-                        });
-                      }
+                    onPressed: ()  {
                     },
                     child: Text(
                       selectedFileName == null ? 'Choose File' : selectedFileName!,
