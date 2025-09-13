@@ -3,10 +3,12 @@ import 'package:flutter_application/features/auth/authprovider.dart';
 import 'package:flutter_application/features/orders/order_model.dart';
 import 'package:flutter_application/features/orders/orderprovider.dart';
 import 'package:provider/provider.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:uuid/uuid.dart';
 
 class CreateOrder extends StatefulWidget {
   const CreateOrder({super.key});
+
   @override
   State<CreateOrder> createState() => _CreateOrderState();
 }
@@ -20,6 +22,7 @@ class _CreateOrderState extends State<CreateOrder> {
   String? sizeQuantity = '500ml';
   String? colorCombination = 'Blue & White';
   String? preDesignOption = 'Modern';
+  String? selectedFileName;
 
   final TextEditingController textOnBottleController = TextEditingController();
   final TextEditingController socialNetwork1Controller = TextEditingController();
@@ -49,12 +52,11 @@ class _CreateOrderState extends State<CreateOrder> {
   }
 
   void _submitOrder() {
-    if (!_formKey.currentState!.validate()) {
-      // Form will show validation errors automatically
-      return;
-    }
+    if (!_formKey.currentState!.validate()) return;
+
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final currentUser = authProvider.currentUser;
+
     final newOrder = Order(
       id: const Uuid().v4().substring(0, 8),
       customerName: currentUser?.firstName ?? '',
@@ -70,6 +72,7 @@ class _CreateOrderState extends State<CreateOrder> {
       socialNetwork1: socialNetwork1Controller.text,
       socialNetwork2: socialNetwork2Controller.text,
     );
+
     Provider.of<OrderProvider>(context, listen: false).addOrder(newOrder);
     Navigator.pop(context);
   }
@@ -143,11 +146,19 @@ class _CreateOrderState extends State<CreateOrder> {
                     color: Colors.white,
                   ),
                   child: TextButton(
-                    onPressed: () {
-                      // File picker logic
+                    onPressed: () async {
+                      FilePickerResult? result = await FilePicker.platform.pickFiles(
+                        type: FileType.custom,
+                        allowedExtensions: ['psd', 'ai', 'cdr', 'pdf'],
+                      );
+                      if (result != null && result.files.isNotEmpty) {
+                        setState(() {
+                          selectedFileName = result.files.single.name;
+                        });
+                      }
                     },
                     child: Text(
-                      'Choose File',
+                      selectedFileName == null ? 'Choose File' : selectedFileName!,
                       style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 14,
@@ -201,19 +212,20 @@ class _CreateOrderState extends State<CreateOrder> {
           child: ElevatedButton(
             onPressed: _submitOrder,
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                if (states.contains(MaterialState.pressed)) {
+              backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                if (states.contains(WidgetState.pressed)) {
                   return const Color(0xFF6B9EEA);
                 }
                 return const Color(0xFFA4CDFD);
               }),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              shadowColor: MaterialStateProperty.all(
+              shadowColor: WidgetStateProperty.all(
+                // ignore: deprecated_member_use
                 Colors.black.withOpacity(0.9),
               ),
-              elevation: MaterialStateProperty.all(3),
+              elevation: WidgetStateProperty.all(3),
             ),
             child: const Text(
               'Submit Order',
@@ -251,7 +263,7 @@ class _CreateOrderState extends State<CreateOrder> {
           ),
           const SizedBox(height: 6),
           DropdownButtonFormField<String>(
-            value: value,
+            initialValue: value,
             isExpanded: true,
             decoration: InputDecoration(
               border: OutlineInputBorder(

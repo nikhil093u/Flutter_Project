@@ -31,14 +31,14 @@ class Home extends StatelessWidget {
     'Customers',
     'Orders',
     'Resources',
-    'Help',
+    'To-Do\'s',
   ];
 
   final List<IconData> icons = const [
     LucideIcons.users,
     LucideIcons.shoppingCart,
     LucideIcons.refreshCcw,
-    LucideIcons.helpCircle,
+    LucideIcons.listTodo,
   ];
 
   Widget _buildClickableBlock(
@@ -54,9 +54,9 @@ class Home extends StatelessWidget {
           Navigator.pushNamed(context, Routes.orders);
         } else if (label == 'Resources') {
           Navigator.pushNamed(context, Routes.resources);
-        }// else if (label == 'Help') {
-        //   Navigator.pushNamed(context, Routes.help);
-        // }
+        } else if (label == 'To-Do\'s') {
+           Navigator.pushNamed(context, Routes.todo);
+        }
       },
       child: Container(
         width: 135,

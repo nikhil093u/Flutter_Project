@@ -13,23 +13,29 @@ class ProfilePage extends StatelessWidget {
     final email=user?.email;
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(LucideIcons.arrowLeft, color: Colors.black),
+        ),
+        title: Text(
+          "Profile",
+          style: const TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w700,
+            color: Colors.black,
+          ),
+        ),
+        elevation: 0,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Column(
               children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Profile',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Poppins',
-                    ),
-                  ),
-                ),
 
                 const SizedBox(height: 20),
 
