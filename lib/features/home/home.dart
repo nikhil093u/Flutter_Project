@@ -36,7 +36,7 @@ class Home extends StatelessWidget {
 
   final List<IconData> icons = const [
     LucideIcons.users,
-    LucideIcons.fileText,
+    LucideIcons.shoppingCart,
     LucideIcons.refreshCcw,
     LucideIcons.helpCircle,
   ];
@@ -112,7 +112,7 @@ class Home extends StatelessWidget {
             Navigator.pushNamed(context, Routes.todo);
           },
           child: const Text(
-            'TO-DO List',
+            'Sales Application',
             style: TextStyle(
               color: Color(0xFF030303),
               fontSize: 20,

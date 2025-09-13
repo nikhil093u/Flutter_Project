@@ -1,6 +1,5 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
+import 'package:flutter_application/features/auth/authprovider.dart';
 import 'package:flutter_application/features/orders/order_model.dart';
 import 'package:flutter_application/features/orders/orderprovider.dart';
 import 'package:provider/provider.dart';
@@ -8,12 +7,13 @@ import 'package:uuid/uuid.dart';
 
 class CreateOrder extends StatefulWidget {
   const CreateOrder({super.key});
-
   @override
   State<CreateOrder> createState() => _CreateOrderState();
 }
 
 class _CreateOrderState extends State<CreateOrder> {
+  final _formKey = GlobalKey<FormState>();
+
   String? waterType = 'Mineral Water';
   String? bottleMaterial = 'Plastic';
   String? bottleShape = 'Round';
@@ -21,21 +21,9 @@ class _CreateOrderState extends State<CreateOrder> {
   String? colorCombination = 'Blue & White';
   String? preDesignOption = 'Modern';
 
-  final TextEditingController waterTypeController = TextEditingController();
-  final TextEditingController bottleMaterialController =
-      TextEditingController();
-  final TextEditingController bottleShapeController = TextEditingController();
-  final TextEditingController sizeQuantityController = TextEditingController();
-  final TextEditingController colorCombinationController =
-      TextEditingController();
-  final TextEditingController preDesignOptionController =
-      TextEditingController();
-
   final TextEditingController textOnBottleController = TextEditingController();
-  final TextEditingController socialNetwork1Controller =
-      TextEditingController();
-  final TextEditingController socialNetwork2Controller =
-      TextEditingController();
+  final TextEditingController socialNetwork1Controller = TextEditingController();
+  final TextEditingController socialNetwork2Controller = TextEditingController();
 
   final List<String> waterTypeOptions = [
     'Mineral Water',
@@ -53,25 +41,7 @@ class _CreateOrderState extends State<CreateOrder> {
   final List<String> preDesignOptions = ['Modern', 'Classic', 'Minimal'];
 
   @override
-  void initState() {
-    super.initState();
-
-    waterTypeController.text = waterType!;
-    bottleMaterialController.text = bottleMaterial!;
-    bottleShapeController.text = bottleShape!;
-    sizeQuantityController.text = sizeQuantity!;
-    colorCombinationController.text = colorCombination!;
-    preDesignOptionController.text = preDesignOption!;
-  }
-
-  @override
   void dispose() {
-    waterTypeController.dispose();
-    bottleMaterialController.dispose();
-    bottleShapeController.dispose();
-    sizeQuantityController.dispose();
-    colorCombinationController.dispose();
-    preDesignOptionController.dispose();
     textOnBottleController.dispose();
     socialNetwork1Controller.dispose();
     socialNetwork2Controller.dispose();
@@ -79,48 +49,29 @@ class _CreateOrderState extends State<CreateOrder> {
   }
 
   void _submitOrder() {
-    final formData = getFormData();
-
-    if (formData.values.any((value) => value.trim().isEmpty)) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please fill all fields')));
+    if (!_formKey.currentState!.validate()) {
+      // Form will show validation errors automatically
       return;
     }
-
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final currentUser = authProvider.currentUser;
     final newOrder = Order(
       id: const Uuid().v4().substring(0, 8),
-      customerName: 'John Doe',
+      customerName: currentUser?.firstName ?? '',
       date: DateTime.now(),
       status: 'Pending',
-      waterType: formData['waterType']!,
-      bottleMaterial: formData['bottleMaterial']!,
-      bottleShape: formData['bottleShape']!,
-      sizeQuantity: formData['sizeQuantity']!,
-      colorCombination: formData['colorCombination']!,
-      preDesignOption: formData['preDesignOption']!,
-      textOnBottle: formData['textOnBottle']!,
-      socialNetwork1: formData['socialNetwork1']!,
-      socialNetwork2: formData['socialNetwork2']!,
+      waterType: waterType!,
+      bottleMaterial: bottleMaterial!,
+      bottleShape: bottleShape!,
+      sizeQuantity: sizeQuantity!,
+      colorCombination: colorCombination!,
+      preDesignOption: preDesignOption!,
+      textOnBottle: textOnBottleController.text,
+      socialNetwork1: socialNetwork1Controller.text,
+      socialNetwork2: socialNetwork2Controller.text,
     );
-
     Provider.of<OrderProvider>(context, listen: false).addOrder(newOrder);
-
     Navigator.pop(context);
-  }
-
-  Map<String, String> getFormData() {
-    return {
-      'waterType': waterTypeController.text,
-      'bottleMaterial': bottleMaterialController.text,
-      'bottleShape': bottleShapeController.text,
-      'sizeQuantity': sizeQuantityController.text,
-      'colorCombination': colorCombinationController.text,
-      'preDesignOption': preDesignOptionController.text,
-      'textOnBottle': textOnBottleController.text,
-      'socialNetwork1': socialNetwork1Controller.text,
-      'socialNetwork2': socialNetwork2Controller.text,
-    };
   }
 
   @override
@@ -144,128 +95,101 @@ class _CreateOrderState extends State<CreateOrder> {
         onTap: () => FocusScope.of(context).unfocus(),
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              buildDropdown(
-                label: 'Select Water Type',
-                value: waterType,
-                items: waterTypeOptions,
-                onChanged: (value) {
-                  setState(() {
-                    waterType = value;
-                    waterTypeController.text = value!;
-                  });
-                },
-              ),
-              buildDropdown(
-                label: 'Select Bottle Material Type',
-                value: bottleMaterial,
-                items: bottleMaterialOptions,
-                onChanged: (value) {
-                  setState(() {
-                    bottleMaterial = value;
-                    bottleMaterialController.text = value!;
-                  });
-                },
-              ),
-              buildDropdown(
-                label: 'Select Bottle Shape',
-                value: bottleShape,
-                items: bottleShapeOptions,
-                onChanged: (value) {
-                  setState(() {
-                    bottleShape = value;
-                    bottleShapeController.text = value!;
-                  });
-                },
-              ),
-              buildDropdown(
-                label: 'Select the Size/Quantity',
-                value: sizeQuantity,
-                items: sizeQuantityOptions,
-                onChanged: (value) {
-                  setState(() {
-                    sizeQuantity = value;
-                    sizeQuantityController.text = value!;
-                  });
-                },
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Upload a Logo (Allowed formats .PSD, .AI, .CDR, PDF)',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                  fontFamily: 'Poppins',
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildDropdownField(
+                  label: 'Select Water Type',
+                  value: waterType,
+                  items: waterTypeOptions,
+                  onChanged: (value) => setState(() => waterType = value),
                 ),
-              ),
-              const SizedBox(height: 12),
-              Container(
-                height: 50,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(23),
-                  border: Border.all(color: Color(0xFFD5D5DA)),
-                  color: Colors.white,
+                buildDropdownField(
+                  label: 'Select Bottle Material Type',
+                  value: bottleMaterial,
+                  items: bottleMaterialOptions,
+                  onChanged: (value) => setState(() => bottleMaterial = value),
                 ),
-                child: TextButton(
-                  onPressed: () {
-                    // File picker logic
-                  },
-                  child: Text(
-                    'Choose File',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 14,
-                      color: Colors.grey[800],
+                buildDropdownField(
+                  label: 'Select Bottle Shape',
+                  value: bottleShape,
+                  items: bottleShapeOptions,
+                  onChanged: (value) => setState(() => bottleShape = value),
+                ),
+                buildDropdownField(
+                  label: 'Select the Size/Quantity',
+                  value: sizeQuantity,
+                  items: sizeQuantityOptions,
+                  onChanged: (value) => setState(() => sizeQuantity = value),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Upload a Logo (Allowed formats .PSD, .AI, .CDR, PDF)',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    fontFamily: 'Poppins',
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Container(
+                  height: 50,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(23),
+                    border: Border.all(color: Color(0xFFD5D5DA)),
+                    color: Colors.white,
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      // File picker logic
+                    },
+                    child: Text(
+                      'Choose File',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 14,
+                        color: Colors.grey[800],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              buildDropdown(
-                label: 'Select Colour Combination',
-                value: colorCombination,
-                items: colorCombinationOptions,
-                onChanged: (value) {
-                  setState(() {
-                    colorCombination = value;
-                    colorCombinationController.text = value!;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-              buildTextField(
-                label: 'Enter the Text on Bottle',
-                controller: textOnBottleController,
-                hint: 'Enter text here',
-              ),
-              const SizedBox(height: 16),
-              buildDropdown(
-                label: 'Select Pre-design Options',
-                value: preDesignOption,
-                items: preDesignOptions,
-                onChanged: (value) {
-                  setState(() {
-                    preDesignOption = value;
-                    preDesignOptionController.text = value!;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-              buildTextField(
-                label: 'Add Social Network Details:',
-                controller: socialNetwork1Controller,
-                hint: 'Website URL',
-              ),
-              const SizedBox(height: 8),
-              buildTextField(
-                label: '',
-                controller: socialNetwork2Controller,
-                hint: 'Instagram/Facebook/LinkedIn',
-              ),
-            ],
+                const SizedBox(height: 16),
+                buildDropdownField(
+                  label: 'Select Colour Combination',
+                  value: colorCombination,
+                  items: colorCombinationOptions,
+                  onChanged: (value) => setState(() => colorCombination = value),
+                ),
+                const SizedBox(height: 16),
+                buildValidatedTextField(
+                  label: 'Enter the Text on Bottle',
+                  controller: textOnBottleController,
+                  hint: 'Enter text here',
+                ),
+                const SizedBox(height: 16),
+                buildDropdownField(
+                  label: 'Select Pre-design Options',
+                  value: preDesignOption,
+                  items: preDesignOptions,
+                  onChanged: (value) => setState(() => preDesignOption = value),
+                ),
+                const SizedBox(height: 16),
+                buildValidatedTextField(
+                  label: 'Add Social Network Details:',
+                  controller: socialNetwork1Controller,
+                  hint: 'Website URL',
+                ),
+                const SizedBox(height: 8),
+                buildValidatedTextField(
+                  label: '',
+                  controller: socialNetwork2Controller,
+                  hint: 'Instagram/Facebook/LinkedIn',
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -276,13 +200,20 @@ class _CreateOrderState extends State<CreateOrder> {
           height: 48,
           child: ElevatedButton(
             onPressed: _submitOrder,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFA4CDFD),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                if (states.contains(MaterialState.pressed)) {
+                  return const Color(0xFF6B9EEA);
+                }
+                return const Color(0xFFA4CDFD);
+              }),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              shadowColor: Colors.black.withOpacity(0.9),
-              elevation: 3,
+              shadowColor: MaterialStateProperty.all(
+                Colors.black.withOpacity(0.9),
+              ),
+              elevation: MaterialStateProperty.all(3),
             ),
             child: const Text(
               'Submit Order',
@@ -299,7 +230,7 @@ class _CreateOrderState extends State<CreateOrder> {
     );
   }
 
-  Widget buildDropdown({
+  Widget buildDropdownField({
     required String label,
     required String? value,
     required List<String> items,
@@ -319,104 +250,105 @@ class _CreateOrderState extends State<CreateOrder> {
             ),
           ),
           const SizedBox(height: 6),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFD5D5DA)),
-              color: Colors.white,
-            ),
-            child: DropdownButtonFormField<String>(
-              value: value,
-              isExpanded: true,
-              decoration: const InputDecoration(
-                fillColor: Colors.white,
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
+          DropdownButtonFormField<String>(
+            value: value,
+            isExpanded: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-              items: items
-                  .map(
-                    (e) => DropdownMenuItem<String>(
-                      value: e,
-                      child: Text(
-                        e,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: 'Poppins',
-                          color: Colors.grey[800],
-                        ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+              fillColor: Colors.white,
+              filled: true,
+            ),
+            items: items
+                .map(
+                  (e) => DropdownMenuItem<String>(
+                    value: e,
+                    child: Text(
+                      e,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Poppins',
+                        color: Colors.grey[800],
                       ),
                     ),
-                  )
-                  .toList(),
-              onChanged: onChanged,
-              iconEnabledColor: Colors.black,
-              dropdownColor: Colors.white,
-              style: const TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: 14,
-                fontFamily: 'Poppins',
-                color: Colors.black,
-              ),
+                  ),
+                )
+                .toList(),
+            onChanged: onChanged,
+            iconEnabledColor: Colors.black,
+            dropdownColor: Colors.white,
+            style: const TextStyle(
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
+              fontFamily: 'Poppins',
+              color: Colors.black,
             ),
+            validator: (value) => value == null || value.isEmpty ? 'This field is required' : null,
           ),
         ],
       ),
     );
   }
 
-  Widget buildTextField({
+  Widget buildValidatedTextField({
     required String label,
     required TextEditingController controller,
     String? hint,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (label.isNotEmpty)
-          Text(
-            label,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (label.isNotEmpty)
+            Text(
+              label,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+                fontFamily: 'Poppins',
+              ),
+            ),
+          if (label.isNotEmpty) const SizedBox(height: 6),
+          TextFormField(
+            controller: controller,
             style: const TextStyle(
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w400,
               fontSize: 14,
               fontFamily: 'Poppins',
             ),
+            decoration: InputDecoration(
+              hintText: hint,
+              hintStyle: TextStyle(
+                color: Colors.grey[800],
+                fontFamily: 'Poppins',
+              ),
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 14,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Color(0xFFD5D5DA)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Color(0xFFD5D5DA)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Color(0xFFA4CDFD)),
+              ),
+            ),
+            validator: (value) =>
+                value == null || value.trim().isEmpty ? 'This field is required' : null,
           ),
-        if (label.isNotEmpty) const SizedBox(height: 6),
-        TextField(
-          controller: controller,
-          style: const TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 14,
-            fontFamily: 'Poppins',
-          ),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(
-              color: Colors.grey[800],
-              fontFamily: 'Poppins',
-            ),
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 14,
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFFD5D5DA)),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFFD5D5DA)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFFA4CDFD)),
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

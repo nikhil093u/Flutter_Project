@@ -211,15 +211,31 @@ class TodoState extends State<Todo> {
                     height: 48,
                     child: ElevatedButton(
                       onPressed: _addTodo,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFA4CDFD),
-                        elevation: 3,
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>((states) {
+                              if (states.contains(WidgetState.pressed)) {
+                                // Darker or normal blue on pressed
+                                return const Color(
+                                  0xFF7EB6FF,
+                                ); // a bit darker than 0xFFA4CDFD
+                              }
+                              return const Color(0xFFA4CDFD);
+                            }),
+                        elevation: MaterialStateProperty.all(3),
+                        padding: MaterialStateProperty.all(
+                          const EdgeInsets.symmetric(horizontal: 20),
                         ),
-                        shadowColor: Colors.black.withOpacity(0.9),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        shadowColor: MaterialStateProperty.all(
+                          Colors.black.withOpacity(0.9),
+                        ),
                       ),
+
                       child: Text(
                         'Add',
                         style: TextStyle(

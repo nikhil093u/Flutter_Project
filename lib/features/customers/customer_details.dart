@@ -176,12 +176,18 @@ class _CustomerDetailsState extends State<CustomerDetails> {
               }
             },
 
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFA4CDFD),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                if (states.contains(WidgetState.pressed)) {
+                  return const Color(0xFF6B9EEA); // Darker blue when pressed
+                }
+                return const Color(0xFFA4CDFD); // Normal color
+              }),
+              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
             ),
+
             child: const Text(
               'Edit Details',
               style: TextStyle(

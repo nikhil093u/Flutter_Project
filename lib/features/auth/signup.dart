@@ -2,67 +2,151 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application/features/auth/authprovider.dart';
-// import 'package:cryptography/cryptography.dart';
-// import 'dart:convert';
-// import 'package:flutter_application/core/services/apiservice.dart';
-// import 'package:flutter_application/core/services/encrypt.dart';
 import 'package:flutter_application/routes/routes.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreen();
+  State<SignInScreen> createState() => _SignInScreen();
 }
 
-class _SignUpScreen extends State<SignUpScreen> {
+class _SignInScreen extends State<SignInScreen> {
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _dobController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
   final storage = FlutterSecureStorage();
+  bool isEmailSignUp = true;
+  bool isOTPVerified = false;
+
   @override
   void dispose() {
     _emailController.dispose();
+    _phoneController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _dobController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
-    final email = _emailController.text;
-    final password = _passwordController.text;
+  Future<void> _handleSignUp() async {
+    if (!_validateFields()) return;
 
-    if (email.isEmpty || password.isEmpty) {
-      Navigator.pushNamed(context, Routes.home);
-      _showMessage("Login Successfull!");
-    } else if (!email.contains('@') || !email.contains('.com')) {
-      _showMessage('Enter a valid email containing "@" and ".com"');
-    } else if (password.length<8) {
-      _showMessage('PassWord must be min 8 characters');
+    final newUser = User(
+      firstName: _firstNameController.text.trim(),
+      lastName: _lastNameController.text.trim(),
+      dob: _dobController.text.trim(),
+      email: _emailController.text.trim(),
+      phone: _phoneController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    bool signUpSuccess = authProvider.signUp(newUser);
+
+    if (signUpSuccess) {
+      _showMessage("Sign up successful! Welcome to Oceana Positive!");
+      Navigator.pushReplacementNamed(context, Routes.home);
     } else {
-      Provider.of<AuthProvider>(
-        context,
-        listen: false,
-      ).login(email: email, password: password);
-      Navigator.pushNamed(context, Routes.home);
+      _showMessage(
+        "User with this email already exists. Please try logging in.",
+      );
+      await Future.delayed(Duration(seconds: 2));
+      if (!mounted) return;
+      Navigator.pop(context);
+    }
+  }
+
+  bool _validateFields() {
+    if (_firstNameController.text.trim().isEmpty) {
+      _showMessage("Please enter your first name");
+      return false;
     }
 
-    // try {
-    //   final response = await ApiService.login(email: email, password: password);
-    //   if (response.statusCode == 200) {
-    //     _showMessage("Loggin Successfull");
-    //     Map<String, dynamic> data = json.decode(response.body);
-    //     final token = data['access_token'];
-    //     await storage.write(key: 'auth_token', value: token);
+    if (_lastNameController.text.trim().isEmpty) {
+      _showMessage("Please enter your last name");
+      return false;
+    }
 
-    //     // ignore: use_build_context_synchronously
-    //     Navigator.pushNamed(context, Routes.home);
-    //   } else {
-    //     _showMessage("Sign-up failed. Please try again.");
-    //   }
-    // } catch (e) {
-    //   _showMessage("An error occurred. Please try again.");
-    // }
+    if (_dobController.text.trim().isEmpty) {
+      _showMessage("Please enter your date of birth");
+      return false;
+    }
+
+    if (_emailController.text.trim().isEmpty) {
+      _showMessage("Please enter your email");
+      return false;
+    }
+
+    if (!_emailController.text.contains('@') ||
+        !_emailController.text.contains('.')) {
+      _showMessage("Please enter a valid email address");
+      return false;
+    }
+
+    if (_phoneController.text.trim().isEmpty) {
+      _showMessage("Please enter your phone number");
+      return false;
+    }
+
+    if (_passwordController.text.trim().isEmpty) {
+      _showMessage("Please enter a password");
+      return false;
+    }
+
+    if (_passwordController.text.length < 8) {
+      _showMessage("Password must be at least 8 characters");
+      return false;
+    }
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      _showMessage("Passwords do not match");
+      return false;
+    }
+
+    if (!isOTPVerified) {
+      _showMessage("Please verify your OTP first");
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<void> _handleOTPVerification() async {
+    String contactMethod = isEmailSignUp
+        ? _emailController.text.trim()
+        : _phoneController.text.trim();
+
+    if (contactMethod.isEmpty) {
+      _showMessage(
+        isEmailSignUp
+            ? "Please enter your email"
+            : "Please enter your phone number",
+      );
+      return;
+    }
+
+    if (isEmailSignUp &&
+        (!contactMethod.contains('@') || !contactMethod.contains('.'))) {
+      _showMessage("Please enter a valid email address");
+      return;
+    }
+
+    await Future.delayed(Duration(seconds: 1));
+    setState(() {
+      isOTPVerified = true;
+    });
+    _showMessage("OTP verified successfully!");
   }
 
   @override
@@ -109,12 +193,9 @@ class _SignUpScreen extends State<SignUpScreen> {
                   ],
                 ),
               ),
-
               const SizedBox(height: 20),
-
               const Text(
                 'Oceana Positive',
-                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF030303),
                   fontSize: 34,
@@ -123,12 +204,9 @@ class _SignUpScreen extends State<SignUpScreen> {
                   height: 1.41,
                 ),
               ),
-
               const SizedBox(height: 10),
-
               const Text(
-                'Login',
-                textAlign: TextAlign.center,
+                'Sign Up',
                 style: TextStyle(
                   color: Color(0xFF030303),
                   fontSize: 16,
@@ -136,8 +214,191 @@ class _SignUpScreen extends State<SignUpScreen> {
                   height: 1.5,
                 ),
               ),
-
               const SizedBox(height: 20),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        isEmailSignUp = true;
+                        isOTPVerified = false;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isEmailSignUp
+                          ? Color(0xFFA4CDFD)
+                          : Colors.grey,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      shadowColor: Colors.black.withOpacity(0.9),
+                      elevation: 2,
+                    ),
+                    child: const Text(
+                      'Sign Up with Email',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        isEmailSignUp = false;
+                        isOTPVerified = false;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: !isEmailSignUp
+                          ? Color(0xFFA4CDFD)
+                          : Colors.grey,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      shadowColor: Colors.black.withOpacity(0.9),
+                      elevation: 2,
+                    ),
+                    child: const Text(
+                      'Sign Up with Phone',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+
+              if (isEmailSignUp) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Email*",
+                        style: TextStyle(
+                          color: Color(0xFF030303),
+                          fontSize: 14,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      SizedBox(
+                        width: 335,
+                        height: 48,
+                        child: TextField(
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(
+                            hintText: 'Email@gmail.com',
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ),
+                            filled: true,
+                            fillColor: Color.fromRGBO(255, 255, 255, 0.8),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(12),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ] else ...[
+                // Phone Number Input
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Phone Number*",
+                        style: TextStyle(
+                          color: Color(0xFF030303),
+                          fontSize: 14,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      SizedBox(
+                        width: 335,
+                        height: 48,
+                        child: TextField(
+                          controller: _phoneController,
+                          keyboardType: TextInputType.phone,
+                          decoration: const InputDecoration(
+                            hintText: 'Phone Number',
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ),
+                            filled: true,
+                            fillColor: Color.fromRGBO(255, 255, 255, 0.8),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(12),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+
+              SizedBox(
+                width: 335,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: _handleOTPVerification,
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all(
+                      const EdgeInsets.symmetric(horizontal: 8),
+                    ),
+                    backgroundColor: MaterialStateProperty.resolveWith<Color>((
+                      states,
+                    ) {
+                      if (isOTPVerified) {
+                        return Colors.green;
+                      }
+                      if (states.contains(MaterialState.pressed)) {
+                        return const Color(
+                          0xFF5BAAF8,
+                        ); // Darker blue when pressed
+                      }
+                      return const Color(0xFFA4CDFD); // Default light blue
+                    }),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    minimumSize: MaterialStateProperty.all(const Size(335, 48)),
+                    shadowColor: MaterialStateProperty.all(
+                      Colors.black.withOpacity(0.9),
+                    ),
+                    elevation: MaterialStateProperty.all(2),
+                  ),
+
+                  child: Text(
+                    isOTPVerified ? 'OTP Verified ✓' : 'Verify OTP',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -145,77 +406,159 @@ class _SignUpScreen extends State<SignUpScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
+                      "First Name*",
+                      style: TextStyle(
+                        color: Color(0xFF030303),
+                        fontSize: 14,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    SizedBox(
+                      width: 335,
+                      height: 48,
+                      child: TextField(
+                        controller: _firstNameController,
+                        decoration: const InputDecoration(
+                          hintText: 'First Name',
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
+                          filled: true,
+                          fillColor: Color.fromRGBO(255, 255, 255, 0.8),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Last Name*",
+                      style: TextStyle(
+                        color: Color(0xFF030303),
+                        fontSize: 14,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    SizedBox(
+                      width: 335,
+                      height: 48,
+                      child: TextField(
+                        controller: _lastNameController,
+                        decoration: const InputDecoration(
+                          hintText: 'Last Name',
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
+                          filled: true,
+                          fillColor: Color.fromRGBO(255, 255, 255, 0.8),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Date of Birth*",
+                      style: TextStyle(
+                        color: Color(0xFF030303),
+                        fontSize: 14,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    SizedBox(
+                      width: 335,
+                      height: 48,
+                      child: TextField(
+                        controller: _dobController,
+                        keyboardType: TextInputType.datetime,
+                        decoration: const InputDecoration(
+                          hintText: 'DD/MM/YYYY',
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
+                          filled: true,
+                          fillColor: Color.fromRGBO(255, 255, 255, 0.8),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
                       "Email*",
                       style: TextStyle(
                         color: Color(0xFF030303),
                         fontSize: 14,
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.w600,
-                        height: 1.57,
                       ),
                     ),
-
                     const SizedBox(height: 6),
-
                     SizedBox(
                       width: 335,
                       height: 48,
                       child: TextField(
                         controller: _emailController,
-                        style: const TextStyle(
-                          color: Color(0xFF171719),
-                          fontSize: 14,
-                          fontFamily: 'Poppins',
-                          height: 1.43,
-                        ),
+                        keyboardType: TextInputType.emailAddress,
                         decoration: const InputDecoration(
-                          hintText: 'Email@gmail.com',
+                          hintText: 'Email@example.com',
                           contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                           filled: true,
                           fillColor: Color.fromRGBO(255, 255, 255, 0.8),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(12)),
-                            borderSide: BorderSide(color: Color(0xFFD5D5DA)),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                            borderSide: BorderSide(color: Color(0xFFD5D5DA)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                            borderSide: BorderSide(color: Color(0xFFD5D5DA)),
                           ),
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 20),
-
                     const Text(
-                      "Password*",
+                      "Phone Number*",
                       style: TextStyle(
                         color: Color(0xFF030303),
                         fontSize: 14,
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.w600,
-                        height: 1.57,
                       ),
                     ),
-
                     const SizedBox(height: 6),
-
+                    SizedBox(
+                      width: 335,
+                      height: 48,
+                      child: TextField(
+                        controller: _phoneController,
+                        keyboardType: TextInputType.phone,
+                        decoration: const InputDecoration(
+                          hintText: 'Phone Number',
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
+                          filled: true,
+                          fillColor: Color.fromRGBO(255, 255, 255, 0.8),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Enter Password*",
+                      style: TextStyle(
+                        color: Color(0xFF030303),
+                        fontSize: 14,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
                     SizedBox(
                       width: 335,
                       height: 48,
                       child: TextField(
                         controller: _passwordController,
                         obscureText: true,
-                        style: const TextStyle(
-                          color: Color(0xFF171719),
-                          fontSize: 14,
-                          fontFamily: 'Poppins',
-                          height: 1.43,
-                        ),
                         decoration: const InputDecoration(
                           hintText: '**********',
                           contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -223,15 +566,34 @@ class _SignUpScreen extends State<SignUpScreen> {
                           fillColor: Color.fromRGBO(255, 255, 255, 0.8),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(12)),
-                            borderSide: BorderSide(color: Color(0xFFD5D5DA)),
                           ),
-                          enabledBorder: OutlineInputBorder(
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Confirm Password*",
+                      style: TextStyle(
+                        color: Color(0xFF030303),
+                        fontSize: 14,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    SizedBox(
+                      width: 335,
+                      height: 48,
+                      child: TextField(
+                        controller: _confirmPasswordController,
+                        obscureText: true,
+                        decoration: const InputDecoration(
+                          hintText: '**********',
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
+                          filled: true,
+                          fillColor: Color.fromRGBO(255, 255, 255, 0.8),
+                          border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(12)),
-                            borderSide: BorderSide(color: Color(0xFFD5D5DA)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                            borderSide: BorderSide(color: Color(0xFFD5D5DA)),
                           ),
                         ),
                       ),
@@ -240,31 +602,44 @@ class _SignUpScreen extends State<SignUpScreen> {
                 ),
               ),
 
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
 
               SizedBox(
                 width: 335,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: _handleLogin,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    backgroundColor: const Color(0xFFA4CDFD),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                  onPressed: _handleSignUp,
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all(
+                      const EdgeInsets.symmetric(horizontal: 8),
                     ),
-                    minimumSize: const Size(335, 48),
-                    shadowColor: Colors.black.withOpacity(0.9),
-                    elevation: 3,
+                    backgroundColor: MaterialStateProperty.resolveWith<Color>((
+                      Set<MaterialState> states,
+                    ) {
+                      if (states.contains(MaterialState.pressed)) {
+                        return const Color(0xFF5BAAF8); 
+                      }
+                      return const Color(0xFFA4CDFD);
+                    }),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    minimumSize: MaterialStateProperty.all(const Size(335, 48)),
+                    shadowColor: MaterialStateProperty.all(
+                      Colors.black.withOpacity(0.9),
+                    ),
+                    elevation: MaterialStateProperty.all(3),
                   ),
+
                   child: const Text(
-                    'Login',
+                    'Submit',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.w600,
-                      height: 1.375,
                     ),
                   ),
                 ),
@@ -276,7 +651,7 @@ class _SignUpScreen extends State<SignUpScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'New to Oceana Positive? ',
+                    'Already have an account? ',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Color(0xFF030303),
@@ -287,10 +662,10 @@ class _SignUpScreen extends State<SignUpScreen> {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, Routes.signin);
+                      Navigator.pop(context);
                     },
                     child: const Text(
-                      'Sign Up',
+                      'Login',
                       style: TextStyle(
                         color: Color(0xFF030303),
                         fontSize: 14,
@@ -310,8 +685,8 @@ class _SignUpScreen extends State<SignUpScreen> {
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), duration: Duration(seconds: 3)),
+    );
   }
 }
