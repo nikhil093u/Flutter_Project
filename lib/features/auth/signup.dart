@@ -20,8 +20,7 @@ class _SignInScreen extends State<SignInScreen> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _dobController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   final storage = FlutterSecureStorage();
   bool isEmailSignUp = true;
@@ -228,7 +227,7 @@ class _SignInScreen extends State<SignInScreen> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: isEmailSignUp
-                          ? Color(0xFFA4CDFD)
+                          ? Colors.blue
                           : Colors.grey,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -251,7 +250,7 @@ class _SignInScreen extends State<SignInScreen> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: !isEmailSignUp
-                          ? Color(0xFFA4CDFD)
+                          ? Colors.blue
                           : Colors.grey,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -310,7 +309,6 @@ class _SignInScreen extends State<SignInScreen> {
                 ),
                 const SizedBox(height: 20),
               ] else ...[
-                // Phone Number Input
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Column(
@@ -369,11 +367,9 @@ class _SignInScreen extends State<SignInScreen> {
                         return Colors.green;
                       }
                       if (states.contains(MaterialState.pressed)) {
-                        return const Color(
-                          0xFF5BAAF8,
-                        ); // Darker blue when pressed
+                        return Colors.blue;
                       }
-                      return const Color(0xFFA4CDFD); // Default light blue
+                      return Colors.blue; 
                     }),
                     shape: MaterialStateProperty.all(
                       RoundedRectangleBorder(
@@ -617,9 +613,9 @@ class _SignInScreen extends State<SignInScreen> {
                       Set<MaterialState> states,
                     ) {
                       if (states.contains(MaterialState.pressed)) {
-                        return const Color(0xFF5BAAF8); 
+                        return Colors.blue; 
                       }
-                      return const Color(0xFFA4CDFD);
+                      return Colors.blue;
                     }),
                     shape: MaterialStateProperty.all(
                       RoundedRectangleBorder(

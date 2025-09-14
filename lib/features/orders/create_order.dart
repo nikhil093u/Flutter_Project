@@ -204,9 +204,9 @@ class _CreateOrderState extends State<CreateOrder> {
             style: ButtonStyle(
               backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                 if (states.contains(WidgetState.pressed)) {
-                  return const Color(0xFF6B9EEA);
+                  return Colors.blue;
                 }
-                return const Color(0xFFA4CDFD);
+                return Colors.blue;
               }),
               shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

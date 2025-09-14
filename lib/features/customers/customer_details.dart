@@ -179,9 +179,9 @@ class _CustomerDetailsState extends State<CustomerDetails> {
             style: ButtonStyle(
               backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                 if (states.contains(WidgetState.pressed)) {
-                  return const Color(0xFF6B9EEA); // Darker blue when pressed
+                  return Colors.blue;
                 }
-                return const Color(0xFFA4CDFD); // Normal color
+                return Colors.blue;
               }),
               shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),

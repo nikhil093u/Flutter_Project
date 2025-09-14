@@ -88,10 +88,10 @@ class TaskDetails extends StatelessWidget {
               ) {
                 if (states.contains(WidgetState.pressed)) {
                   // Darker color when pressed
-                  return const Color(0xFF6B9EEA);
+                  return Colors.blue;
                 }
                 // Normal color
-                return const Color(0xFFA4CDFD);
+                return Colors.blue;
               }),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
