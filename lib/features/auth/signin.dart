@@ -246,9 +246,9 @@ class _SignUpScreen extends State<SignUpScreen> {
                       Set<MaterialState> states,
                     ) {
                       if (states.contains(MaterialState.pressed)) {
-                        return  Color(0xFF5BAAF8); // Pressed color
+                        return  Colors.blue; // Pressed color
                       }
-                      return const Color(0xFFA4CDFD); // Default color
+                      return Colors.blue; // Default color
                     }),
                     shape: MaterialStateProperty.all(
                       RoundedRectangleBorder(

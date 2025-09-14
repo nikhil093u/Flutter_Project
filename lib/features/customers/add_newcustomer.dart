@@ -118,15 +118,13 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
                 children: [
                   const SizedBox(height: 10),
                   _buildTextField("Name", controller: _nameController, hint: "Enter Your Name"),
-
                   _buildDropdownField(),
-
                   _buildTextField("Address", controller: _addressController, hint: "Enter Address"),
                   _buildTextField("Phone Number", controller: _phoneController, hint: "Enter Mobile Number"),
-                  _buildTextField("Email", controller: _emailController, hint: "Enter Email"),
+                  _buildTextField("Email", controller: _emailController, hint: "Enter Email", isOptional: true),
                   _buildTextField("Mode of Business", controller: _modeofbusinnerController, hint: "e.g. Function Hall, Shop"),
-                  _buildTextField("SPOC 1 Contact Number", controller: _spoc1Controller, hint: "Contact Number 1"),
-                  _buildTextField("SPOC 2 Contact Number", controller: _spoc2Controller, hint: "Contact Number 2"),
+                  _buildTextField("SPOC 1 Contact Number", controller: _spoc1Controller, hint: "Contact Number 1", isOptional: true),
+                  _buildTextField("SPOC 2 Contact Number", controller: _spoc2Controller, hint: "Contact Number 2", isOptional: true),
                   _buildTextField("GST Number (Compulsory for B2B)", controller: _gstController, hint: "Enter GST Number"),
                 ],
               ),
@@ -144,9 +142,9 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
                 if (states.contains(MaterialState.pressed)) {
-                  return const Color(0xFF5BAAF8); 
+                  return Colors.blue;
                 }
-                return const Color(0xFFA4CDFD); 
+                return Colors.blue;
               }),
               padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 14)),
               shape: MaterialStateProperty.all(
@@ -166,67 +164,64 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
   }
 
   Widget _buildDropdownField() {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          "Customer Type*",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-            fontFamily: 'Poppins',
-            color: Colors.black,
-          ),
-        ),
-        const SizedBox(height: 6),
-        DropdownButtonFormField<String>(
-          dropdownColor: Colors.white,
-          value: (_selectedCustomerType == null || _selectedCustomerType!.isEmpty)
-              ? null
-              : _selectedCustomerType, 
-              
-          hint: Text(
-            'Select Customer Type',
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Customer Type*",
             style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              fontFamily: 'Poppins',
+              color: Colors.black,
+            ),
+          ),
+          const SizedBox(height: 6),
+          DropdownButtonFormField<String>(
+            dropdownColor: Colors.white,
+            value: (_selectedCustomerType == null || _selectedCustomerType!.isEmpty)
+                ? null
+                : _selectedCustomerType,
+            hint: Text(
+              'Select Customer Type',
+              style: TextStyle(
                 color: Colors.grey[800],
                 fontFamily: 'Poppins',
               ),
-          ),
-
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            ),
+            items: ["B2B", "B2C"]
+                .map((type) => DropdownMenuItem(
+                      value: type,
+                      child: Text(
+                        type,
+                        style: const TextStyle(fontFamily: 'Poppins'),
+                      ),
+                    ))
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                _selectedCustomerType = value!;
+              });
+            },
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Select Customer Type';
+              }
+              return null;
+            },
           ),
-          items: ["B2B", "B2C"]
-              .map((type) => DropdownMenuItem(
-                    value: type,
-                    child: Text(
-                      type,
-                      style: const TextStyle(fontFamily: 'Poppins'),
-                    ),
-                  ))
-              .toList(),
-          onChanged: (value) {
-            setState(() {
-              _selectedCustomerType = value!;
-            });
-          },
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Select Customer Type';
-            }
-            return null;
-          },
-        ),
-      ],
-    ),
-  );
-}
-
+        ],
+      ),
+    );
+  }
 
   Widget _buildTextField(
     String label, {
@@ -263,19 +258,26 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
               contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
             ),
             validator: (value) {
-              if (isOptional) return null;
-              if (value == null || value.trim().isEmpty) {
+              if (isOptional && (value == null || value.trim().isEmpty)) {
+                return null;
+              }
+
+              if (!isOptional && (value == null || value.trim().isEmpty)) {
                 return 'Please enter $label';
               }
 
-              // Email validation
+              // Email validation (only if not empty)
               if (label == "Email" &&
+                  value != null &&
+                  value.trim().isNotEmpty &&
                   !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
                 return 'Enter a valid email (must contain @ and .com)';
               }
 
-              // Phone number validation (10 digits)
-              if ((label == "Phone Number" || label.contains("SPOC")) &&
+              // Phone number validation (only if not empty)
+              if ((label.contains("SPOC") || label == "Phone Number") &&
+                  value != null &&
+                  value.trim().isNotEmpty &&
                   !RegExp(r'^\d{10}$').hasMatch(value)) {
                 return 'Enter a valid 10-digit phone number';
               }

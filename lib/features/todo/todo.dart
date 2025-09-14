@@ -215,11 +215,9 @@ class TodoState extends State<Todo> {
                         backgroundColor:
                             MaterialStateProperty.resolveWith<Color>((states) {
                               if (states.contains(WidgetState.pressed)) {
-                                return const Color(
-                                  0xFF7EB6FF,
-                                ); 
+                                return Colors.blue;
                               }
-                              return const Color(0xFFA4CDFD);
+                              return Colors.blue;
                             }),
                         elevation: MaterialStateProperty.all(3),
                         padding: MaterialStateProperty.all(

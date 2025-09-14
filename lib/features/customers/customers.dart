@@ -117,8 +117,6 @@ class _CustomerScreenState extends State<CustomerScreen> {
                   borderRadius: BorderRadius.circular(16),
                   borderSide: const BorderSide(color: Colors.white),
                 ),
-                fillColor: Colors.grey[200],
-                filled: true,
               ),
             ),
           ),

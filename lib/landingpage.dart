@@ -90,9 +90,9 @@ class LandingPage extends StatelessWidget {
                       Set<MaterialState> states,
                     ) {
                       if (states.contains(MaterialState.pressed)) {
-                        return Color(0xFF5BAAF8); // Pressed color
+                        return Colors.blue;
                       }
-                      return const Color(0xFFA4CDFD); // Default color
+                      return Colors.blue;
                     }),
                     shape: MaterialStateProperty.all(
                       RoundedRectangleBorder(
