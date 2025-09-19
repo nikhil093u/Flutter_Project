@@ -205,7 +205,7 @@ class _OrdersListState extends State<OrdersList> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, Routes.createorder);
+          Navigator.pushNamed(context, Routes.selectcustomer);
         },
         backgroundColor: Colors.white,
         child: const Icon(LucideIcons.plus, color: Colors.black),

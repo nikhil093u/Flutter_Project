@@ -9,6 +9,7 @@ import 'package:flutter_application/features/orders/order_details.dart';
 import 'package:flutter_application/features/orders/order_model.dart';
 import 'package:flutter_application/features/orders/orders.dart';
 import 'package:flutter_application/features/orders/repeatorder.dart';
+import 'package:flutter_application/features/orders/selectcustomer.dart';
 import 'package:flutter_application/features/profile.dart';
 import 'package:flutter_application/features/resources/resource.dart';
 import 'package:flutter_application/features/resources/resource_details.dart';
@@ -34,6 +35,7 @@ class Routes {
   static const profile = '/ProfilePage';
   static const setting = '/SettingsPage';
   static const repeatorder = '/RepeatOrderPage';
+  static const selectcustomer = 'SelectCustomer';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -61,6 +63,8 @@ class Routes {
         return MaterialPageRoute(builder: (context) => const ProfilePage());
       case setting:
         return MaterialPageRoute(builder: (_) => SettingsPage());
+      case selectcustomer:
+        return MaterialPageRoute(builder: (_) => SelectCustomer());
       case repeatorder:
         final order = settings.arguments as Order;
         return MaterialPageRoute(builder: (_) => RepeatOrderPage(order: order));

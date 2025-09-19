@@ -30,6 +30,7 @@ class _SignUpScreen extends State<SignUpScreen> {
     final password = _passwordController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
+      Navigator.pushReplacementNamed(context, Routes.home);
       _showMessage("Please fill in all fields");
       return;
     }
@@ -208,7 +209,7 @@ class _SignUpScreen extends State<SignUpScreen> {
                           height: 1.43,
                         ),
                         decoration: const InputDecoration(
-                          hintText: '**********',
+                          hintText: '********',
                           contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                           filled: true,
                           fillColor: Color.fromRGBO(255, 255, 255, 0.8),
