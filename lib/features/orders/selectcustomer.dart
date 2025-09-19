@@ -3,16 +3,92 @@ import 'package:flutter_application/features/customers/customerprovider.dart';
 import 'package:flutter_application/routes/routes.dart';
 import 'package:provider/provider.dart';
 
-class SelectCustomer extends StatelessWidget {
+class SelectCustomer extends StatefulWidget {
   const SelectCustomer({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final customerProvider = Provider.of<CustomerProvider>(context);
+  State<SelectCustomer> createState() => _SelectCustomerState();
+}
+
+class _SelectCustomerState extends State<SelectCustomer> {
+  final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+
+  List<Customer> _filteredCustomers = [];
+  Customer? _selectedCustomer;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    final query = _searchController.text.toLowerCase();
+    final customerProvider = Provider.of<CustomerProvider>(context, listen: false);
     final allCustomers = customerProvider.customers;
-    final int customerCountToShow = allCustomers.length >= 2
-        ? 2
-        : allCustomers.length;
+
+    setState(() {
+      _filteredCustomers = allCustomers.where((customer) {
+        return customer.name.toLowerCase().contains(query) ||
+            customer.phoneNumber.toLowerCase().contains(query);
+      }).toList();
+    });
+  }
+
+  void _onCustomerSelected(Customer customer) {
+    setState(() {
+      _selectedCustomer = customer;
+    });
+  }
+
+  void _onProceed() {
+    final customerProvider = Provider.of<CustomerProvider>(context, listen: false);
+
+    if (_selectedCustomer != null) {
+      Navigator.pushNamed(context, Routes.createorder, arguments: _selectedCustomer);
+    } else if (_nameController.text.isNotEmpty &&
+        _phoneController.text.isNotEmpty &&
+        _emailController.text.isNotEmpty &&
+        _addressController.text.isNotEmpty) {
+      
+      final newCustomer = Customer(
+        name: _nameController.text,
+        phoneNumber: _phoneController.text,
+        email: _emailController.text,
+        address: _addressController.text,
+        customerType: 'Retail', 
+        gstNumber: '',
+        modeOfBusiness: '',
+        profileImageUrl: '',
+        spoc1: '',
+        spoc2: '',
+      );
+
+      customerProvider.addCustomer(newCustomer);
+      Navigator.pushNamed(context, Routes.createorder, arguments: newCustomer);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select or create a customer.")),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -23,29 +99,23 @@ class SelectCustomer extends StatelessWidget {
         ),
         centerTitle: true,
         elevation: 0,
-        actions: const [
-          Icon(Icons.info_outline, color: Colors.white),
-          SizedBox(width: 12),
-        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              child: Text(
-                "Create Order",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Poppins',
-                ),
+            const Text(
+              "Create Order",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Poppins',
               ),
             ),
             const SizedBox(height: 24),
             const Text(
-              "Select Customer",
+              "Search Customer",
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
@@ -53,36 +123,43 @@ class SelectCustomer extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            _buildTextField("Search Customer"),
+            _buildTextField("Enter name or phone", _searchController),
+
             const SizedBox(height: 12),
-            allCustomers.isEmpty
-                ? const Text(
-                    "No customers available.",
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 14,
-                      color: Colors.grey,
+            if (_filteredCustomers.isEmpty && _searchController.text.isNotEmpty)
+              const Text(
+                "No matching customers found.",
+                style: TextStyle(fontFamily: 'Poppins', color: Colors.grey),
+              )
+            else if (_filteredCustomers.isNotEmpty)
+              Column(
+                children: _filteredCustomers.map((customer) {
+                  return GestureDetector(
+                    onTap: () => _onCustomerSelected(customer),
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: _selectedCustomer == customer
+                              ? Colors.blue
+                              : Colors.grey.shade300,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: _buildCustomerCard(
+                        customer.name,
+                        customer.phoneNumber,
+                        customer.email,
+                      ),
                     ),
-                  )
-                : Column(
-                    children: List.generate(customerCountToShow, (index) {
-                      final customer = allCustomers[index];
-                      return Column(
-                        children: [
-                          _buildCustomerCard(
-                            customer.name,
-                            customer.phoneNumber,
-                            customer.email,
-                          ),
-                          const SizedBox(height: 8),
-                        ],
-                      );
-                    }),
-                  ),
+                  );
+                }).toList(),
+              ),
 
             const SizedBox(height: 24),
             const Text(
-              "Create New Customer",
+              "Or Create New Customer",
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
@@ -90,18 +167,19 @@ class SelectCustomer extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            _buildTextField("Customer Name"),
+            _buildTextField("Customer Name", _nameController),
             const SizedBox(height: 12),
-            _buildTextField("Contact Email"),
+            _buildTextField("Contact Email", _emailController),
             const SizedBox(height: 12),
-            _buildTextField("Address"),
+            _buildTextField("Phone Number", _phoneController),
+            const SizedBox(height: 12),
+            _buildTextField("Address", _addressController),
+
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, Routes.createorder);
-                },
+                onPressed: _onProceed,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   padding: const EdgeInsets.symmetric(vertical: 14),
@@ -126,8 +204,9 @@ class SelectCustomer extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(String hint) {
+  Widget _buildTextField(String hint, TextEditingController controller) {
     return TextField(
+      controller: controller,
       decoration: InputDecoration(
         hintText: hint,
         filled: true,

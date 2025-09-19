@@ -83,7 +83,6 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
 
               const SizedBox(height: 24),
 
-              // 🧮 Quantity Selector Styled Like Image
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
@@ -165,7 +164,6 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
 
               const SizedBox(height: 30),
 
-              // ✅ Checkout and Proceed Buttons like Image
               Container(
                 width: double.infinity,
                 height: 48,
