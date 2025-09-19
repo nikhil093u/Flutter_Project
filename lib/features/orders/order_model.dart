@@ -15,6 +15,7 @@ class Order {
   final String textOnBottle;
   final String socialNetwork1;
   final String socialNetwork2;
+   final String? logoPath;
 
   Order({
     required this.id,
@@ -30,5 +31,6 @@ class Order {
     required this.textOnBottle,
     required this.socialNetwork1,
     required this.socialNetwork2,
+    this.logoPath,
   });
 }

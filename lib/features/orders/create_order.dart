@@ -22,25 +22,35 @@ class _CreateOrderState extends State<CreateOrder> {
   String? colorCombination = 'Blue & White';
   String? preDesignOption = 'Modern';
   String? selectedFileName;
+  String? selectedPredefinedLogo;
 
   final TextEditingController textOnBottleController = TextEditingController();
   final TextEditingController socialNetwork1Controller = TextEditingController();
   final TextEditingController socialNetwork2Controller = TextEditingController();
 
-  final List<String> waterTypeOptions = [
-    'Mineral Water',
-    'Spring Water',
-    'Distilled Water',
+   final List<String> predefinedLogos = [
+    'assets/logo/logo1.1.png',
+    'assets/logo/logo1.2.png',
+    'assets/logo/logo1.3.png',
+    'assets/logo/logo1.4.png',
   ];
+
+  final List<String> waterTypeOptions = ['Mineral Water', 'Spring Water', 'Distilled Water'];
   final List<String> bottleMaterialOptions = ['Plastic', 'Glass', 'Metal'];
   final List<String> bottleShapeOptions = ['Round', 'Square', 'Oval'];
   final List<String> sizeQuantityOptions = ['250ml', '500ml', '1L'];
-  final List<String> colorCombinationOptions = [
-    'Blue & White',
-    'Red & White',
-    'Green & White',
-  ];
+  final List<String> colorCombinationOptions = ['Blue & White', 'Red & White', 'Green & White'];
   final List<String> preDesignOptions = ['Modern', 'Classic', 'Minimal'];
+
+  @override
+  void initState() {
+    super.initState();
+    textOnBottleController.addListener(() {
+      if (selectedPredefinedLogo != null) {
+        setState(() {});
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -70,6 +80,7 @@ class _CreateOrderState extends State<CreateOrder> {
       textOnBottle: textOnBottleController.text,
       socialNetwork1: socialNetwork1Controller.text,
       socialNetwork2: socialNetwork2Controller.text,
+      logoPath: selectedPredefinedLogo ?? selectedFileName,
     );
 
     Provider.of<OrderProvider>(context, listen: false).addOrder(newOrder);
@@ -126,7 +137,53 @@ class _CreateOrderState extends State<CreateOrder> {
                   items: sizeQuantityOptions,
                   onChanged: (value) => setState(() => sizeQuantity = value),
                 ),
+
+                const SizedBox(height: 16),
+                const Text(
+                  'Existing Logos',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    fontFamily: 'Poppins',
+                  ),
+                ),
                 const SizedBox(height: 8),
+                SizedBox(
+                  height: 80,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: predefinedLogos.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 12),
+                    itemBuilder: (context, index) {
+                      final logo = predefinedLogos[index];
+                      final isSelected = selectedPredefinedLogo == logo;
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedPredefinedLogo = logo;
+                            selectedFileName = null; // Clear file
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: isSelected ? Colors.blueAccent : Colors.transparent,
+                              width: 2,
+                            ),
+                          ),
+                          padding: const EdgeInsets.all(4),
+                          child: CircleAvatar(
+                            radius: 30,
+                            backgroundImage: AssetImage(logo),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+                const SizedBox(height: 20),
                 const Text(
                   'Upload a Logo (Allowed formats .PSD, .AI, .CDR, PDF)',
                   style: TextStyle(
@@ -141,11 +198,15 @@ class _CreateOrderState extends State<CreateOrder> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(23),
-                    border: Border.all(color: Color(0xFFD5D5DA)),
+                    border: Border.all(color: const Color(0xFFD5D5DA)),
                     color: Colors.white,
                   ),
                   child: TextButton(
-                    onPressed: ()  {
+                    onPressed: () {
+                      setState(() {
+                        selectedFileName = 'user_logo.pdf'; // Stubbed
+                        selectedPredefinedLogo = null; // Clear predefined
+                      });
                     },
                     child: Text(
                       selectedFileName == null ? 'Choose File' : selectedFileName!,
@@ -157,6 +218,44 @@ class _CreateOrderState extends State<CreateOrder> {
                     ),
                   ),
                 ),
+
+                // === PREVIEW WITH TEXT OVERLAY ===
+                if (selectedPredefinedLogo != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Center(
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          ClipOval(
+                            child: Image.asset(
+                              selectedPredefinedLogo!,
+                              width: 120,
+                              height: 120,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Text(
+                            textOnBottleController.text,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              shadows: [
+                                Shadow(
+                                  offset: Offset(1, 1),
+                                  blurRadius: 2,
+                                  color: Colors.black45,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
                 const SizedBox(height: 16),
                 buildDropdownField(
                   label: 'Select Colour Combination',
@@ -164,26 +263,22 @@ class _CreateOrderState extends State<CreateOrder> {
                   items: colorCombinationOptions,
                   onChanged: (value) => setState(() => colorCombination = value),
                 ),
-                const SizedBox(height: 16),
                 buildValidatedTextField(
                   label: 'Enter the Text on Bottle',
                   controller: textOnBottleController,
                   hint: 'Enter text here',
                 ),
-                const SizedBox(height: 16),
                 buildDropdownField(
                   label: 'Select Pre-design Options',
                   value: preDesignOption,
                   items: preDesignOptions,
                   onChanged: (value) => setState(() => preDesignOption = value),
                 ),
-                const SizedBox(height: 16),
                 buildValidatedTextField(
                   label: 'Add Social Network Details:',
                   controller: socialNetwork1Controller,
                   hint: 'Website URL',
                 ),
-                const SizedBox(height: 8),
                 buildValidatedTextField(
                   label: '',
                   controller: socialNetwork2Controller,
@@ -202,18 +297,9 @@ class _CreateOrderState extends State<CreateOrder> {
           child: ElevatedButton(
             onPressed: _submitOrder,
             style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
-                if (states.contains(WidgetState.pressed)) {
-                  return Colors.blue;
-                }
-                return Colors.blue;
-              }),
-              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+              backgroundColor: WidgetStateProperty.all(Colors.blueAccent),
+              shape: WidgetStateProperty.all(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-              shadowColor: WidgetStateProperty.all(
-                // ignore: deprecated_member_use
-                Colors.black.withOpacity(0.9),
               ),
               elevation: WidgetStateProperty.all(3),
             ),
@@ -243,50 +329,27 @@ class _CreateOrderState extends State<CreateOrder> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
-              fontFamily: 'Poppins',
-            ),
-          ),
+          Text(label,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, fontFamily: 'Poppins')),
           const SizedBox(height: 6),
           DropdownButtonFormField<String>(
             initialValue: value,
             isExpanded: true,
             decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
               fillColor: Colors.white,
               filled: true,
             ),
             items: items
-                .map(
-                  (e) => DropdownMenuItem<String>(
-                    value: e,
-                    child: Text(
-                      e,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'Poppins',
-                        color: Colors.grey[800],
-                      ),
-                    ),
-                  ),
-                )
+                .map((e) => DropdownMenuItem<String>(
+                      value: e,
+                      child: Text(e,
+                          style: TextStyle(
+                              fontSize: 14, fontFamily: 'Poppins', color: Colors.grey[800])),
+                    ))
                 .toList(),
             onChanged: onChanged,
-            iconEnabledColor: Colors.black,
-            dropdownColor: Colors.white,
-            style: const TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 14,
-              fontFamily: 'Poppins',
-              color: Colors.black,
-            ),
             validator: (value) => value == null || value.isEmpty ? 'This field is required' : null,
           ),
         ],
@@ -300,44 +363,23 @@ class _CreateOrderState extends State<CreateOrder> {
     String? hint,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (label.isNotEmpty)
-            Text(
-              label,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-                fontFamily: 'Poppins',
-              ),
-            ),
+            Text(label,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w600, fontSize: 14, fontFamily: 'Poppins')),
           if (label.isNotEmpty) const SizedBox(height: 6),
           TextFormField(
             controller: controller,
-            style: const TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 14,
-              fontFamily: 'Poppins',
-            ),
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: TextStyle(
-                color: Colors.grey[800],
-                fontFamily: 'Poppins',
-              ),
               filled: true,
               fillColor: Colors.white,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 14,
-              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Color(0xFFD5D5DA)),
-              ),
-              enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(color: Color(0xFFD5D5DA)),
               ),

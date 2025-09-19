@@ -144,7 +144,7 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
                 if (states.contains(MaterialState.pressed)) {
                   return Colors.blue;
                 }
-                return Colors.blue;
+                return Colors.blueAccent;
               }),
               padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 14)),
               shape: MaterialStateProperty.all(

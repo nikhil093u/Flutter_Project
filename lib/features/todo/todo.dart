@@ -217,7 +217,7 @@ class TodoState extends State<Todo> {
                               if (states.contains(WidgetState.pressed)) {
                                 return Colors.blue;
                               }
-                              return Colors.blue;
+                              return Colors.blueAccent;
                             }),
                         elevation: MaterialStateProperty.all(3),
                         padding: MaterialStateProperty.all(

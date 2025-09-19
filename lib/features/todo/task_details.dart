@@ -89,7 +89,7 @@ class TaskDetails extends StatelessWidget {
                 if (states.contains(WidgetState.pressed)) {
                   return Colors.blue;
                 }
-                return Colors.blue;
+                return Colors.blueAccent;
               }),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
