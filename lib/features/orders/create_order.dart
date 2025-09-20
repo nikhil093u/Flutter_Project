@@ -161,7 +161,7 @@ class _CreateOrderState extends State<CreateOrder> {
                         onTap: () {
                           setState(() {
                             selectedPredefinedLogo = logo;
-                            selectedFileName = null; // Clear file
+                            selectedFileName = null; 
                           });
                         },
                         child: Container(
@@ -204,8 +204,8 @@ class _CreateOrderState extends State<CreateOrder> {
                   child: TextButton(
                     onPressed: () {
                       setState(() {
-                        selectedFileName = 'user_logo.pdf'; // Stubbed
-                        selectedPredefinedLogo = null; // Clear predefined
+                        selectedFileName = 'user_logo.pdf'; 
+                        selectedPredefinedLogo = null; 
                       });
                     },
                     child: Text(
@@ -219,13 +219,13 @@ class _CreateOrderState extends State<CreateOrder> {
                   ),
                 ),
 
-                // === PREVIEW WITH TEXT OVERLAY ===
+                // PREVIEW WITH TEXT OVERLAY 
                 if (selectedPredefinedLogo != null)
                   Padding(
                     padding: const EdgeInsets.only(top: 16),
                     child: Center(
                       child: Stack(
-                        alignment: Alignment.center,
+                        alignment: Alignment(0, 0.6),
                         children: [
                           ClipOval(
                             child: Image.asset(

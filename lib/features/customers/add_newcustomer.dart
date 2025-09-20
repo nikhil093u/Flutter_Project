@@ -1,7 +1,12 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_application/features/customers/add_customer_category.dart';
 import 'package:flutter_application/features/customers/customerprovider.dart';
+import 'package:flutter_application/features/customers/logo_overlay_screen.dart';
+import 'package:flutter_application/features/customers/template_selection.dart';
 import 'package:provider/provider.dart';
 
 class AddCustomerForm extends StatefulWidget {
@@ -14,6 +19,11 @@ class AddCustomerForm extends StatefulWidget {
 
 class _AddCustomerFormState extends State<AddCustomerForm> {
   final _formKey = GlobalKey<FormState>();
+  Uint8List?
+  // ignore: unused_field
+  _labelDesignPreviewBytes; 
+  // ignore: unused_field
+  String? _selectedTemplateId;
 
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
@@ -24,8 +34,6 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
   final _spoc2Controller = TextEditingController();
   final _gstController = TextEditingController();
 
-  String? _selectedCustomerType;
-
   @override
   void initState() {
     super.initState();
@@ -35,7 +43,6 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
       _nameController.text = customer.name;
       _emailController.text = customer.email;
       _phoneController.text = customer.phoneNumber;
-      _selectedCustomerType = customer.customerType;
       _addressController.text = customer.address;
       _modeofbusinnerController.text = customer.modeOfBusiness;
       _spoc1Controller.text = customer.spoc1;
@@ -72,7 +79,7 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
       email: _emailController.text,
       phoneNumber: _phoneController.text,
       profileImageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
-      customerType: _selectedCustomerType ?? '',
+      customerType: '', // Removed selection
       address: _addressController.text,
       modeOfBusiness: _modeofbusinnerController.text,
       spoc1: _spoc1Controller.text,
@@ -117,15 +124,157 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 10),
-                  _buildTextField("Name", controller: _nameController, hint: "Enter Your Name"),
-                  _buildDropdownField(),
-                  _buildTextField("Address", controller: _addressController, hint: "Enter Address"),
-                  _buildTextField("Phone Number", controller: _phoneController, hint: "Enter Mobile Number"),
-                  _buildTextField("Email", controller: _emailController, hint: "Enter Email", isOptional: true),
-                  _buildTextField("Mode of Business", controller: _modeofbusinnerController, hint: "e.g. Function Hall, Shop"),
-                  _buildTextField("SPOC 1 Contact Number", controller: _spoc1Controller, hint: "Contact Number 1", isOptional: true),
-                  _buildTextField("SPOC 2 Contact Number", controller: _spoc2Controller, hint: "Contact Number 2", isOptional: true),
-                  _buildTextField("GST Number (Compulsory for B2B)", controller: _gstController, hint: "Enter GST Number"),
+                  _buildTextField(
+                    "Name",
+                    controller: _nameController,
+                    hint: "Enter Your Name",
+                  ),
+                  _buildTextField(
+                    "Address",
+                    controller: _addressController,
+                    hint: "Enter Address",
+                  ),
+                  _buildTextField(
+                    "Phone Number",
+                    controller: _phoneController,
+                    hint: "Enter Mobile Number",
+                  ),
+                  _buildTextField(
+                    "Email",
+                    controller: _emailController,
+                    hint: "Enter Email",
+                    isOptional: true,
+                  ),
+
+                  // Mode of Business Button
+                  const SizedBox(height: 10),
+                  Text(
+                    "Mode of Business*",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      fontFamily: 'Poppins',
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddCustomerCategorySelect(
+                            onCategorySelected: (selectedCategory) {
+                              setState(() {
+                                _modeofbusinnerController.text =
+                                    selectedCategory;
+                              });
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      _modeofbusinnerController.text.isEmpty
+                          ? "Select Mode of Business"
+                          : _modeofbusinnerController.text,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Choose Label*",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      fontFamily: 'Poppins',
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  ElevatedButton.icon(
+                    icon: Icon(Icons.label_outlined),
+                    label: Text('Choose Label Design',style: const TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Poppins',
+                      ),),
+                    onPressed: () {
+                      final selectedCategory = _modeofbusinnerController.text
+                          .trim();
+                      if (selectedCategory.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Please select Mode of Business first',
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TemplateSelectionScreen(
+                            category: selectedCategory,
+                            onTemplateSelected: (template) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      LogoOverlayScreen(template: template),
+                                ),
+                              ).then((previewData) {
+                                if (previewData != null) {
+                                  setState(() {
+                                    _labelDesignPreviewBytes =
+                                        previewData['previewBytes'];
+                                    _selectedTemplateId =
+                                        previewData['templateId'];
+                                  });
+                                }
+                              });
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+
+                  _buildTextField(
+                    "SPOC 1 Contact Number",
+                    controller: _spoc1Controller,
+                    hint: "Contact Number 1",
+                    isOptional: true,
+                  ),
+                  _buildTextField(
+                    "SPOC 2 Contact Number",
+                    controller: _spoc2Controller,
+                    hint: "Contact Number 2",
+                    isOptional: true,
+                  ),
+                  _buildTextField(
+                    "GST Number (Compulsory for B2B)",
+                    controller: _gstController,
+                    hint: "Enter GST Number",
+                  ),
                 ],
               ),
             ),
@@ -140,17 +289,23 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
           child: ElevatedButton(
             onPressed: _saveCustomer,
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+              backgroundColor: MaterialStateProperty.resolveWith<Color>((
+                states,
+              ) {
                 if (states.contains(MaterialState.pressed)) {
                   return Colors.blue;
                 }
                 return Colors.blueAccent;
               }),
-              padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 14)),
+              padding: MaterialStateProperty.all(
+                const EdgeInsets.symmetric(vertical: 14),
+              ),
               shape: MaterialStateProperty.all(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
-              shadowColor: MaterialStateProperty.all(Colors.black.withOpacity(0.9)),
+              shadowColor: MaterialStateProperty.all(
+                Colors.black.withOpacity(0.9),
+              ),
               elevation: MaterialStateProperty.all(3),
             ),
             child: const Text(
@@ -159,66 +314,6 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildDropdownField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Customer Type*",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-              fontFamily: 'Poppins',
-              color: Colors.black,
-            ),
-          ),
-          const SizedBox(height: 6),
-          DropdownButtonFormField<String>(
-            dropdownColor: Colors.white,
-            value: (_selectedCustomerType == null || _selectedCustomerType!.isEmpty)
-                ? null
-                : _selectedCustomerType,
-            hint: Text(
-              'Select Customer Type',
-              style: TextStyle(
-                color: Colors.grey[800],
-                fontFamily: 'Poppins',
-              ),
-            ),
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-            ),
-            items: ["B2B", "B2C"]
-                .map((type) => DropdownMenuItem(
-                      value: type,
-                      child: Text(
-                        type,
-                        style: const TextStyle(fontFamily: 'Poppins'),
-                      ),
-                    ))
-                .toList(),
-            onChanged: (value) {
-              setState(() {
-                _selectedCustomerType = value!;
-              });
-            },
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Select Customer Type';
-              }
-              return null;
-            },
-          ),
-        ],
       ),
     );
   }
@@ -255,7 +350,10 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 16,
+              ),
             ),
             validator: (value) {
               if (isOptional && (value == null || value.trim().isEmpty)) {
@@ -266,15 +364,13 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
                 return 'Please enter $label';
               }
 
-              // Email validation (only if not empty)
               if (label == "Email" &&
                   value != null &&
                   value.trim().isNotEmpty &&
                   !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                return 'Enter a valid email (must contain @ and .com)';
+                return 'Enter a valid email';
               }
 
-              // Phone number validation (only if not empty)
               if ((label.contains("SPOC") || label == "Phone Number") &&
                   value != null &&
                   value.trim().isNotEmpty &&
