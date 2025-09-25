@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
-import 'template_selection.dart'; // for LabelTemplate
+import 'template_selection.dart'; 
 
 class LogoOverlayScreen extends StatefulWidget {
   final LabelTemplate template;
@@ -35,10 +35,8 @@ class _LogoOverlayScreenState extends State<LogoOverlayScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       appBar: AppBar(
         backgroundColor: Colors.white,
-
         title: const Text('Upload Logo & Adjust',
         style: TextStyle(
           fontFamily: 'poppins'

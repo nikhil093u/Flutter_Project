@@ -79,7 +79,7 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
       email: _emailController.text,
       phoneNumber: _phoneController.text,
       profileImageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
-      customerType: '', // Removed selection
+      customerType: '', 
       address: _addressController.text,
       modeOfBusiness: _modeofbusinnerController.text,
       spoc1: _spoc1Controller.text,

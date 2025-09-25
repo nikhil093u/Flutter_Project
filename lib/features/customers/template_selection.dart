@@ -71,7 +71,6 @@ class LabelTemplatePainter extends CustomPainter {
       ..strokeWidth = 2;
     _drawDashedRect(canvas, logoRect, dashPaint, dashWidth: 8, dashGap: 6);
 
-    // "LOGO" text
     final textPainter = TextPainter(
       text: const TextSpan(
         text: 'LOGO',
@@ -92,7 +91,6 @@ class LabelTemplatePainter extends CustomPainter {
     );
     textPainter.paint(canvas, textOffset);
 
-    // Template name text
     final namePainter = TextPainter(
       text: TextSpan(
         text: template.name,
