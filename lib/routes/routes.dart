@@ -3,6 +3,7 @@ import 'package:flutter_application/features/auth/signup.dart';
 import 'package:flutter_application/features/auth/signin.dart';
 import 'package:flutter_application/features/customers/add_newcustomer.dart';
 import 'package:flutter_application/features/customers/customers.dart';
+// import 'package:flutter_application/features/customers/sizeselection.dart';
 import 'package:flutter_application/features/home/home.dart';
 import 'package:flutter_application/features/orders/create_order.dart';
 import 'package:flutter_application/features/orders/order_details.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_application/features/settings.dart';
 import 'package:flutter_application/features/todo/task_details.dart';
 import 'package:flutter_application/features/todo/todo.dart';
 import 'package:flutter_application/landingpage.dart';
+// import 'package:flutter_application/features/customers/sizeselection.dart';
 
 class Routes {
   static const root = '/';
@@ -36,6 +38,7 @@ class Routes {
   static const setting = '/SettingsPage';
   static const repeatorder = '/RepeatOrderPage';
   static const selectcustomer = 'SelectCustomer';
+  static const sizeselection = '/SizeSelection';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -51,12 +54,12 @@ class Routes {
         return MaterialPageRoute(builder: (_) => Todo());
       case resources:
         return MaterialPageRoute(builder: (_) => ResourcePage());
+      case addcustomer:
+        return MaterialPageRoute(builder: (_) => AddNewcustomer());
       case signup:
         return MaterialPageRoute(builder: (_) => SignUpScreen());
       case signin:
         return MaterialPageRoute(builder: (_) => SignInScreen());
-      case addcustomer:
-        return MaterialPageRoute(builder: (_) => AddCustomerForm());
       case createorder:
         return MaterialPageRoute(builder: (_) => CreateOrder());
       case profile:

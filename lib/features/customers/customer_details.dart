@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/features/customers/add_newcustomer.dart';
 import 'package:flutter_application/features/customers/customerprovider.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
@@ -161,19 +160,19 @@ class _CustomerDetailsState extends State<CustomerDetails> {
           height: 50,
           child: ElevatedButton(
             onPressed: () async {
-              final updatedCustomer = await Navigator.push<Customer>(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      AddCustomerForm(existingCustomer: customer),
-                ),
-              );
+              // final updatedCustomer = await Navigator.push<Customer>(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) =>
+              //         AddCustomerForm(existingCustomer: customer),
+              //   ),
+              // );
 
-              if (updatedCustomer != null) {
-                setState(() {
-                  customer = updatedCustomer;
-                });
-              }
+              // if (updatedCustomer != null) {
+              //   setState(() {
+              //     customer = updatedCustomer;
+              //   });
+              // }
             },
 
             style: ButtonStyle(

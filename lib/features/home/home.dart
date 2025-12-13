@@ -28,8 +28,10 @@ class Home extends StatelessWidget {
   }
 
   final List<String> labels = const [
-    'Customers',
-    'Orders',
+    'Add Customers',
+    'View Customers',
+    'Create Orders',
+    'View Orders',
     'Resources',
     'To-Do\'s',
   ];
@@ -48,14 +50,14 @@ class Home extends StatelessWidget {
   ) {
     return GestureDetector(
       onTap: () {
-        if (label == 'Customers') {
-          Navigator.pushNamed(context, Routes.customers);
+        if (label == 'Add Customers') {
+          Navigator.pushNamed(context, Routes.addcustomer);
         } else if (label == 'Orders') {
           Navigator.pushNamed(context, Routes.orders);
         } else if (label == 'Resources') {
           Navigator.pushNamed(context, Routes.resources);
         } else if (label == 'To-Do\'s') {
-           Navigator.pushNamed(context, Routes.todo);
+          Navigator.pushNamed(context, Routes.todo);
         }
       },
       child: Container(
@@ -179,7 +181,7 @@ class Home extends StatelessWidget {
                   children: [
                     const SizedBox(height: 42),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -201,9 +203,9 @@ class Home extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 42),
+                    const SizedBox(height: 32),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

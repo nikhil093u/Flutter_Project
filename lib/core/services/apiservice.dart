@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ApiService {
-  static final _baseUrl = 'https://d28c5r6pnnqv4m.cloudfront.net/fastapi/api';
+  static final _baseUrl = 'https://d28c5r6pnnqv4m.cloudfront.net';
   static final _storage = FlutterSecureStorage();
 
   static Future<http.Response> get(String path) async {
@@ -24,7 +24,7 @@ class ApiService {
     required String email,
     required String password,
   }) async {
-    final url = Uri.parse('$_baseUrl/login');
+    final url = Uri.parse('$_baseUrl/api/login');
 
     final body = jsonEncode({
       "email": email,
