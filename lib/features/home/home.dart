@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import 'package:flutter_application/core/services/apiservice.dart';
 import 'package:flutter_application/routes/routes.dart';
 import 'package:flutter_application/common/widgets/footer.dart';
 import 'package:intl/intl.dart';
@@ -49,7 +50,7 @@ class Home extends StatelessWidget {
     IconData icon,
   ) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async{
         if (label == 'Add Customers') {
           Navigator.pushNamed(context, Routes.addcustomer);
         } else if (label == 'Orders') {
@@ -58,6 +59,12 @@ class Home extends StatelessWidget {
           Navigator.pushNamed(context, Routes.resources);
         } else if (label == 'To-Do\'s') {
           Navigator.pushNamed(context, Routes.todo);
+        }
+        else if (label == 'View Orders') {
+          Navigator.pushNamed(context,Routes.orders);
+        }
+        else if (label == 'View Customers') {
+          Navigator.pushNamed(context, Routes.customers);
         }
       },
       child: Container(

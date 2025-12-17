@@ -53,7 +53,7 @@ class _SignUpScreen extends State<SignUpScreen> {
       _showMessage("Login Successful!");
       Navigator.pushReplacementNamed(context, Routes.home);
     } else {
-      _showMessage("Invalid email or password. Please try again or sign up.");
+      _showMessage("Invalid email or password");
     }
   }
 

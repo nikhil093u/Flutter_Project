@@ -1,93 +1,88 @@
 // Your complete CustomerProvider should look like this:
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application/core/services/apiservice.dart';
 
 class Customer {
+  final int id;
   final String name;
   final String email;
   final String phoneNumber;
-  final String profileImageUrl;
-  final String customerType;
   final String address;
-  final String modeOfBusiness;
+  final String profileImageUrl;
   final String spoc1;
   final String spoc2;
-  final String gstNumber;
 
   Customer({
+    required this.id,
     required this.name,
     required this.email,
     required this.phoneNumber,
-    required this.profileImageUrl,
-    required this.customerType,
     required this.address,
-    required this.modeOfBusiness,
+    required this.profileImageUrl,
     required this.spoc1,
     required this.spoc2,
-    required this.gstNumber,
   });
 
-  Customer copyWith({
-    String? name,
-    String? email,
-    String? phoneNumber,
-    String? profileImageUrl,
-    String? customerType,
-    String? address,
-    String? modeOfBusiness,
-    String? spoc1,
-    String? spoc2,
-    String? gstNumber,
-  }) {
+  factory Customer.fromJson(Map<String, dynamic> json) {
     return Customer(
-      name: name ?? this.name,
-      email: email ?? this.email,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
-      customerType: customerType ?? this.customerType,
-      address: address ?? this.address,
-      modeOfBusiness: modeOfBusiness ?? this.modeOfBusiness,
-      spoc1: spoc1 ?? this.spoc1,
-      spoc2: spoc2 ?? this.spoc2,
-      gstNumber: gstNumber ?? this.gstNumber,
+      id: json['id'] ?? 0,
+      name: _safeString(json['name']),
+      email: _safeString(json['email']),
+      phoneNumber: _safeString(json['phone']),
+      address: _buildAddress(json),
+      profileImageUrl: _extractImageFromComment(
+        _safeString(json['comment']),
+      ),
+      spoc1: _safeString(json['spoc_1']),
+      spoc2: _safeString(json['spoc_2']),
     );
   }
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Customer &&
-        other.name == name &&
-        other.email == email &&
-        other.phoneNumber == phoneNumber &&
-        other.profileImageUrl == profileImageUrl &&
-        other.customerType == customerType &&
-        other.address == address &&
-        other.modeOfBusiness == modeOfBusiness &&
-        other.spoc1 == spoc1 &&
-        other.spoc2 == spoc2 &&
-        other.gstNumber == gstNumber;
-  }
+  /// Extract label image URL from HTML comment
+  static String _extractImageFromComment(String? comment) {
+    if (comment == null) return '';
+    if (comment is bool) return '';
 
-  @override
-  int get hashCode {
-    return name.hashCode ^
-        email.hashCode ^
-        phoneNumber.hashCode ^
-        profileImageUrl.hashCode ^
-        customerType.hashCode ^
-        address.hashCode ^
-        modeOfBusiness.hashCode ^
-        spoc1.hashCode ^
-        spoc2.hashCode ^
-        gstNumber.hashCode;
+    final regex = RegExp(r'https?://\S+\.jpg');
+    return regex.firstMatch(comment)?.group(0) ?? '';
+  }
+  static String _safeString(dynamic value) {
+    if (value == null) return '';
+    if (value is bool) return '';
+    return value.toString();
+  }
+  static String _buildAddress(Map<String, dynamic> json) {
+    final street = _safeString(json['street']);
+    final city = _safeString(json['city']);
+
+    if (street.isEmpty && city.isEmpty) return '';
+    if (street.isEmpty) return city;
+    if (city.isEmpty) return street;
+    return '$street, $city';
   }
 }
 
-class CustomerProvider with ChangeNotifier {
-  final List<Customer> _customers = [];
 
+class CustomerProvider with ChangeNotifier {
+  List<Customer> _customers = [];
+  bool isLoading = false;
   List<Customer> get customers => _customers;
+
+
+  Future<void> fetchCustomers() async {
+    try {
+      isLoading = true;
+      notifyListeners();
+
+      _customers = await ApiService.fetchCustomers();
+    } catch (e) {
+      debugPrint('Customer fetch error: $e');
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
 
   void addCustomer(Customer customer) {
     _customers.add(customer);

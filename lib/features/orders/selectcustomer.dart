@@ -70,12 +70,9 @@ class _SelectCustomerState extends State<SelectCustomer> {
         phoneNumber: _phoneController.text,
         email: _emailController.text,
         address: _addressController.text,
-        customerType: 'Retail', 
-        gstNumber: '',
-        modeOfBusiness: '',
         profileImageUrl: '',
         spoc1: '',
-        spoc2: '',
+        spoc2: '', id: 1,
       );
 
       customerProvider.addCustomer(newCustomer);

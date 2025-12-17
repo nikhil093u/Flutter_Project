@@ -48,20 +48,20 @@ class OrderDetails extends StatelessWidget {
             _buildSection(
               title: "Bottle Customization",
               items: {
-                'Water Type': order.waterType,
-                'Bottle Material': order.bottleMaterial,
-                'Bottle Shape': order.bottleShape,
-                'Size/Quantity': order.sizeQuantity,
-                'Color Combination': order.colorCombination,
-                'Pre-design Option': order.preDesignOption,
-                'Text on Bottle': order.textOnBottle,
+                // 'Water Type': order.waterType,
+                // 'Bottle Material': order.bottleMaterial,
+                // 'Bottle Shape': order.bottleShape,
+                // 'Size/Quantity': order.sizeQuantity,
+                // 'Color Combination': order.colorCombination,
+                // 'Pre-design Option': order.preDesignOption,
+                // 'Text on Bottle': order.textOnBottle,
               },
             ),
             _buildSection(
               title: "Social Media Details",
               items: {
-                'Website URL': order.socialNetwork1,
-                'Instagram/Facebook/LinkedIn': order.socialNetwork2,
+                // 'Website URL': order.socialNetwork1,
+                // 'Instagram/Facebook/LinkedIn': order.socialNetwork2,
               },
             ),
             _buildSection(

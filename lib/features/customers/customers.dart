@@ -14,6 +14,18 @@ class CustomerScreen extends StatefulWidget {
 }
 
 class _CustomerScreenState extends State<CustomerScreen> {
+  @override
+@override
+void initState() {
+  super.initState();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (!mounted) return;
+    Provider.of<CustomerProvider>(context, listen: false)
+        .fetchCustomers();
+  });
+}
+
+
   String searchQuery = '';
 
   void _onSearchChanged(String query) {
