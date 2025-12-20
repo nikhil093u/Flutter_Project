@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/features/auth/signup.dart';
+// import 'package:flutter_application/features/auth/signup.dart';
 import 'package:flutter_application/features/auth/signin.dart';
 import 'package:flutter_application/features/customers/add_newcustomer.dart';
 import 'package:flutter_application/features/customers/customers.dart';
@@ -11,10 +11,10 @@ import 'package:flutter_application/features/orders/order_model.dart';
 import 'package:flutter_application/features/orders/orders.dart';
 import 'package:flutter_application/features/orders/repeatorder.dart';
 import 'package:flutter_application/features/orders/selectcustomer.dart';
-import 'package:flutter_application/features/profile.dart';
+// import 'package:flutter_application/features/profile.dart';
 import 'package:flutter_application/features/resources/resource.dart';
 import 'package:flutter_application/features/resources/resource_details.dart';
-import 'package:flutter_application/features/settings.dart';
+// import 'package:flutter_application/features/settings.dart';
 import 'package:flutter_application/features/todo/task_details.dart';
 import 'package:flutter_application/features/todo/todo.dart';
 import 'package:flutter_application/landingpage.dart';
@@ -59,13 +59,13 @@ class Routes {
       case signup:
         return MaterialPageRoute(builder: (_) => SignUpScreen());
       case signin:
-        return MaterialPageRoute(builder: (_) => SignInScreen());
+        // return MaterialPageRoute(builder: (_) => SignInScreen());
       case createorder:
         return MaterialPageRoute(builder: (_) => CreateOrder());
       case profile:
-        return MaterialPageRoute(builder: (context) => const ProfilePage());
+        // return MaterialPageRoute(builder: (context) => const ProfilePage());
       case setting:
-        return MaterialPageRoute(builder: (_) => SettingsPage());
+        // return MaterialPageRoute(builder: (_) => SettingsPage());
       case selectcustomer:
         return MaterialPageRoute(builder: (_) => SelectCustomer());
       case repeatorder:

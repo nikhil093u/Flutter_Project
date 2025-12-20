@@ -54,11 +54,11 @@ class _CreateOrderState extends State<CreateOrder> {
     if (!_formKey.currentState!.validate()) return;
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final currentUser = authProvider.currentUser;
+    final currentUser = authProvider.user;
 
     final newOrder = Order(
       id: const Uuid().v4().substring(0, 8),
-      customerName: currentUser?.firstName ?? '',
+      customerName: currentUser?.name ?? '',
       date: DateTime.now(),
       status: 'Pending',
       // waterType: waterType!,

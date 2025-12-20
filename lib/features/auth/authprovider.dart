@@ -1,64 +1,39 @@
 import 'package:flutter/material.dart';
-
-class User {
-  final String firstName;
-  final String lastName;
-  final String dob;
-  final String email;
-  final String phone;
-  final String password;
-
-  User({
-    required this.firstName,
-    required this.lastName,
-    required this.dob,
-    required this.email,
-    required this.phone,
-    required this.password,
-  });
-}
+import 'package:flutter_application/features/auth/usermodel.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 
 class AuthProvider with ChangeNotifier {
-  final List<User> _users = [];
-  User? _currentUser;
+  final _storage = const FlutterSecureStorage();
+  AuthUser? _user;
 
-  List<User> get users => _users;
-  User? get currentUser => _currentUser;
-  bool get isLoggedIn => _currentUser != null;
+  AuthUser? get user => _user;
+  bool get isLoggedIn => _user != null;
 
-  bool signUp(User newUser) {
-    final exists = _users.any((user) => user.email == newUser.email);
-    if (exists) return false;
+  /// Called after successful login
+  Future<void> setUser(AuthUser user) async {
+    _user = user;
 
-    _users.add(newUser);
-    _currentUser = newUser;
+    await _storage.write(key: 'auth_token', value: user.accessToken);
+    await _storage.write(key: 'user_data', value: userToJson(user));
+
     notifyListeners();
-    return true;
   }
 
-  bool signIn({required String email, required String password}) {
-    final matchedUser = _users.firstWhere(
-      (user) => user.email == email && user.password == password,
-      orElse: () => User(
-        firstName: '',
-        lastName: '',
-        dob: '',
-        email: '',
-        phone: '',
-        password: '',
-      ),
-    );
+  /// Restore login on app start
+  Future<void> loadUserFromStorage() async {
+    final token = await _storage.read(key: 'auth_token');
+    final userJson = await _storage.read(key: 'user_data');
 
-    if (matchedUser.email.isEmpty) return false;
-
-    _currentUser = matchedUser;
-    notifyListeners();
-    return true;
+    if (token != null && userJson != null) {
+      _user = authUserFromJson(userJson);
+      notifyListeners();
+    }
   }
 
-  void logout() {
-    _currentUser = null;
+  Future<void> logout() async {
+    _user = null;
+    await _storage.deleteAll();
     notifyListeners();
   }
 }

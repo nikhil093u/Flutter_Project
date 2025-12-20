@@ -1,4 +1,6 @@
 // import 'package:flutter_application/features/orders/order_model.dart';
+import 'dart:typed_data';
+
 import 'package:flutter_application/features/customers/customerprovider.dart';
 import 'package:flutter_application/features/orders/order_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -6,31 +8,35 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ApiService {
-  static final _baseUrl = 'https://d28c5r6pnnqv4m.cloudfront.net';
+  static const String baseUrl = 'https://d28c5r6pnnqv4m.cloudfront.net';
   static final _storage = FlutterSecureStorage();
 
-  static Future<http.Response> get(String path, {
+  static Future<http.Response> get(
+  String path, {
   Map<String, String>? queryParams,
 }) async {
-    final token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzYWxlc0BnbWFpbC5jb20iLCJ1aWQiOjMwLCJleHAiOjE3NjU5NTQzMDksInR5cGUiOiJhY2Nlc3MifQ.7dYSlLUqykUW7Bi016tKKMbvaZSKMhpQahbtru_z-U0';
+  final token = await _storage.read(key: 'auth_token');
 
-    final response = await http.get(
-      Uri.parse('$_baseUrl$path').replace(
-        queryParameters: queryParams,
-      ),
-      headers: {'Authorization': 'Bearer $token'},
-    );
-    if (response.statusCode == 401) {
-      await _storage.delete(key: 'auth_token');
-    }
-    return response;
+  final response = await http.get(
+    Uri.parse('$baseUrl$path').replace(queryParameters: queryParams),
+    headers: {
+      if (token != null) 'Authorization': 'Bearer $token',
+    },
+  );
+
+  if (response.statusCode == 401) {
+    await _storage.deleteAll();
   }
+
+  return response;
+}
+
 
   static Future<http.Response> login({
     required String email,
     required String password,
   }) async {
-    final url = Uri.parse('$_baseUrl/api/login');
+    final url = Uri.parse('$baseUrl/fastapi/api/login');
 
     final body = jsonEncode({
       "email": email,
@@ -74,5 +80,42 @@ class ApiService {
     throw Exception('Failed to load customers');
   }
 }
+static Future<Map<String, dynamic>> generatePresignedUrl({
+  required String filename,
+  required String contentType,
+}) async {
+  final token = await _storage.read(key: 'auth_token');
+  final response = await http.post(
+    Uri.parse('$baseUrl/fastapi/odoo/order-management/generate-presigned-url'),
+    headers: {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode({
+      'filename': filename,
+      'content_type': contentType,
+    }),
+  );
+
+  if (response.statusCode != 200) {
+    throw Exception('Failed to generate presigned URL');
+  }
+
+  return jsonDecode(response.body);
+}
+static Future<void> uploadToS3({
+  required String uploadUrl,
+  required Uint8List bytes,
+}) async {
+  final response = await http.put(
+    Uri.parse(uploadUrl),
+    body: bytes,
+  );
+
+  if (response.statusCode != 200) {
+    throw Exception('S3 upload failed');
+  }
+}
+
 
 }

@@ -15,8 +15,6 @@ class _AddNewcustomerState extends State<AddNewcustomer> {
   String selectedSize = '';
   String sizeDescription = '';
   String selectedCategory = '';
-  Color backgroundColor = Colors.white;
-  String backgroundType = 'color';
 
   @override
   Widget build(BuildContext context) {
@@ -61,10 +59,6 @@ class _AddNewcustomerState extends State<AddNewcustomer> {
           labelSize: selectedSize,
           labelDescription: sizeDescription,
           category: selectedCategory,
-          backgroundColor: backgroundColor,
-          backgroundType: backgroundType,
-          onBackgroundColorChange: (value) => setState(() => backgroundColor = value),
-          onBackgroundTypeChange: (value) => setState(() => backgroundType = value)
         );
 
       default:

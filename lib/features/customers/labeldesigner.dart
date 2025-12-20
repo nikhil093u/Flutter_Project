@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -11,38 +12,45 @@ import 'package:flutter_application/features/customers/logo_controls.dart';
 import 'package:flutter_application/features/customers/text_controls.dart';
 import 'package:flutter_application/models/logo_model.dart';
 import 'package:flutter_application/models/text_model.dart';
+import 'package:image_picker/image_picker.dart';
 
 class LabelDesigner extends StatefulWidget {
   final String? labelSize;
   final String? labelDescription;
   final String? category;
-  final Color backgroundColor;
-  final String backgroundType;
-
-  final ValueChanged<String> onBackgroundTypeChange;
-  final ValueChanged<Color> onBackgroundColorChange;
 
   const LabelDesigner({
     super.key,
     required this.labelSize,
     required this.labelDescription,
     required this.category,
-    required this.backgroundColor,
-    required this.backgroundType,
-    required this.onBackgroundTypeChange,
-    required this.onBackgroundColorChange,
   });
   @override
   State<LabelDesigner> createState() => _LabelDesignerState();
 }
 
 class _LabelDesignerState extends State<LabelDesigner> {
-  List<LogoElement> logos = [];
-  String? selectedLogoId;
+  Map<LogoSlot, LogoElement?> logos = {
+    LogoSlot.primaryLogo: null,
+    LogoSlot.secondaryLogo: null,
+    LogoSlot.qrCode: null,
+  };
+
+  LogoSlot? selectedSlot;
   List<TextElement> textElements = [];
   String? selectedTextId;
   final GlobalKey _previewKey = GlobalKey();
   Uint8List? previewImageBytes;
+  String backgroundType = 'color';
+  Color backgroundColor = Colors.white;
+  ui.Image? backgroundImage;
+  double backgroundImageScale = 1.0;
+  String? selectedPattern;
+  ui.Image? patternImage;
+  String backgroundPattern =
+      'solid'; // solid, stripes, dots, waves, gradient, droplets
+  double patternScale = 1.0;
+  Offset backgroundImageOffset = Offset.zero;
 
   void goToCustomerDetails() async {
     final previewBytes = await capturePreviewImage();
@@ -61,25 +69,96 @@ class _LabelDesignerState extends State<LabelDesigner> {
       ),
     );
   }
-  void _moveLogo(String id, Offset delta) {
+
+  Future<void> _pickLogoForSlot(LogoSlot slot, File file) async {
+    final uiImage = await loadUiImage(FileImage(file));
+    final defaults = defaultLogoPositions[slot]!;
+
     setState(() {
-      final logo = logos.firstWhere((l) => l.id == id);
-      logo.x = (logo.x + delta.dx).clamp(0.0, 1.0);
-      logo.y = (logo.y + delta.dy).clamp(0.0, 1.0);
+      logos = {
+        ...logos,
+        slot: LogoElement(
+          id: slot.name,
+          image: uiImage,
+          slot: slot,
+          x: defaults['x']!,
+          y: defaults['y']!,
+          scale: defaults['scale']!,
+          rotation: 0,
+        ),
+      };
+      selectedSlot = slot;
     });
   }
 
   void _scaleLogo(double delta) {
+    if (selectedSlot == null) return;
+
+    final logo = logos[selectedSlot];
+    if (logo == null) return;
+
     setState(() {
-      final logo = logos.firstWhere((l) => l.id == selectedLogoId);
-      logo.scale = (logo.scale + delta).clamp(0.1, 1.0);
+      logos = {
+        ...logos,
+        selectedSlot!: LogoElement(
+          id: logo.id,
+          image: logo.image,
+          slot: logo.slot,
+          x: logo.x,
+          y: logo.y,
+          scale: (logo.scale + delta).clamp(0.1, 1.0),
+          rotation: logo.rotation,
+        ),
+      };
     });
   }
 
   void _rotateLogo(double delta) {
+    if (selectedSlot == null) return;
+
+    final logo = logos[selectedSlot];
+    if (logo == null) return;
+
     setState(() {
-      final logo = logos.firstWhere((l) => l.id == selectedLogoId);
-      logo.rotation += delta;
+      logos = {
+        ...logos,
+        selectedSlot!: LogoElement(
+          id: logo.id,
+          image: logo.image,
+          slot: logo.slot,
+          x: logo.x,
+          y: logo.y,
+          scale: logo.scale,
+          rotation: logo.rotation + delta,
+        ),
+      };
+    });
+  }
+
+  void _moveLogo(LogoSlot slot, Offset delta) {
+    final logo = logos[slot];
+    if (logo == null) return;
+
+    setState(() {
+      logos = {
+        ...logos,
+        slot: LogoElement(
+          id: logo.id,
+          image: logo.image,
+          slot: logo.slot,
+          x: (logo.x + delta.dx).clamp(0.0, 1.0),
+          y: (logo.y + delta.dy).clamp(0.0, 1.0),
+          scale: logo.scale,
+          rotation: logo.rotation,
+        ),
+      };
+    });
+  }
+
+  void _removeLogo(LogoSlot slot) {
+    setState(() {
+      logos = {...logos, slot: null};
+      if (selectedSlot == slot) selectedSlot = null;
     });
   }
 
@@ -104,14 +183,28 @@ class _LabelDesignerState extends State<LabelDesigner> {
   void _selectText(String id) {
     setState(() {
       selectedTextId = id;
-      selectedLogoId = null;
+      selectedSlot = null;
     });
   }
 
   void _updateText(String id, TextElement updated) {
     setState(() {
-      final index = textElements.indexWhere((t) => t.id == id);
-      textElements[index] = updated;
+      textElements = textElements.map((t) {
+        if (t.id == id) {
+          return TextElement(
+            id: t.id,
+            text: updated.text,
+            x: t.x,
+            y: t.y,
+            fontSize: updated.fontSize,
+            rotation: updated.rotation,
+            opacity: updated.opacity,
+            color: updated.color,
+            align: updated.align,
+          );
+        }
+        return t;
+      }).toList();
     });
   }
 
@@ -122,19 +215,34 @@ class _LabelDesignerState extends State<LabelDesigner> {
     });
   }
 
-  Future<void> _addLogoFromFile(File file) async {
-    final provider = FileImage(file);
-    final uiImage = await loadUiImage(provider);
-
-    final logo = LogoElement(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      image: uiImage,
-    );
-
+  void _setBackgroundImage(ui.Image image) {
     setState(() {
-      logos.add(logo);
-      selectedLogoId = logo.id;
+      backgroundImage = image;
+      backgroundType = 'image';
+      backgroundImageScale = 1.0;
     });
+  }
+
+  void _scaleBackgroundImage(double delta) {
+    setState(() {
+      backgroundImageScale = (backgroundImageScale + delta).clamp(0.5, 3.0);
+    });
+  }
+
+  void _selectPattern(String pattern) {
+    setState(() {
+      backgroundType = 'pattern';
+      backgroundPattern = pattern; // 'dots', 'waves', etc.
+    });
+  }
+
+  Future<void> _pickBackgroundImage() async {
+    final picker = ImagePicker();
+    final file = await picker.pickImage(source: ImageSource.gallery);
+    if (file == null) return;
+
+    final image = await loadUiImage(FileImage(File(file.path)));
+    _setBackgroundImage(image);
   }
 
   Future<Uint8List> capturePreviewImage() async {
@@ -149,6 +257,7 @@ class _LabelDesignerState extends State<LabelDesigner> {
 
   @override
   Widget build(BuildContext context) {
+    final logoList = logos.values.whereType<LogoElement>().toList();
     return SingleChildScrollView(
       padding: const EdgeInsets.only(bottom: 24),
       child: Column(
@@ -159,15 +268,47 @@ class _LabelDesignerState extends State<LabelDesigner> {
             title: 'Preview',
             child: LabelPreview(
               labelSizeId: widget.labelSize,
-              backgroundColor: widget.backgroundColor,
-              backgroundType: widget.backgroundType,
-              logos: logos,
+              backgroundColor: backgroundColor,
+              backgroundType: backgroundType,
+              backgroundImage: backgroundImage,
+              backgroundImageScale: backgroundImageScale,
+              logos: logoList,
               textElements: textElements,
               repaintKey: _previewKey,
-              selectedLogoId: selectedLogoId,
               selectedTextId: selectedTextId,
-              onMoveLogo: _moveLogo,
+              backgroundImageOffset: backgroundImageOffset,
+              selectedSlot: selectedSlot,
+              onMoveBackground: (delta) {
+                setState(() {
+                  backgroundImageOffset += delta;
+                });
+              },
+              onMoveLogo: (delta) {
+                if (selectedSlot != null) {
+                  _moveLogo(selectedSlot!, delta);
+                }
+              },
+              onSelectText: (id) {
+                setState(() {
+                  selectedTextId = id;
+                  selectedSlot = null;
+                });
+              },
+              onSelectLogo: (slot) {
+                setState(() {
+                  selectedSlot = slot;
+                  selectedTextId = null;
+                });
+              },
+              clearSelection: () {
+                setState(() {
+                  selectedSlot = null;
+                  selectedTextId = null;
+                });
+              },
               onMoveText: _moveText,
+              backgroundPattern: backgroundPattern,
+              patternScale: patternScale,
             ),
           ),
 
@@ -175,10 +316,21 @@ class _LabelDesignerState extends State<LabelDesigner> {
           _buildSection(
             title: 'Background',
             child: BackgroundControls(
-              backgroundType: widget.backgroundType,
-              backgroundColor: widget.backgroundColor,
-              onBackgroundTypeChange: widget.onBackgroundTypeChange,
-              onBackgroundColorChange: widget.onBackgroundColorChange,
+              backgroundType: backgroundType,
+              backgroundColor: backgroundColor,
+
+              onBackgroundTypeChange: (type) {
+                setState(() => backgroundType = type);
+              },
+
+              onBackgroundColorChange: (color) {
+                setState(() => backgroundColor = color);
+              },
+
+              onPickImage: _pickBackgroundImage,
+              onScaleUp: () => _scaleBackgroundImage(0.1),
+              onScaleDown: () => _scaleBackgroundImage(-0.1),
+              onPatternSelect: _selectPattern,
             ),
           ),
 
@@ -187,19 +339,15 @@ class _LabelDesignerState extends State<LabelDesigner> {
             title: 'Logos',
             child: LogoControls(
               logos: logos,
-              selectedLogoId: selectedLogoId,
-              onPickLogo: _addLogoFromFile,
-              onAddLogo: (logo) {
+              selectedSlot: selectedSlot,
+              onRemoveLogo: _removeLogo,
+              onSelectSlot: (slot) {
                 setState(() {
-                  logos.add(logo);
-                  selectedLogoId = logo.id;
+                  selectedSlot = slot;
+                  selectedTextId = null;
                 });
               },
-              onSelectLogo: (id) {
-                setState(() {
-                  selectedLogoId = id;
-                });
-              },
+              onPickLogo: _pickLogoForSlot,
               onScaleChange: _scaleLogo,
               onRotateChange: _rotateLogo,
             ),
@@ -218,12 +366,12 @@ class _LabelDesignerState extends State<LabelDesigner> {
             ),
           ),
           Padding(
-              padding: const EdgeInsets.all(16),
-              child: ElevatedButton(
-                onPressed: goToCustomerDetails,
-                child: const Text('Continue'),
-              ),
-          )
+            padding: const EdgeInsets.all(16),
+            child: ElevatedButton(
+              onPressed: goToCustomerDetails,
+              child: const Text('Continue'),
+            ),
+          ),
         ],
       ),
     );

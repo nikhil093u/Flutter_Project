@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_application/models/patterns_preview.dart';
 
 class BackgroundControls extends StatelessWidget {
   final String backgroundType;
   final Color backgroundColor;
+
   final ValueChanged<String> onBackgroundTypeChange;
   final ValueChanged<Color> onBackgroundColorChange;
+
+  final VoidCallback onPickImage;
+  final VoidCallback onScaleUp;
+  final VoidCallback onScaleDown;
+  final ValueChanged<String> onPatternSelect;
 
   const BackgroundControls({
     super.key,
@@ -13,6 +20,10 @@ class BackgroundControls extends StatelessWidget {
     required this.backgroundColor,
     required this.onBackgroundTypeChange,
     required this.onBackgroundColorChange,
+    required this.onPickImage,
+    required this.onScaleUp,
+    required this.onScaleDown,
+    required this.onPatternSelect,
   });
 
   @override
@@ -23,8 +34,9 @@ class BackgroundControls extends StatelessWidget {
         /// TYPE SELECTOR
         SegmentedButton<String>(
           segments: const [
-            ButtonSegment(value: 'color', label: Text('Color', style: TextStyle(fontFamily: 'Poppins'))),
-            ButtonSegment(value: 'image', label: Text('Image', style: TextStyle(fontFamily: 'Poppins'))),
+            ButtonSegment(value: 'color', label: Text('Color')),
+            ButtonSegment(value: 'image', label: Text('Image')),
+            ButtonSegment(value: 'pattern', label: Text('Pattern')),
           ],
           selected: {backgroundType},
           onSelectionChanged: (value) {
@@ -32,9 +44,9 @@ class BackgroundControls extends StatelessWidget {
           },
         ),
 
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
 
-        /// COLOR PICKER
+        /// COLOR
         if (backgroundType == 'color')
           GestureDetector(
             onTap: () => _openColorPicker(context),
@@ -42,30 +54,64 @@ class BackgroundControls extends StatelessWidget {
               height: 48,
               width: double.infinity,
               decoration: BoxDecoration(
-                // color: backgroundColor,
-                color: const Color.fromARGB(255, 120, 207, 247),
+                color: backgroundColor,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.grey),
               ),
-              child: const Center(
-                child: Text(
-                  'Tap to select color',
-                  style: TextStyle(fontSize: 15, fontFamily: 'Poppins'),
-                ),
-              ),
+              alignment: Alignment.center,
+              child: const Text('Tap to select color'),
             ),
           ),
 
-        /// IMAGE UPLOAD (later)
-        if (backgroundType == 'image')
-          Container(
-            height: 100,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Text('Upload Image / PDF'),
+        /// IMAGE
+        if (backgroundType == 'image') ...[
+          ElevatedButton.icon(
+            onPressed: onPickImage,
+            icon: const Icon(Icons.image),
+            label: const Text('Pick Background Image'),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.remove),
+                onPressed: onScaleDown,
+              ),
+              const Text('Scale'),
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: onScaleUp,
+              ),
+            ],
+          ),
+        ],
+
+        /// PATTERN (CANVAS-BASED)
+        if (backgroundType == 'pattern')
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: ['stripes', 'dots', 'waves', 'gradient', 'droplets']
+                .map((pattern) {
+              return GestureDetector(
+                onTap: () => onPatternSelect(pattern),
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: CustomPaint(
+                    painter: PatternPreviewPainter(
+                      pattern: pattern,
+                      baseColor: backgroundColor,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
           ),
       ],
     );
@@ -75,7 +121,6 @@ class BackgroundControls extends StatelessWidget {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor: Colors.white,
         title: const Text('Pick Background Color'),
         content: SingleChildScrollView(
           child: BlockPicker(
